@@ -1,0 +1,203 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.column {
+  padding: var(--space-18) var(--space-gutter-mobile) var(--space-26);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-18);
+  max-width: 560px;
+}
+
+.title {
+  font-size: var(--fs-title-section);
+  line-height: var(--lh-display-min);
+  letter-spacing: var(--ls-display-min);
+  text-transform: uppercase;
+}
+
+.note {
+  max-width: var(--measure-prose);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  padding-top: var(--space-10);
+}
+
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+.groupLabel,
+.groupHint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+}
+
+.groupLabel {
+  color: var(--color-ink);
+}
+
+.groupHint {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-label);
+}
+
+.groupEmpty {
+  max-width: var(--measure-prose);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+/* Un repère : sa ligne d'heure et de nom, sa sous-ligne, puis sa bascule de départ. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  padding: var(--space-9);
+}
+
+.rowTop {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-5);
+}
+
+.time,
+.label,
+.detail {
+  box-sizing: border-box;
+  min-height: var(--action-height-min);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  padding: 0 var(--space-9);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* L'heure est une quantité : Space Mono, comme partout dans le produit. */
+.time {
+  flex: none;
+  width: 84px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.detail {
+  width: 100%;
+  min-height: 38px;
+  border-color: var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.time:focus,
+.label:focus,
+.detail:focus {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: 1px;
+}
+
+.remove {
+  flex: none;
+  width: var(--action-height-min);
+  min-height: var(--action-height-min);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--fs-glyph-close);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.rowFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-9);
+  flex-wrap: wrap;
+}
+
+.startOn,
+.startOff {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--action-height-min);
+  border: 0;
+  padding: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.startOn {
+  color: var(--color-ink);
+}
+
+.startOff {
+  color: var(--color-inactive);
+}
+
+.error {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-signal-red);
+}
+
+.add {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: 340px;
+}
+
+.save {
+  width: 100%;
+}
+
+.blocked {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+  color: var(--color-label);
+}

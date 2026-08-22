@@ -5,7 +5,7 @@ import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar } from '../../components/ui/ProgressBar/ProgressBar'
 import type { Race } from '../../domain/types'
 import { disciplineShares, timelineGroups } from '../../domain/raceView'
-import { racePath } from './routes'
+import { racePath, raceTimelineEditPath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceDayScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -60,6 +60,15 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
               headline="Pas de timeline"
               sentence="Aucun horaire n’est enregistré pour cette course : rien n’est inventé à la place de ton propre déroulé."
             />
+            {/* Le vide se nommait, et ne se remplissait pas : `Race.timeline` n'avait aucun écran
+                d'écriture, donc cet écran restait vide pour toujours. */}
+            <PrimaryAction
+              tone="ink"
+              className={own.emptyAction}
+              onClick={() => navigate(raceTimelineEditPath(race.id))}
+            >
+              Écrire le déroulé
+            </PrimaryAction>
           </div>
         ) : (
           groups.map((group) => (

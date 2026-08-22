@@ -34,3 +34,10 @@
   letter-spacing: -0.04em;
   text-transform: uppercase;
 }
+
+/* La sortie du vide : le cadre pointillé nomme le manque, l'action le comble. */
+.emptyAction {
+  margin-top: var(--space-14);
+  width: 100%;
+  max-width: 340px;
+}

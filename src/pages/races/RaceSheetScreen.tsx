@@ -15,10 +15,9 @@ import {
 } from '../../domain/raceView'
 import { formatDayMonthLong } from '../../domain/planGenerator/dates'
 import { splitName } from './splitName'
-import { raceEditPath, racePath } from './routes'
+import { raceEditPath, racePath, raceTimelineEditPath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceSheetScreen.module.css'
-import { InertNote } from '../../components/ui/InertNote/InertNote'
 import { calculatorPath } from '../tools/toolsRoutes'
 
 export interface RaceSheetScreenProps {
@@ -220,22 +219,18 @@ export function RaceSheetScreen({ race, today, variant = 'root' }: RaceSheetScre
               <span aria-hidden="true">→</span>
             </SecondaryAction>
           )}
+          {/* La commande était éteinte faute de timeline, et rien ne permettait d'en écrire une :
+              elle l'aurait donc été pour toujours. Sans déroulé, elle mène à l'écriture. */}
           <SecondaryAction
             shape="block"
             className={s.navAction}
-            onClick={() => navigate(racePath(race.id, 'jour-j'))}
-            disabled={!race.timeline?.length}
-            aria-describedby={race.timeline?.length ? undefined : 'inert-timeline'}
+            onClick={() =>
+              navigate(race.timeline?.length ? racePath(race.id, 'jour-j') : raceTimelineEditPath(race.id))
+            }
           >
-            Timeline du jour J
+            {race.timeline?.length ? 'Timeline du jour J' : 'Écrire le déroulé du jour J'}
             <span aria-hidden="true">→</span>
           </SecondaryAction>
-          {!race.timeline?.length && (
-            <InertNote id="inert-timeline">
-              Aucune timeline enregistrée pour cette course : les repères du jour J (réveil, dépôt du
-              vélo, départ) se saisissent course par course, et cet écran n’existe pas encore.
-            </InertNote>
-          )}
 
           {/* La fiche se lisait et ne se corrigeait pas : une date décalée, un nom mal écrit, une
               heure de départ manquante n'avaient aucun chemin. */}

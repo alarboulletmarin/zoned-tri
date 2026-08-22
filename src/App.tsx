@@ -23,6 +23,7 @@ import {
   RacesRoute,
 } from './pages/races/RacesRoute'
 import { RaceFormScreen } from './pages/races/RaceFormScreen'
+import { RaceTimelineScreen } from './pages/races/RaceTimelineScreen'
 import { RacesPreview } from './pages/races/RacesPreview'
 import { ToolsScreen } from './pages/tools/ToolsScreen'
 import { ReferencesScreen } from './pages/tools/ReferencesScreen'
@@ -80,6 +81,7 @@ function App() {
             <Route path="/races/:id/pacing" element={<RacePacingRoute />} />
             <Route path="/races/:id/nutrition" element={<RaceNutritionRoute />} />
             <Route path="/races/:id/jour-j" element={<RaceDayRoute />} />
+            <Route path="/races/:id/jour-j/modifier" element={<RaceTimelineScreen />} />
             <Route path="/races/:id/checklist" element={<RaceChecklistRoute />} />
             {/* Outils — artboards 12 (profil et références), 13 (les douze calculateurs) et S8. */}
             <Route path="/tools" element={<ToolsScreen />} />

@@ -18,3 +18,8 @@ export const NEW_RACE_PATH = `${RACES_PATH}/nouvelle`
 export function raceEditPath(raceId: string): string {
   return `${RACES_PATH}/${raceId}/modifier`
 }
+
+/** Le déroulé du jour J. `Race.timeline` existait ; aucun écran ne savait l'écrire. */
+export function raceTimelineEditPath(raceId: string): string {
+  return `${RACES_PATH}/${raceId}/jour-j/modifier`
+}

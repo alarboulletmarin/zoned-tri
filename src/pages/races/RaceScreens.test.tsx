@@ -54,23 +54,19 @@ describe('RaceSheetScreen · artboard 08', () => {
   })
 
   /**
-   * Trois commandes grises portaient leur motif dans un `title` qu'aucun doigt ne survole. Deux
-   * avaient une sortie évidente — le produit embarque le calculateur de pacing et celui des
-   * glucides de course : elles y mènent au lieu de s'éteindre. La troisième reste inerte, mais
-   * son motif est désormais écrit à l'écran.
+   * Trois commandes grises portaient leur motif dans un `title` qu'aucun doigt ne survole. Toutes
+   * les trois ont une sortie : le produit embarque le calculateur de pacing et celui des glucides
+   * de course, et le déroulé du jour J a désormais son écran d'écriture. Une commande éteinte
+   * faute d'une donnée que rien ne sait écrire l'aurait été pour toujours.
    */
-  it('mène aux calculateurs plutôt que de s’éteindre quand la donnée manque', () => {
+  it('mène là où la donnée se fabrique plutôt que de s’éteindre', () => {
     const bare: Race = { ...demoRace, pacing: undefined, nutrition: undefined, timeline: [] }
     renderScreen(<RaceSheetScreen race={bare} today={TODAY} />)
 
     expect(screen.queryByRole('button', { name: /^Plan de pacing/ })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Calculer un plan de pacing/ })).toBeEnabled()
     expect(screen.getByRole('button', { name: /Calculer les glucides de course/ })).toBeEnabled()
-
-    const timeline = screen.getByRole('button', { name: /Timeline du jour J/ })
-    expect(timeline).toBeDisabled()
-    expect(timeline).toHaveAccessibleDescription(/Aucune timeline enregistrée/)
-    expect(screen.getByText(/Aucune timeline enregistrée/)).toBeVisible()
+    expect(screen.getByRole('button', { name: /Écrire le déroulé du jour J/ })).toBeEnabled()
   })
 
   it('nomme le vide du profil quand le dénivelé est connu mais pas son découpage', () => {
