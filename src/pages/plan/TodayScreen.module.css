@@ -745,9 +745,10 @@
  * `mainPad`, `sidePad`, `h1Size`). */
 
 /* Le cadre se borne à la fenêtre : ce sont les deux colonnes qui défilent, pas la page. */
+/* Le cadre suit son contenu et ne s'étire pas jusqu'au bas de la fenêtre : une séance courte
+ * laissait sinon deux colonnes à moitié vides, avec leurs filets, au milieu de rien. */
 .screenSplit {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
 }
 
 .columnSplit {
@@ -767,22 +768,20 @@
 }
 
 .split {
-  flex: 1;
-  min-height: 0;
+  flex: none;
   display: grid;
   /* `gridCols` tablette. */
   grid-template-columns: 1fr 292px;
-  align-content: stretch;
+  /* Les deux colonnes montent à la hauteur de la plus haute — le filet qui les sépare court sur
+     toute cette hauteur, comme dans le canevas — mais aucune ne s'étire au-delà du contenu. */
+  align-items: stretch;
 }
 
 .mainCol,
 .sideCol {
   min-width: 0;
-  min-height: 0;
-  overflow-y: auto;
   /* Le profil de la séance dépasse de ses gouttières de 2 px, exactement comme dans le canevas,
-   * qui le laisse déborder puis le rogne au cadre. Sans ce `hidden`, `overflow-y:auto` rendrait
-   * l'axe horizontal défilable et la colonne gagnerait une barre de défilement. */
+   * qui le laisse déborder puis le rogne au cadre. */
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -811,9 +810,80 @@
   margin-top: var(--space-18);
 }
 
-/* La rangée de fin descend en bas de colonne (l. 1610). */
+/* La rangée de fin suit le déroulé au lieu d'être poussée en bas du cadre.
+ *
+ * Le canevas la colle en bas (l. 1610) parce que S4 est un artboard de hauteur fixe, taillé sur
+ * sa séance. Dans l'application le cadre fait la hauteur de la fenêtre, et le même `margin-top:
+ * auto` ouvrait un blanc de 150 px entre le dernier bloc et la case à cocher. Le cadre suit donc
+ * son contenu (cf. `.screenSplit`), et la rangée reste sous le déroulé, sans trou. */
 .mainCol .doneRow {
-  margin-top: auto;
+  margin-top: var(--space-18);
+}
+
+/* --- Très grand écran : la colonne de séance se dédouble ------------------------------------
+ *
+ * Au-delà de ~1600 px, la colonne principale dépasse 1000 px et le flux vertical de S4 ne fait
+ * plus qu'étirer ses blocs : la grille de trois chiffres s'étale sur toute la largeur, et le
+ * tableau du déroulé traîne un demi-écran de blanc dans sa première colonne. L'espace est occupé
+ * sans être utilisé.
+ *
+ * On le range donc au lieu de l'étirer : à gauche l'identité de la séance — badges, titre, méta,
+ * profil, légende — et ses trois chiffres ; à droite le déroulé, qui est le bloc qui a le plus à
+ * gagner en hauteur. La rangée d'action reste en bas, sur toute la largeur. Aucun bloc n'apparaît
+ * ni ne disparaît : ce sont les mêmes huit, autrement disposés. */
+@media (min-width: 1600px) {
+  .mainCol {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(6, auto) 1fr;
+    grid-template-areas:
+      'badges   sets'
+      'title    sets'
+      'meta     sets'
+      'timeline sets'
+      'legend   sets'
+      'stats    sets'
+      'done     done';
+    column-gap: var(--space-28);
+    align-content: start;
+  }
+
+  .mainCol .badgeRow {
+    grid-area: badges;
+  }
+
+  .mainCol .sessionTitle {
+    grid-area: title;
+  }
+
+  .mainCol .sessionMeta {
+    grid-area: meta;
+  }
+
+  .mainCol .timeline {
+    grid-area: timeline;
+  }
+
+  .mainCol .legend {
+    grid-area: legend;
+  }
+
+  .mainCol .statGrid {
+    grid-area: stats;
+  }
+
+  /* Le déroulé occupe toute la hauteur de la colonne de droite : il n'y a plus de trou sous lui. */
+  .mainCol .setsTable {
+    grid-area: sets;
+    margin-top: 0;
+    align-self: stretch;
+  }
+
+  .mainCol .doneRow {
+    grid-area: done;
+    margin-top: 0;
+    align-self: end;
+  }
 }
 
 .mainCol .doneRow .chipButton {
@@ -862,6 +932,92 @@
 
 .setsTable tbody tr:last-child td {
   border-bottom: none;
+}
+
+/* Nouvel artboard 02 : le bloc porte son intitulé puis, en dessous, ce que le modèle en sait. */
+.setsBlock {
+  display: block;
+  font-size: 12px;
+}
+
+.setsDetail {
+  display: block;
+  font-size: 9.5px;
+  color: var(--color-label);
+  margin-top: 3px;
+}
+
+/* Le corps de séance passe en inverse — c'est la ligne qu'on vient lire. */
+.setsRowMain td {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+}
+
+.setsRowMain .setsBlock {
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+}
+
+.setsRowMain .setsDetail {
+  color: var(--color-on-ink-muted);
+}
+
+/* L'allure du corps est la seule valeur en accent de la carte. */
+.setsRowMain td:nth-child(2) {
+  color: var(--color-signal-lime);
+}
+
+/* --- Trois cellules chiffrées (nouvel artboard 02) -------------------------------------------
+ * `display:grid; grid-template-columns:repeat(3,1fr); border:2px solid` — filets de 1 px entre. */
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: var(--border-width-structure) solid var(--color-ink);
+  margin-top: var(--space-11);
+}
+
+.stat {
+  padding: var(--space-6) 9px;
+  min-width: 0;
+}
+
+.stat + .stat {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.statNoteRef {
+  font-size: 7px;
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  margin-top: 2px;
+}
+
+/* « Séance entière → » : le chemin vers la fiche complète, à droite de la case à cocher. */
+.wholeSession {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--action-height-min);
 }
 
 /* --- Colonne de contexte (l. 1616-1655) ------------------------------------------------------ */

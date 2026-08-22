@@ -5,16 +5,19 @@ import { MemoryRouter } from 'react-router-dom'
 import { RailBlockProvider, useRailBlock } from '../../context/RailBlockContext'
 import { TodayScreen } from './TodayScreen'
 import { demoAthleteProfile, demoBikeWorkout, demoPlan, demoRace, demoWorkouts } from '../../domain/demoData'
-import type { TrainingPlan, Workout } from '../../domain/types'
+import type { AthleteProfile, TrainingPlan, Workout } from '../../domain/types'
 
 const saveWorkout = vi.fn()
 const savePlan = vi.fn()
 let catalogue: Workout[] = demoWorkouts
+// Mutable : un plan généré sans profil enregistré est un cas réel, et il ne doit pas faire
+// disparaître la colonne de contexte de S4.
+let storedProfile: AthleteProfile | undefined = demoAthleteProfile
 
 vi.mock('../../context/AppDataContext', () => ({
   useWorkouts: () => ({ workouts: catalogue, saveWorkout, deleteWorkout: vi.fn(), loading: false }),
   usePlans: () => ({ plans: [], savePlan, deletePlan: vi.fn(), loading: false }),
-  useProfile: () => ({ profile: demoAthleteProfile, saveProfile: vi.fn(), loading: false }),
+  useProfile: () => ({ profile: storedProfile, saveProfile: vi.fn(), loading: false }),
   useRaces: () => ({ races: [demoRace], saveRace: vi.fn(), deleteRace: vi.fn(), loading: false }),
 }))
 
@@ -59,6 +62,7 @@ function completed(workout: Workout, completedAt: string): Workout {
 
 beforeEach(() => {
   catalogue = demoWorkouts
+  storedProfile = demoAthleteProfile
   saveWorkout.mockReset()
   savePlan.mockReset()
 })
@@ -117,25 +121,29 @@ describe('TodayScreen · une séance (02)', () => {
   })
 })
 
-// Canevas S4 : `showSets` et `showWeekBars` sont faux en mobile, vrais dès la tablette. Ce que la
-// largeur ajoute doit donc être absent à 390 px et présent à 834 comme à 1280.
+// Le nouvel artboard 02 pose le déroulé chiffré dès 390 px — il ne dépend plus de la largeur.
+// Ce que la largeur ajoute, c'est la colonne de contexte de S4 (`showWeekBars`).
 describe('TodayScreen · deux colonnes (S4)', () => {
-  it('keeps the block table and the week histogram out of the mobile flow', () => {
+  it('writes the block table in the mobile flow, but not the week histogram', () => {
     renderScreen('2026-06-16')
-    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    const table = screen.getByRole('table')
+    expect(within(table).getByRole('columnheader', { name: /Déroulé/ })).toBeInTheDocument()
     expect(screen.queryByRole('img', { name: /Charge de la semaine/ })).not.toBeInTheDocument()
   })
 
   it.each([
     ['tablette', 834],
     ['desktop', 1280],
-  ])('adds the block table and the week context on %s', (_name, width) => {
+  ])('keeps the block table and adds the week context on %s', (_name, width) => {
     mockMatchMediaWidth(width)
     renderScreen('2026-06-16')
 
     const table = screen.getByRole('table')
-    expect(within(table).getByRole('columnheader', { name: 'Bloc' })).toBeInTheDocument()
-    expect(within(table).getByRole('columnheader', { name: 'Cible' })).toBeInTheDocument()
+    // Le canevas compte les blocs dans l'en-tête, puis nomme l'allure et le repos.
+    expect(
+      within(table).getByRole('columnheader', { name: `Déroulé · ${demoBikeWorkout.blocks.length} blocs` }),
+    ).toBeInTheDocument()
+    expect(within(table).getByRole('columnheader', { name: 'Allure' })).toBeInTheDocument()
     expect(within(table).getByRole('columnheader', { name: 'Repos' })).toBeInTheDocument()
     // Une ligne par bloc de la séance, plus la ligne d'en-tête.
     expect(within(table).getAllByRole('row')).toHaveLength(demoBikeWorkout.blocks.length + 1)
@@ -143,6 +151,39 @@ describe('TodayScreen · deux colonnes (S4)', () => {
     expect(screen.getByRole('img', { name: /Charge de la semaine/ })).toBeInTheDocument()
     expect(screen.getByText(/colonne en pointillé/)).toBeInTheDocument()
     expect(screen.getByText(/Prochaine référence/)).toBeInTheDocument()
+  })
+
+  it('shows the three figures of the session and the way to its whole sheet', () => {
+    renderScreen('2026-06-16')
+    // La séance de vélo de démonstration n'a pas de distance enregistrée : la cellule cède la
+    // place à la zone plutôt que d'afficher un tiret, et la cible s'annonce en intensité.
+    expect(screen.getByText('Zone')).toBeInTheDocument()
+    expect(screen.getByText('Durée')).toBeInTheDocument()
+    expect(screen.getByText(/Intensité cible/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Séance entière/ })).toHaveAttribute(
+      'href',
+      `/workouts/${demoBikeWorkout.id}`,
+    )
+  })
+
+  it('reads the target of a bike session off its power, not off a pace it does not carry', () => {
+    renderScreen('2026-06-16')
+    const table = screen.getByRole('table')
+    // Avant, toute séance de vélo n'affichait que des tirets : seul `pace` était lu.
+    expect(within(table).getAllByText(/% FTP/).length).toBeGreaterThan(0)
+  })
+
+  // Un plan généré sans profil enregistré faisait disparaître la colonne de contexte, et donc la
+  // disposition à deux colonnes : l'écran retombait sur son flux mobile au milieu du desktop.
+  it('keeps the week context on desktop even without an athlete profile', () => {
+    storedProfile = undefined
+    mockMatchMediaWidth(1280)
+    renderScreen('2026-06-16')
+
+    expect(screen.getByRole('img', { name: /Charge de la semaine/ })).toBeInTheDocument()
+    expect(screen.getByText('Reste cette semaine')).toBeInTheDocument()
+    // Seule la ligne qui dépend vraiment du profil se tait.
+    expect(screen.queryByText(/Prochaine référence/)).not.toBeInTheDocument()
   })
 
   it('offers the inert .FIT export at the bottom of the session column', () => {

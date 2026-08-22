@@ -6,7 +6,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { todayIso, weekdayIndex } from '../../domain/planWeek'
 import { selectOpeningState } from '../../domain/openingState'
 import { DAY_LABELS, buildWeekContext, type WeekBar, type WeekContext } from '../../domain/weekContext'
-import { buildSwimSetRows } from '../../domain/swimSetRows'
+import { buildSwimSetRows, mainTargetOf } from '../../domain/swimSetRows'
 import {
   buildTodayView,
   type TodayAllDoneView,
@@ -17,10 +17,11 @@ import {
   type TodayWeekPausedView,
   type UpcomingSession,
 } from '../../domain/todayState'
-import { formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
+import { formatDurationMin, formatWorkoutDistance, zoneToNumber } from '../../domain/workoutFormat'
 import { TODAY_FRAME_COLOR_VAR, buildTodayProfileBars, repeatRestLabel } from '../../domain/workoutBlocks'
 import type { AthleteProfile, EvidenceNoteData, ProofLevel, Race, TrainingPlan, Workout } from '../../domain/types'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
+import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
 import { DisciplineTag, ZoneTag, type ZoneNumber } from '../../components/ui/Badge/Badge'
 import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
@@ -92,15 +93,20 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
   )
 
   /**
-   * Colonne latérale de S4 (l. 1616-1655). `showWeekBars` et `showSets` sont faux en mobile :
-   * l'artboard 02 n'a ni histogramme ni tableau, et on ne les lui ajoute pas. Sans profil, il n'y
-   * a pas de « prochaine référence » à dériver — `buildWeekContext` le dit lui-même.
+   * Colonne latérale de S4 (l. 1616-1655). Elle n'existe pas en mobile : l'artboard 02 n'a pas
+   * d'histogramme, et on ne le lui ajoute pas.
+   *
+   * Le profil n'est PAS une condition. Il ne nourrit que la ligne « prochaine référence », qui
+   * sait déjà se taire sans lui. L'exiger faisait disparaître toute la colonne — et donc la
+   * disposition à deux colonnes — dès qu'un plan était généré sans profil enregistré : l'écran
+   * retombait sur son flux mobile, une colonne de 540 px perdue au milieu d'un écran de 1 850.
+   *
    * Midi UTC : le jour injecté par les tests et l'aperçu doit rester celui-là, quel que soit le
    * fuseau du navigateur.
    */
   const weekContext = useMemo(
     () =>
-      breakpoint === 'mobile' || !athlete
+      breakpoint === 'mobile'
         ? null
         : buildWeekContext(plan, resolved, athlete, new Date(`${reference}T12:00:00Z`)),
     [breakpoint, plan, resolved, athlete, reference],
@@ -175,6 +181,10 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
         rootActions={remaining}
         desktopActions={remaining}
       />
+
+      {/* Deuxième entrée permanente du plan de navigation du canevas : le segment des quatre
+          niveaux de zoom, sous le bandeau, sur tous les écrans de la section Plan. */}
+      <PlanSegment current="jour" />
 
       <div className={split ? `${styles.column} ${styles.columnSplit}` : styles.column}>
       <ScreenHeader view={view} oneLine={split} />
@@ -525,9 +535,11 @@ function SessionBlock({
         </>
       )}
 
-      {/* `showSets` du canevas S4 : le déroulé chiffré n'apparaît qu'à partir de la tablette —
-          l'artboard 02 ne le montre pas, la largeur mobile n'a pas la place de le lire. */}
-      {wide && <BlockTable workout={workout} />}
+      {/* Nouvel artboard 02 : trois cellules chiffrées sous le titre, puis le déroulé en tableau.
+          L'ancien artboard réservait le tableau à la tablette — le canevas les montre désormais
+          dès 390 px, et c'est ce qui manquait à l'écran mobile comme à la colonne desktop. */}
+      {!framed && <SessionStats workout={workout} />}
+      {(!framed || wide) && <BlockTable workout={workout} />}
 
       <div className={styles.doneRow}>
         <label className={styles.checkboxLabel}>
@@ -539,6 +551,12 @@ function SessionBlock({
           />
           Marquer comme faite
         </label>
+        {/* 02 : « Séance entière → », le seul chemin depuis Aujourd'hui vers la fiche complète. */}
+        {!framed && (
+          <Link className={styles.wholeSession} to={`/workouts/${workout.id}`} state={{ from: 'Plan' }}>
+            Séance entière <span aria-hidden="true">→</span>
+          </Link>
+        )}
         {(framed || wide) && (
           <button type="button" className={styles.chipButton} disabled title="Bientôt disponible">
             .FIT
@@ -584,21 +602,70 @@ function BlockTable({ workout }: { workout: Workout }) {
       <table>
         <thead>
           <tr>
-            <th scope="col">Bloc</th>
-            <th scope="col">Cible</th>
+            {/* Le canevas compte les blocs dans l'en-tête : « Déroulé · 3 blocs ». */}
+            <th scope="col">Déroulé · {rows.length} bloc{rows.length > 1 ? 's' : ''}</th>
+            <th scope="col">Allure</th>
             <th scope="col">Repos</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key}>
-              <td>{row.block}</td>
+            <tr key={row.key} className={row.emphasis ? styles.setsRowMain : undefined}>
+              <td>
+                <span className={styles.setsBlock}>{row.block}</span>
+                <span className={styles.setsDetail}>{row.detail}</span>
+              </td>
               <td>{row.target}</td>
               <td>{row.rest}</td>
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
+  )
+}
+
+/**
+ * Les trois cellules chiffrées du nouvel artboard 02 (Distance · Durée · Allure cible), en grille
+ * de trois colonnes encadrée de 2 px.
+ *
+ * Une cellule sans donnée écrit le tiret des données absentes : une séance de course sans distance
+ * enregistrée ne s'en voit pas inventer une.
+ */
+function SessionStats({ workout }: { workout: Workout }) {
+  const target = mainTargetOf(workout)
+  // Le vélo se pilote en pourcentage de FTP, pas en allure : le canevas écrit « allure cible »
+  // sur une séance de natation, l'intitulé suit donc la discipline plutôt que de mentir.
+  const targetLabel = workout.discipline === 'V' ? 'Intensité cible' : 'Allure cible'
+
+  return (
+    <div className={styles.statGrid}>
+      {/* Une séance sans distance enregistrée — une endurance vélo au temps — n'écrit pas la
+          cellule vide : elle cède la place au troisième chiffre que la séance porte vraiment. */}
+      {workout.distanceM ? (
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Distance</div>
+          <div className={styles.statValue}>
+            {formatWorkoutDistance(workout.discipline, workout.distanceM)}
+          </div>
+        </div>
+      ) : (
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Zone</div>
+          <div className={styles.statValue}>{workout.zone ?? '—'}</div>
+        </div>
+      )}
+      <div className={styles.stat}>
+        <div className={styles.statLabel}>Durée</div>
+        <div className={styles.statValue}>{formatDurationMin(workout.durationMin)}</div>
+      </div>
+      <div className={styles.stat}>
+        <div className={styles.statLabel}>
+          {targetLabel}
+          {workout.why && <sup className={styles.statNoteRef}>1</sup>}
+        </div>
+        <div className={styles.statValue}>{target ?? '—'}</div>
+      </div>
     </div>
   )
 }

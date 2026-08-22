@@ -158,7 +158,8 @@ function buildRest(week: PlanWeek, catalogue: Workout[], todayIso: string): Week
 }
 
 /** Prochain retest de la référence la plus ancienne du profil, dérivé de `measuredAt` + la cadence de retest. */
-function findNextReference(profile: AthleteProfile, today: Date): WeekContextEntry | null {
+function findNextReference(profile: AthleteProfile | undefined, today: Date): WeekContextEntry | null {
+  if (!profile) return null
   const references = [
     { name: 'test CSS', measuredAt: profile.css?.measuredAt },
     { name: 'test FTP', measuredAt: profile.ftp?.measuredAt },
@@ -193,10 +194,18 @@ function findNextReference(profile: AthleteProfile, today: Date): WeekContextEnt
  * LIMITATION : `Workout` n'a pas de date propre, la séance ouverte ne peut donc pas être pointée
  * dans l'histogramme. Le panneau présente la semaine, pas la position exacte de la séance.
  */
+/**
+ * Contexte de la semaine pour la colonne latérale de S4.
+ *
+ * `profile` est facultatif : seule la ligne « prochaine référence » en dépend, et elle sait déjà
+ * se taire quand aucune date de test n'est enregistrée. Un plan généré sans profil enregistré
+ * doit garder son histogramme et son « reste cette semaine » — les exiger tous les trois faisait
+ * disparaître la colonne entière, et avec elle la disposition à deux colonnes.
+ */
 export function buildWeekContext(
   plan: TrainingPlan,
   catalogue: Workout[],
-  profile: AthleteProfile,
+  profile: AthleteProfile | undefined,
   today: Date,
 ): WeekContext | null {
   const todayIso = isoDay(today)
