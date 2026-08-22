@@ -63,8 +63,21 @@
   flex: none;
 }
 
-/* Pas d'opacité : elle déteindrait l'aplat lime. L'indisponibilité passe par le curseur, l'attribut
- * `disabled` que lisent les technologies d'assistance, et le `title` qui dit pourquoi. */
+/* Pas d'opacité : elle déteindrait l'aplat lime. L'indisponibilité se voit à l'OMBRE qui tombe —
+ * c'est le seul relief du produit, et son absence se lit sans rien salir — plus le curseur,
+ * l'attribut `disabled` que lisent les technologies d'assistance, et le motif écrit à l'écran.
+ * Sans ça, une action `ink-shadow` désactivée était strictement indiscernable d'une action prête :
+ * on cliquait, il ne se passait rien. */
 .action:disabled {
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Les deux tons d'encre perdent aussi leur texte lime : sur un aplat noir, le lime EST le signal
+ * « ceci part maintenant ». Le gris d'encre du canevas le remplace — 5,8:1 sur l'encre, au-dessus
+ * du seuil AA. L'aplat lime, lui, garde sa couleur — c'est le seul du produit — et ne perd que
+ * son ombre. */
+.ink:disabled,
+.ink-shadow:disabled {
+  color: var(--color-on-ink-muted);
 }

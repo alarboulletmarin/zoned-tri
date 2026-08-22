@@ -92,3 +92,33 @@ describe('motifs des commandes inertes', () => {
     ).toBe(0)
   })
 })
+
+/**
+ * 3. **Une commande indisponible doit SE VOIR.**
+ *
+ * Le composant s'interdisait l'opacité — à raison, elle déteindrait l'aplat lime — et n'avait donc
+ * plus aucun signal visuel : une action `ink-shadow` désactivée était strictement identique à une
+ * action prête, même aplat d'encre, même texte lime, même ombre orange. On cliquait, il ne se
+ * passait rien. L'ombre qui tombe est le signal : c'est le seul relief du produit, et son absence
+ * se lit sans rien salir.
+ *
+ * Le test porte sur la feuille de style parce que jsdom n'applique pas les modules CSS : aucune
+ * assertion de DOM ne pourrait voir cette règle.
+ */
+describe('Une action indisponible se voit', () => {
+  const CSS = readFileSync('src/components/ui/PrimaryAction/PrimaryAction.module.css', 'utf8')
+
+  it('fait tomber l’ombre de toute action désactivée', () => {
+    const rule = /\.action:disabled\s*\{[^}]*\}/.exec(CSS)?.[0] ?? ''
+    expect(rule).toMatch(/box-shadow:\s*none/)
+  })
+
+  it('éteint le texte lime des deux tons d’encre, seul signal « ceci part maintenant »', () => {
+    expect(CSS).toMatch(/\.ink:disabled,\s*\n\s*\.ink-shadow:disabled\s*\{[^}]*color:/)
+  })
+
+  it('ne recourt jamais à l’opacité, qui déteindrait l’aplat lime', () => {
+    const disabledRules = CSS.match(/:disabled[^{]*\{[^}]*\}/g) ?? []
+    expect(disabledRules.some((rule) => /opacity/.test(rule))).toBe(false)
+  })
+})
