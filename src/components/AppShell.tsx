@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useBreakpoint } from '../hooks/useBreakpoint'
 import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
-import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
+import { OPENING_PATH, ROOT_SECTIONS, sectionForPath } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
 import { BurgerIcon, SearchIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
@@ -40,6 +40,7 @@ function AppShellLayout() {
   // — « aucun rail, rien n'est encore ouvert » (S9) — et sa colonne sombre porte elle-même le
   // mot-symbole. La coquille s'y efface entièrement. Voir `OPENING_PATH` dans src/navigation.ts.
   const showRail = breakpoint === 'desktop' && location.pathname !== OPENING_PATH
+  const activeSection = sectionForPath(location.pathname)
   const openMenu = useCallback(() => setMenuOpen(true), [])
   const openSearch = useCallback(() => setSearching(true), [])
 
@@ -74,14 +75,22 @@ function AppShellLayout() {
           <div className={styles.railSectionLabel}>Sections</div>
           <div className={styles.railNav}>
             {ROOT_SECTIONS.map((section, index) => (
-              <NavLink
+              /* `NavLink` n'allume que par préfixe d'URL : le rail s'éteignait donc entièrement
+                 sur `/generate-plan`, `/plans`, `/import-export` et `/exports`, alors que trois
+                 de ces quatre écrans appartiennent bien à une section. `sectionForPath` connaît
+                 déjà ces rattachements — c'est lui qui décide, pas le préfixe. */
+              /* `Link` et non `NavLink` : c'est `sectionForPath` qui décide de l'état actif, et
+                 `NavLink` poserait son propre `aria-current` d'après son seul préfixe d'URL —
+                 c'est-à-dire jamais sur `/generate-plan`. */
+              <Link
                 key={section.to}
                 to={section.to}
-                className={({ isActive }) => `${styles.railLink} ${isActive ? styles.railLinkActive : ''}`}
+                aria-current={activeSection?.to === section.to ? 'page' : undefined}
+                className={`${styles.railLink} ${activeSection?.to === section.to ? styles.railLinkActive : ''}`}
               >
                 <span className={styles.railIndex}>{String(index + 1).padStart(2, '0')}</span>
                 <span className={styles.railLabel}>{section.label}</span>
-              </NavLink>
+              </Link>
             ))}
           </div>
           {railBlock && (

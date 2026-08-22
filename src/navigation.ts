@@ -72,10 +72,8 @@ const TRAIL_DESTINATIONS: Record<string, string> = {
   Semaine: '/plan/semaine',
   Mois: '/plan/mois',
   Saison: PLAN_MACRO_PATH,
-  'Vue macro': PLAN_MACRO_PATH,
   'Mes plans': PLANS_PATH,
   Séances: '/workouts',
-  Bibliothèque: '/workouts',
   Courses: '/races',
   Outils: '/tools',
   Calculateurs: '/tools/calculateurs',
@@ -85,7 +83,6 @@ const TRAIL_DESTINATIONS: Record<string, string> = {
      « Réglages du plan » — le libellé qui mène à `/plan/reglages`. Deux écrans différents ne
      peuvent pas partager un segment : un fil d'Ariane qui ment est pire que pas de fil du tout. */
   'Réglages du plan': '/plan/reglages',
-  Menu: OPENING_PATH,
 }
 
 /** Un segment de fil : un intitulé seul (destination déduite) ou un couple explicite. */

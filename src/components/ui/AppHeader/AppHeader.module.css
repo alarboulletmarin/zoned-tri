@@ -2,7 +2,7 @@
  * Bandeau unique d'écran. Trois formes :
  *
  * - `.chrome`     → mobile et tablette. Une barre de marque de 46 px (mot-symbole, section ou
- *   retour, recherche, burger) et, dès que la page a un parent, une barre de fil de 30 px. Le
+ *   retour, recherche, burger) et, dès que la page a un parent, une barre de fil de 34 px. Le
  *   canevas n'ouvrait ses artboards que par la première ; la seconde est l'écart assumé qui donne
  *   au produit un fil d'Ariane et un nom de page sur tous les écrans, à toutes les largeurs.
  * - `.desktopBar` → artboards S4, S5, S6 : `padding:0 20px; min-height:52px`. Le rail portant le
@@ -90,12 +90,20 @@
 
 /* --- Barre de fil (mobile / tablette) --------------------------------------------------------- */
 
-/* 30 px : la hauteur qu'il faut au mono de 11 px pour respirer, et pas un pixel de plus — c'est
-   autant de pris sur l'affiche. Le filet est un cheveu, pas une structure : les deux barres sont
-   un seul bloc de chrome, c'est `.chrome` qui porte le trait d'encre en bas. */
+/* 34 px : la hauteur qu'il faut au mono de 11 px pour respirer et donner aux segments une cible
+   qui se touche, et pas un pixel de plus — c'est autant de pris sur l'affiche. Le filet est un
+   cheveu, pas une structure : les deux barres sont un seul bloc de chrome, c'est `.chrome` qui
+   porte le trait d'encre en bas.
+
+   Écart assumé au plancher de 44 px du README §3 : un segment parent est un lien de texte en
+   ligne, pas une commande principale — le retour au parent, lui, passe par le carré de 38 px du
+   bandeau au-dessus, qui porte bien sa cible de 44 px. Monter cette barre à 44 px coûterait
+   10 px de chrome sur CHAQUE écran de détail, et le pseudo-élément d'extension habituel
+   mordrait soit sur le carré de retour, soit sur le segment JOUR·SEMAINE·MOIS·SAISON en
+   dessous. On élargit donc la cible horizontalement plutôt que verticalement. */
 .trailBar {
   box-sizing: border-box;
-  min-height: 30px;
+  min-height: 34px;
   padding: 0 16px;
   display: flex;
   align-items: center;
@@ -172,8 +180,8 @@
   color: inherit;
   text-decoration: none;
   display: inline-block;
-  padding: 9px 2px;
-  margin: -9px 0;
+  padding: 11px 8px;
+  margin: -11px -6px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

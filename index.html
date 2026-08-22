@@ -4,19 +4,44 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zoned TRI Brut</title>
-    <!-- Offline-first : les liens ci-dessous se chargent en best-effort. Sans réseau, la pile de secours
-         (sans-serif / monospace) prend le relais via font-family, aucun rendu bloqué. -->
+    <title>Zoned Tri — plan de triathlon hors ligne</title>
+    <meta
+      name="description"
+      content="Six questions, puis un plan de triathlon jusqu'à ta course : chaque séance dit ce qu'elle vise, sur quelle mesure elle s'appuie, et ce qu'elle coûte à la suivante. Hors ligne, sans compte, données locales."
+    />
+    <meta name="theme-color" content="#0b0b0a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Zoned Tri — un plan qui dit pourquoi" />
+    <meta
+      property="og:description"
+      content="Plan de triathlon hors ligne, sans compte : 32 séances documentées, 12 calculateurs et leurs sources, exports .FIT · .ZWO · .ICS · .PDF."
+    />
+    <!--
+      Offline-first : les deux feuilles ci-dessous se chargent en best-effort et NE BLOQUENT PAS le
+      rendu. Elles le bloquaient : sur un réseau lent — ou derrière un mandataire qui les retient —
+      l'application restait une page blanche aussi longtemps qu'elles, ce qui est exactement le
+      contraire de ce qu'un produit hors ligne doit faire. `media="print"` les sort du chemin
+      critique, `onload` les y remet une fois arrivées, et la pile de secours (sans-serif /
+      monospace) peint entre-temps.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+      <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>
