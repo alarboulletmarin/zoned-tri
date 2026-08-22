@@ -23,3 +23,8 @@ export function raceEditPath(raceId: string): string {
 export function raceTimelineEditPath(raceId: string): string {
   return `${RACES_PATH}/${raceId}/jour-j/modifier`
 }
+
+/** La checklist du parc. Même impasse : `Race.transitionChecklist` sans écran d'écriture. */
+export function raceChecklistEditPath(raceId: string): string {
+  return `${RACES_PATH}/${raceId}/checklist/modifier`
+}

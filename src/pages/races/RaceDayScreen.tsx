@@ -5,7 +5,7 @@ import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar } from '../../components/ui/ProgressBar/ProgressBar'
 import type { Race } from '../../domain/types'
 import { disciplineShares, timelineGroups } from '../../domain/raceView'
-import { racePath, raceTimelineEditPath } from './routes'
+import { raceChecklistEditPath, racePath, raceTimelineEditPath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceDayScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -107,14 +107,20 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
             Consultable hors ligne. Aucune notification : l’app ne te réveillera pas, ton réveil le fera.
           </div>
           <div className={s.actionRow}>
+            {/* Éteinte faute de checklist, alors que rien ne permettait d'en écrire une : elle
+                l'aurait été pour toujours. Sans liste, elle mène à l'écriture. */}
             <PrimaryAction
               tone="ink"
               className={s.primary}
-              onClick={() => navigate(racePath(race.id, 'checklist'))}
-              disabled={!race.transitionChecklist?.length}
-              aria-describedby={race.transitionChecklist?.length ? undefined : 'inert-checklist'}
+              onClick={() =>
+                navigate(
+                  race.transitionChecklist?.length
+                    ? racePath(race.id, 'checklist')
+                    : raceChecklistEditPath(race.id),
+                )
+              }
             >
-              Checklist parc
+              {race.transitionChecklist?.length ? 'Checklist parc' : 'Écrire la checklist'}
             </PrimaryAction>
             {/* Le moteur d'agenda existe depuis l'artboard 24 : il ne manquait qu'un lecteur de
                 timeline. Inerte seulement quand la course n'en porte aucune — il n'y a alors rien
@@ -129,12 +135,6 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
               .ICS
             </button>
           </div>
-          {!race.transitionChecklist?.length && (
-            <InertNote id="inert-checklist">
-              Aucune checklist de parc enregistrée pour cette course : les affaires de T1, du vélo et
-              de T2 se saisissent course par course, et cet écran n’existe pas encore.
-            </InertNote>
-          )}
           {!ics && (
             <InertNote id="inert-ics-course">
               Aucune heure de départ ni timeline enregistrée pour cette course : il n’y a rien à mettre

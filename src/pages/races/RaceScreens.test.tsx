@@ -144,13 +144,18 @@ describe('RaceDayScreen · artboard 11', () => {
     expect(screen.getByText('départ 07:20')).toBeInTheDocument()
   })
 
-  it('promet la checklist du parc, et le dit quand elle n’existe pas', () => {
+  it('mène à l’écriture de la checklist quand il n’y en a pas, au lieu de s’éteindre', () => {
+    // La commande était éteinte faute de liste, alors que RIEN dans le produit n'en écrivait une :
+    // elle l'aurait donc été pour toujours sur un appareil réel.
     renderScreen(<RaceDayScreen race={{ ...demoRace, transitionChecklist: [] }} />)
-    const cta = screen.getByRole('button', { name: 'Checklist parc' })
-    expect(cta).toBeDisabled()
-    // Le motif est écrit à l'écran, pas dans un `title` qu'un doigt ne survole jamais.
+    const cta = screen.getByRole('button', { name: 'Écrire la checklist' })
+    expect(cta).toBeEnabled()
     expect(cta).not.toHaveAttribute('title')
-    expect(cta).toHaveAccessibleDescription(/Aucune checklist de parc/)
+  })
+
+  it('mène à la checklist elle-même dès qu’elle existe', () => {
+    renderScreen(<RaceDayScreen race={demoRace} />)
+    expect(screen.getByRole('button', { name: 'Checklist parc' })).toBeEnabled()
   })
 
   it('n’envoie aucune notification, et le dit', () => {

@@ -19,7 +19,7 @@ import {
 import type { Race } from '../../domain/types'
 import { splitName } from './splitName'
 import { GENERATOR_PATH } from '../../navigation'
-import { racePath } from './routes'
+import { raceChecklistEditPath, racePath } from './routes'
 import { EXPORTS_PRINT_PATH } from '../exports/exportsRoutes'
 import s from './RaceScreens.module.css'
 import own from './RacesDesktopScreen.module.css'
@@ -237,23 +237,21 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
               <section className={own.detailBlockRuled}>
                 <div className={s.sectionLabel}>Préparation logistique</div>
                 <div className={own.chips}>
+                  {/* Éteinte faute de checklist, alors que rien ne permettait d'en écrire une :
+                      elle l'aurait été pour toujours. Sans liste, elle mène à l'écriture. */}
                   <SecondaryAction
                     shape="chip"
                     className={own.chip}
-                    onClick={() => navigate(racePath(goal.id, 'checklist'))}
-                    disabled={!goal.transitionChecklist?.length}
-                    aria-describedby={
-                      goal.transitionChecklist?.length ? undefined : 'inert-checklist-parc'
+                    onClick={() =>
+                      navigate(
+                        goal.transitionChecklist?.length
+                          ? racePath(goal.id, 'checklist')
+                          : raceChecklistEditPath(goal.id),
+                      )
                     }
                   >
-                    Checklist parc à vélo
+                    {goal.transitionChecklist?.length ? 'Checklist parc à vélo' : 'Écrire la checklist'}
                   </SecondaryAction>
-                  {!goal.transitionChecklist?.length && (
-                    <InertNote id="inert-checklist-parc">
-                      Aucune checklist de parc enregistrée pour cette course : les affaires de T1, du
-                      vélo et de T2 se saisissent course par course.
-                    </InertNote>
-                  )}
                   {/* L'atlas des zones n'était pas « à venir » : c'est la première page du
                       document A4, qui se rend depuis toujours dans `PrintDocument`. */}
                   <SecondaryAction

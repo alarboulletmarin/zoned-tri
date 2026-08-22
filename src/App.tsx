@@ -24,6 +24,7 @@ import {
 } from './pages/races/RacesRoute'
 import { RaceFormScreen } from './pages/races/RaceFormScreen'
 import { RaceTimelineScreen } from './pages/races/RaceTimelineScreen'
+import { RaceChecklistEditScreen } from './pages/races/RaceChecklistEditScreen'
 import { RacesPreview } from './pages/races/RacesPreview'
 import { ToolsScreen } from './pages/tools/ToolsScreen'
 import { ReferencesScreen } from './pages/tools/ReferencesScreen'
@@ -83,6 +84,7 @@ function App() {
             <Route path="/races/:id/jour-j" element={<RaceDayRoute />} />
             <Route path="/races/:id/jour-j/modifier" element={<RaceTimelineScreen />} />
             <Route path="/races/:id/checklist" element={<RaceChecklistRoute />} />
+            <Route path="/races/:id/checklist/modifier" element={<RaceChecklistEditScreen />} />
             {/* Outils — artboards 12 (profil et références), 13 (les douze calculateurs) et S8. */}
             <Route path="/tools" element={<ToolsScreen />} />
             {/* L'écriture des références : le canevas dessine le bouton, pas l'écran derrière. */}

@@ -5,11 +5,13 @@ import { ProgressBar } from '../../components/ui/ProgressBar/ProgressBar'
 import { useRaces } from '../../context/AppDataContext'
 import type { ChecklistItem, Race } from '../../domain/types'
 import { checklistGroups, checklistProgress } from '../../domain/raceView'
-import { racePath } from './routes'
+import { raceChecklistEditPath, racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceChecklistScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { RaceSegment } from '../../components/navigation/RaceSegment/RaceSegment'
+import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
+import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 
 export interface RaceChecklistScreenProps {
   race: Race
@@ -73,8 +75,17 @@ export function RaceChecklistScreen({ race, onToggle }: RaceChecklistScreenProps
           <div className={s.emptyBlock}>
             <EmptyState
               headline="Rien à cocher"
-              sentence="Aucune checklist n’est enregistrée pour cette course : la liste du parc se remplit avec ton propre matériel, elle ne s’invente pas."
+              sentence="Aucune checklist n’est enregistrée pour cette course : la liste du parc se remplit avec ton propre matériel. Une liste type sert de point de départ, à tailler à ton matériel."
             />
+            {/* Le vide se nommait sans se remplir : `transitionChecklist` n'avait aucun écran
+                d'écriture, donc cet écran restait vide pour toujours. */}
+            <PrimaryAction
+              tone="ink"
+              className={own.emptyAction}
+              onClick={() => navigate(raceChecklistEditPath(race.id))}
+            >
+              Écrire la checklist
+            </PrimaryAction>
           </div>
         ) : (
           groups.map((group, index) => (
@@ -98,17 +109,25 @@ export function RaceChecklistScreen({ race, onToggle }: RaceChecklistScreenProps
         )}
 
         <div className={`${s.footer} ${own.footer}`}>
+          {/* La phrase promettait une remise à zéro après la course que rien n'implémente : une
+              promesse de copie est un mensonge comme un autre (règle nº 4). Décocher se fait à la
+              main, d'un second appui, et l'écran le dit. */}
           <div className={`${s.footerNote} ${s.footerNoteTight}`}>
-            Les cases restent cochées hors ligne et se remettent à zéro après la course. Aucun rappel.
+            Les cases restent cochées hors ligne. Aucun rappel, et aucune remise à zéro
+            automatique : un second appui décoche.
           </div>
           {/* Les deux puces d'export étaient grises sous un `title` invisible au doigt, et rien
               dans le produit n'écrit une checklist : les seuls documents sont le plan, l'atlas des
               zones et la carte de séance. Elles partent, et la phrase dit ce qui reste vrai. */}
-          <div className={s.exportRow}>
-            <span className={s.exportLabel}>
-              La checklist reste lisible hors ligne : c’est pour ça qu’elle tient sur un écran.
-            </span>
-          </div>
+          {groups.length > 0 && (
+            <SecondaryAction
+              shape="block"
+              className={own.editAction}
+              onClick={() => navigate(raceChecklistEditPath(race.id))}
+            >
+              Modifier la liste
+            </SecondaryAction>
+          )}
         </div>
       </div>
     </div>

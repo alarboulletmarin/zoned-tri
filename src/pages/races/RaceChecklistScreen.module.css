@@ -80,3 +80,11 @@
   padding: var(--space-6) var(--space-8);
   font-size: var(--fs-label-section);
 }
+
+/* La sortie du vide, et la correction d'une liste existante. */
+.emptyAction,
+.editAction {
+  margin-top: var(--space-14);
+  width: 100%;
+  max-width: 340px;
+}
