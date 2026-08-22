@@ -19,7 +19,7 @@ import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAc
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { CalculatorCard } from './CalculatorCard'
 import { CALCULATORS, CALCULATOR_COUNT } from './calculators/registry'
-import { CALCULATORS_PATH } from './toolsRoutes'
+import { CALCULATORS_PATH, IMPORT_EXPORT_PATH } from './toolsRoutes'
 import styles from './ToolsScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 
@@ -164,6 +164,16 @@ function MobileColumn({ view }: { view: ToolsReferencesView }) {
         <PrimaryAction tone="ink" className={styles.ctaButton} onClick={() => navigate(CALCULATORS_PATH)}>
           Ouvrir les calculateurs
         </PrimaryAction>
+        {/* L'écran 14 porte le fil « Outils / Import-export » et son carré de retour mène ici —
+            mais rien ici n'y menait. Un fil qui ne se descend pas est aussi faux qu'un fil qui ne
+            se remonte pas. */}
+        <SecondaryAction
+          shape="block"
+          className={styles.ctaSecondary}
+          onClick={() => navigate(IMPORT_EXPORT_PATH)}
+        >
+          Import / export
+        </SecondaryAction>
       </div>
     </div>
   )
@@ -200,6 +210,8 @@ function DesktopLayout({
   nextTest: ReturnType<typeof findNextReferenceTest>
   tablet: boolean
 }) {
+  const navigate = useNavigate()
+
   return (
     <div className={`${styles.layout} ${tablet ? styles.layoutTablet : styles.layoutDesktop}`}>
       <div className={styles.grid}>
@@ -294,6 +306,13 @@ function DesktopLayout({
         </div>
 
         <div className={styles.sideActions}>
+          <SecondaryAction
+            shape="block"
+            className={styles.sideExit}
+            onClick={() => navigate(IMPORT_EXPORT_PATH)}
+          >
+            Import / export
+          </SecondaryAction>
           <PrimaryAction
             tone="ink"
             className={styles.sidePrimary}

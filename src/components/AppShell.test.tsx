@@ -46,6 +46,50 @@ function renderShell({ withData = false }: { withData?: boolean } = {}) {
   return render(withData ? <AppDataProvider>{tree}</AppDataProvider> : tree)
 }
 
+/**
+ * Le test qui empêche le rail de redevenir un sous-ensemble du burger. Les deux navigations lisent
+ * la même liste (`MENU_ACTIONS`) : ce test le prouve du dehors, en comparant les destinations
+ * réellement rendues aux deux largeurs. Trois destinations — générer un plan, mes plans,
+ * import/export — n'existaient qu'en dessous de 1024 px.
+ */
+describe('AppShell · parité des deux navigations', () => {
+  const ATTENDUES = [
+    '/plan',
+    '/workouts',
+    '/races',
+    '/tools',
+    '/generate-plan',
+    '/plans',
+    '/import-export',
+    '/settings',
+  ]
+
+  it('sert les mêmes destinations au rail desktop et au panneau burger', async () => {
+    const user = userEvent.setup()
+
+    mockMatchMediaWidth(1200)
+    const desktop = renderShell()
+    const rail = screen.getByRole('navigation', { name: 'Navigation principale' })
+    const duRail = within(rail)
+      .getAllByRole('link')
+      .map((link) => link.getAttribute('href'))
+      .filter((href): href is string => href !== null && href !== '/')
+    desktop.unmount()
+
+    mockMatchMediaWidth(500)
+    renderShell({ withData: true })
+    await user.click(screen.getByRole('button', { name: 'Menu' }))
+    const panneau = screen.getByRole('dialog', { name: 'Menu' })
+    const duBurger = within(panneau)
+      .getAllByRole('link')
+      .map((link) => link.getAttribute('href'))
+      .filter((href): href is string => href !== null && href !== '/')
+
+    expect([...new Set(duRail)].sort()).toEqual([...ATTENDUES].sort())
+    expect([...new Set(duBurger)].sort()).toEqual([...ATTENDUES].sort())
+  })
+})
+
 describe('AppShell', () => {
   it('renders no navigation rail on mobile, burger stays the only navigation', () => {
     mockMatchMediaWidth(500)

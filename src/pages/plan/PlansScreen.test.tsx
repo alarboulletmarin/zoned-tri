@@ -40,6 +40,7 @@ function renderScreen(plans: TrainingPlan[], overrides: Partial<Parameters<typeo
     onResume: () => undefined,
     onGenerate: () => undefined,
     onReopen: () => undefined,
+    onBack: () => undefined,
     ...overrides,
   }
   return render(

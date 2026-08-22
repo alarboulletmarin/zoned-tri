@@ -9,10 +9,11 @@ import type { PlanSettingKey, PlanSettingScope, TrainingPlan } from '../../domai
 import { UndoToast } from '../../components/ui/UndoToast/UndoToast'
 import { PlanSettingsScreen } from './PlanSettingsScreen'
 import { PlanSettingChangeScreen } from './PlanSettingChangeScreen'
+// Ré-exportés pour ne casser aucun import existant : la source est le module d'adresses.
+export { PLAN_JOURNAL_PATH, PLAN_SETTINGS_PATH } from './planSettingsRoutes'
+import { PLAN_JOURNAL_PATH, PLAN_SETTINGS_PATH } from './planSettingsRoutes'
 import { PlanJournalScreen } from './PlanJournalScreen'
 
-export const PLAN_SETTINGS_PATH = '/plan/reglages'
-export const PLAN_JOURNAL_PATH = '/plan/journal'
 
 /** Les quatre réglages que l'écran 38 sait rejouer. Format et date repassent par le générateur. */
 const REOPENABLE: PlanSettingKey[] = ['volume', 'days', 'gear', 'reduced_weeks']

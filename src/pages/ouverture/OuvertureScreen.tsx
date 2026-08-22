@@ -426,7 +426,22 @@ function ReferencesBlock({ state }: { state: OpeningState }) {
  */
 function ArchivedBlock({ state, layout }: { state: OpeningState; layout: Layout }) {
   const navigate = useNavigate()
-  if (state.archivedPlans.length === 0) return null
+
+  // Le bloc disparaissait quand l'archive était vide — c'est-à-dire dans le cas le PLUS fréquent,
+  // celui d'un premier plan. Deux règles y passaient : un vide se nomme (nº 1), et « Mes plans »
+  // n'avait alors plus aucun chemin, puisque c'était son unique porte.
+  if (state.archivedPlans.length === 0) {
+    return (
+      <div className={`${styles.panelBlock} ${styles.secondBlock}`}>
+        <div className={styles.blockLabel}>Archivés</div>
+        <EmptyState
+          className={styles.archivedEmpty}
+          sentence="aucun plan archivé · le premier y arrivera quand tu en généreras un second"
+          action={<SecondaryAction onClick={() => navigate(PLANS_PATH)}>Voir mes plans</SecondaryAction>}
+        />
+      </div>
+    )
+  }
 
   // Mobile : la liste complète ne tient pas sous la carte du plan en cours, elle se réduit à un
   // compte et un accès (mockup 01) ; desktop : une ligne par plan avec son bouton (mockup S9).

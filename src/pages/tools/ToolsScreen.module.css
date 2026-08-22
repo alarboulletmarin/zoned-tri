@@ -435,3 +435,13 @@
     flex: 1 1 auto;
   }
 }
+
+/* Sortie vers l'import-export : sous l'appel principal en mobile, en tête des actions latérales
+   en desktop. C'est le seul autre écran de la section Outils. */
+.ctaSecondary {
+  margin-top: var(--space-10);
+}
+
+.sideExit {
+  margin-bottom: var(--space-10);
+}

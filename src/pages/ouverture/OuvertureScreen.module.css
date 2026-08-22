@@ -594,3 +594,8 @@
     padding: var(--space-11);
   }
 }
+
+/* Archive vide : le cadre pointillé du système, à la gouttière du bloc qui le porte. */
+.archivedEmpty {
+  margin-top: var(--space-10);
+}

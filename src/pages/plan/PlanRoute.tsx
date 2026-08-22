@@ -8,6 +8,7 @@ import { demoPlan, demoRace, demoWorkouts } from '../../domain/demoData'
 import { OPENING_PATH, PLAN_PATH } from '../../navigation'
 import type { PlanWeek, TrainingPlan } from '../../domain/types'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
+import { PLAN_SETTINGS_PATH } from '../planSettings/planSettingsRoutes'
 import { PlanMacroScreen } from './PlanMacroScreen'
 import { PlanMonthScreen } from './PlanMonthScreen'
 import { SemaineScreen } from './SemaineScreen'
@@ -117,6 +118,7 @@ export function PlanMacroRoute() {
       plan={activePlan}
       {...(race ? { race } : {})}
       onBack={() => navigate(PLAN_PATH)}
+      onOpenSettings={() => navigate(PLAN_SETTINGS_PATH)}
     />
   )
 }

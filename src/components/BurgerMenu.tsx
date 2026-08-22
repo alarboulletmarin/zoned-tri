@@ -4,7 +4,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap'
 import { usePlans, useRaces } from '../context/AppDataContext'
 import { buildMenuCounts } from '../domain/menuCounts'
 import { todayIso } from '../domain/planWeek'
-import { OPENING_PATH, ROOT_SECTIONS, sectionForPath } from '../navigation'
+import { MENU_ACTIONS, OPENING_PATH, ROOT_SECTIONS, SETTINGS_ACTION, sectionForPath } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
 import styles from './BurgerMenu.module.css'
 import { APP_VERSION } from '../domain/types'
@@ -79,19 +79,20 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
         </ul>
       </nav>
 
+      {/* La même liste que le rail desktop, dans le même ordre — la génération en avant, comme
+          le canevas S1 la met en aplat lime. Réglages ferme la marche : le rail le met en pied. */}
       <div className={styles.actions}>
-        <Link to="/generate-plan" className={`${styles.action} ${styles.actionFeatured}`} onClick={onClose}>
-          Générer un plan
-          <span aria-hidden="true">→</span>
-        </Link>
-        <Link to="/import-export" className={styles.action} onClick={onClose}>
-          Import / export
-          <span aria-hidden="true">→</span>
-        </Link>
-        <Link to="/settings" className={styles.action} onClick={onClose}>
-          Réglages
-          <span aria-hidden="true">→</span>
-        </Link>
+        {[...MENU_ACTIONS, SETTINGS_ACTION].map((action, index) => (
+          <Link
+            key={action.to}
+            to={action.to}
+            className={`${styles.action} ${index === 0 ? styles.actionFeatured : ''}`}
+            onClick={onClose}
+          >
+            {action.label}
+            <span aria-hidden="true">→</span>
+          </Link>
+        ))}
       </div>
 
       <div className={styles.future}>

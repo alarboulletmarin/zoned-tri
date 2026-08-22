@@ -20,7 +20,13 @@ beforeEach(() => {
 function renderScreen(plan: TrainingPlan = demoPlan) {
   return render(
     <MemoryRouter>
-      <PlanMacroScreen plan={plan} race={demoRace} today={TODAY} onBack={() => undefined} />
+      <PlanMacroScreen
+        plan={plan}
+        race={demoRace}
+        today={TODAY}
+        onBack={() => undefined}
+        onOpenSettings={() => undefined}
+      />
     </MemoryRouter>,
   )
 }

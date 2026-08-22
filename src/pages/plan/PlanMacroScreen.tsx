@@ -4,6 +4,7 @@ import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { ProofPip } from '../../components/ui/ProofBadge/ProofBadge'
+import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import {
   LOAD_PROGRESSION_CAVEAT,
@@ -30,6 +31,8 @@ export interface PlanMacroScreenProps {
   /** Injecté par les tests et l'atelier d'aperçu ; par défaut le jour courant du navigateur. */
   today?: string
   onBack: () => void
+  /** Ouvre l'écran 37 : les réglages portent sur le plan entier, comme cet écran. */
+  onOpenSettings: () => void
 }
 
 /**
@@ -52,7 +55,7 @@ export interface PlanMacroScreenProps {
  * — les deux notes de bas d'écran ne sont pas des données du plan mais deux affirmations du
  *   moteur, vraies pour tous les plans qu'il produit (cf. `TAPER_EVIDENCE`).
  */
-export function PlanMacroScreen({ plan, race, today, onBack }: PlanMacroScreenProps) {
+export function PlanMacroScreen({ plan, race, today, onBack, onOpenSettings }: PlanMacroScreenProps) {
   const reference = today ?? todayIso()
   const view = useMemo(
     () => buildPlanMacroView({ plan, race: race ? { name: race.name, date: race.date } : undefined, today: reference }),
@@ -106,6 +109,15 @@ export function PlanMacroScreen({ plan, race, today, onBack }: PlanMacroScreenPr
 
         {/* 04 l. 542-548 : l'export, puis les deux notes — collés en bas par `margin-top:auto`. */}
         <footer className={styles.footer}>
+          {/* Écart assumé à l'artboard 04, qui ne dessine pas cette commande. Les trois écrans de
+              réglages du plan (37, 38, 39) n'étaient atteints par AUCUN clic : l'artboard 37 se
+              dit lui-même ouvert « depuis le plan » et n'avait pas de porte. La Saison est le seul
+              écran qui parle du plan dans son entier — c'est donc ici qu'on change ce qui le
+              gouverne. */}
+          <SecondaryAction shape="block" className={styles.settingsAction} onClick={onOpenSettings}>
+            Réglages du plan
+          </SecondaryAction>
+
           <div className={styles.exportRow}>
             <span className={styles.exportLabel}>Exporter les {view.weeksLabel}</span>
             <Link className={styles.chipButton} to={EXPORTS_PRINT_PATH}>

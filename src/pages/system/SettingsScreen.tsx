@@ -11,7 +11,7 @@ import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { ConfirmSheet } from '../../components/ui/ConfirmSheet/ConfirmSheet'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { IMPORT_EXPORT_PATH } from '../tools/toolsRoutes'
-import { LANGUAGE_PATH } from './systemRoutes'
+import { LANGUAGE_PATH, OFFLINE_PATH } from './systemRoutes'
 import styles from './SettingsScreen.module.css'
 
 /** Les trois segments d'« Apparence », dans l'ordre où l'artboard les pose. */
@@ -187,6 +187,14 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
               <span className={styles.rowName}>Sauvegarde complète</span>
               <span className={styles.rowValue}>.JSON</span>
             </button>
+            {/* L'artboard 17 répond à « et sans réseau ? ». C'est la seule question que pose cet
+                écran-ci — et il n'était référencé nulle part dans l'interface. */}
+            <Link className={styles.row} to={OFFLINE_PATH}>
+              <span className={styles.rowName}>Ce qui marche sans réseau</span>
+              <span className={styles.rowValue} aria-hidden="true">
+                →
+              </span>
+            </Link>
             <button
               type="button"
               className={`${styles.row} ${styles.rowDanger}`}

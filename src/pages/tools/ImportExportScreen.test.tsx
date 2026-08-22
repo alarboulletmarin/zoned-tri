@@ -4,11 +4,16 @@ import { MemoryRouter } from 'react-router-dom'
 import { demoPlan } from '../../domain/demoData'
 import { ImportExportScreen } from './ImportExportScreen'
 
+// L'écran porte désormais le parcours d'import, qui lit les quatre corpus pour comparer l'avant
+// et l'après : le mock du contexte doit les servir tous.
 vi.mock('../../context/AppDataContext', () => ({
   usePlans: () => ({ plans: [demoPlan], savePlan: vi.fn(), deletePlan: vi.fn(), loading: false }),
+  useWorkouts: () => ({ workouts: [], saveWorkout: vi.fn(), deleteWorkout: vi.fn(), loading: false }),
+  useRaces: () => ({ races: [], saveRace: vi.fn(), deleteRace: vi.fn(), loading: false }),
+  useJournal: () => ({ journal: [], addJournalEntry: vi.fn(), undoJournalEntry: vi.fn(), loading: false }),
 }))
 
-vi.mock('../../storage/backup', () => ({ exportBackup: vi.fn() }))
+vi.mock('../../storage/backup', () => ({ exportBackup: vi.fn(), importBackup: vi.fn() }))
 
 beforeEach(() => {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({

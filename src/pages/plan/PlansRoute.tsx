@@ -6,6 +6,7 @@ import { usePlans, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { weeksElapsed } from '../../domain/planMacro'
 import { todayIso } from '../../domain/planWeek'
 import type { Race, TrainingPlan } from '../../domain/types'
+import { PLAN_PATH } from '../../navigation'
 import { PlansScreen } from './PlansScreen'
 
 function planTitle(plan: TrainingPlan, races: Race[]): string {
@@ -80,6 +81,7 @@ export function PlansRoute() {
         onResume={() => navigate('/plan')}
         onGenerate={() => navigate('/generate-plan')}
         onReopen={setPendingId}
+        onBack={() => navigate(PLAN_PATH)}
       />
 
       {pending && (

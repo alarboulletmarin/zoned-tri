@@ -99,6 +99,7 @@ export function PlanMacroPreview() {
       race={demoRace}
       today={PREVIEW_TODAY}
       onBack={() => undefined}
+      onOpenSettings={() => undefined}
     />
   )
 }

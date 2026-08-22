@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useBreakpoint } from '../hooks/useBreakpoint'
 import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
-import { OPENING_PATH, ROOT_SECTIONS, sectionForPath } from '../navigation'
+import { MENU_ACTIONS, OPENING_PATH, ROOT_SECTIONS, SETTINGS_ACTION, sectionForPath } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
 import { BurgerIcon, SearchIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
@@ -54,11 +54,10 @@ function AppShellLayout() {
             <span className={styles.railBurger} aria-hidden="true">
               <BurgerIcon />
             </span>
-            {/* Le mot-symbole est la seule sortie de secours du rail : il ramène à l'ouverture,
-                d'où l'on rejoint « Mes plans », la génération et le bilan de course. */}
-            <NavLink to={OPENING_PATH} className={styles.railWordmark}>
+            {/* Le mot-symbole ramène à l'ouverture — l'écran qui dit ce que porte l'appareil. */}
+            <Link to={OPENING_PATH} className={styles.railWordmark}>
               Zoned Tri
-            </NavLink>
+            </Link>
             {/* La recherche n'existait à AUCUNE largeur desktop : le bandeau S4/S5/S6 ne porte pas
                 de loupe et le rail n'en avait pas. Un produit qui embarque 32 séances et douze
                 calculateurs sans moyen de les chercher au-delà de 1024 px n'est pas explorable —
@@ -93,6 +92,28 @@ function AppShellLayout() {
               </Link>
             ))}
           </div>
+          {/* Les trois destinations que seul le burger portait. Sans elles, générer un plan,
+              retrouver ses plans archivés et importer une sauvegarde n'existaient qu'en dessous
+              de 1024 px — c'est-à-dire nulle part, pour qui travaille sur un écran. */}
+          <div className={styles.railSectionLabel}>Actions</div>
+          <div className={styles.railNav}>
+            {MENU_ACTIONS.map((action) => (
+              <Link
+                key={action.to}
+                to={action.to}
+                aria-current={location.pathname === action.to ? 'page' : undefined}
+                className={`${styles.railLink} ${
+                  location.pathname === action.to ? styles.railLinkActive : ''
+                }`}
+              >
+                <span className={styles.railIndex} aria-hidden="true">
+                  →
+                </span>
+                <span className={styles.railLabel}>{action.label}</span>
+              </Link>
+            ))}
+          </div>
+
           {railBlock && (
             <div className={styles.railBlock}>
               <div className={styles.railBlockTitle}>{railBlock.title}</div>
@@ -118,13 +139,18 @@ function AppShellLayout() {
               mention de démonstration, sans quoi elle ne serait visible qu'en mobile. */}
           {IS_DEMO_BUILD && <div className={styles.railDemoMark}>jeu de démonstration</div>}
 
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => `${styles.railFooter} ${isActive ? styles.railLinkActive : ''}`}
+          {/* Le canevas pose Réglages en pied de rail (S4) et en dernière action du panneau (S1) :
+              même destination, deux placements — il ne peut donc pas vivre dans `MENU_ACTIONS`. */}
+          <Link
+            to={SETTINGS_ACTION.to}
+            aria-current={location.pathname.startsWith(SETTINGS_ACTION.to) ? 'page' : undefined}
+            className={`${styles.railFooter} ${
+              location.pathname.startsWith(SETTINGS_ACTION.to) ? styles.railLinkActive : ''
+            }`}
           >
             <span className={styles.railIndex}>≡</span>
-            <span className={styles.railLabel}>Réglages</span>
-          </NavLink>
+            <span className={styles.railLabel}>{SETTINGS_ACTION.label}</span>
+          </Link>
         </nav>
       )}
 

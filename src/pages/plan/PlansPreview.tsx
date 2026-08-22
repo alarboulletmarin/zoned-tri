@@ -79,6 +79,7 @@ export function PlansPreview() {
       onResume={() => undefined}
       onGenerate={() => undefined}
       onReopen={() => undefined}
+      onBack={() => undefined}
     />
   )
 }

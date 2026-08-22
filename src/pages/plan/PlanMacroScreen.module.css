@@ -420,3 +420,8 @@ a.chipButton {
   text-decoration: none;
   line-height: normal;
 }
+
+/* La commande qui ouvre les réglages du plan, au-dessus de la rangée d'export. */
+.settingsAction {
+  margin-bottom: var(--space-12);
+}

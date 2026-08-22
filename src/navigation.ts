@@ -43,13 +43,42 @@ export const ROOT_SECTIONS: RootSection[] = [
 ]
 
 /**
+ * Destinations que les deux navigations proposent en plus des quatre sections.
+ *
+ * Le rail desktop n'en portait AUCUNE et le panneau burger en portait trois : trois destinations du
+ * produit — dont la génération d'un plan, qui est la porte d'entrée — n'existaient qu'en dessous de
+ * 1024 px. Les deux navigations lisent désormais la même liste, ce qui rend l'écart impossible à
+ * réintroduire sans le voir.
+ *
+ * « Réglages » vit à part : le canevas le pose en pied de rail (S4) et en dernière action du
+ * panneau (S1). Même destination, deux placements — la liste ne peut donc pas le porter.
+ */
+export interface MenuAction {
+  to: string
+  label: string
+}
+
+export const MENU_ACTIONS: MenuAction[] = [
+  { to: '/generate-plan', label: 'Générer un plan' },
+  { to: PLANS_PATH, label: 'Mes plans' },
+  { to: '/import-export', label: 'Import / export' },
+]
+
+export const SETTINGS_ACTION: MenuAction = { to: '/settings', label: 'Réglages' }
+
+/**
  * Écrans rattachés à une section sans en porter le préfixe d'URL. Le générateur s'intitule
  * « Plan / Générer » dans le canevas : il appartient bien à la section Plan, même si sa route est
  * `/generate-plan`. Sans ce rattachement, l'en-tête desktop retomberait sur le mot-symbole et le
  * dupliquerait avec celui du rail.
+ *
+ * L'import-export porte le fil « Outils / Import-export » : il appartient donc aux Outils, et le
+ * rail doit y allumer Outils plutôt que de s'éteindre entièrement.
  */
 const SECTION_ALIASES: Record<string, string> = {
   '/generate-plan': '/plan',
+  '/import-export': '/tools',
+  '/import-export/import': '/tools',
 }
 
 /** Section racine à laquelle appartient un chemin, ou `undefined` hors des 4 sections. */

@@ -24,6 +24,8 @@ export interface PlansScreenProps {
   onGenerate: () => void
   /** Demande de réouverture d'un plan archivé — la confirmation appartient à l'appelant. */
   onReopen: (planId: string) => void
+  /** Remonte à la section Plan : « Mes plans » en est l'antichambre, pas une section de plus. */
+  onBack: () => void
 }
 
 /**
@@ -51,6 +53,7 @@ export function PlansScreen({
   onResume,
   onGenerate,
   onReopen,
+  onBack,
 }: PlansScreenProps) {
   const reference = today ?? todayIso()
   const state = useMemo(
@@ -63,8 +66,12 @@ export function PlansScreen({
 
   return (
     <div className={styles.screen}>
-      {/* 41 l. 3840-3843 : « Plans » en mono 12 px gras, et le burger. */}
-      <AppHeader variant="root" label="Plans" desktopTitle="Plans" />
+      {/* Écart assumé au canevas 41, qui coiffe l'écran d'un bandeau de section « Plans ».
+          Il annonçait une cinquième section racine que rien ne porte — ni le rail numéroté, ni
+          `buildMenuCounts` — et privait l'écran de tout retour. « Mes plans » est ce qui décide
+          QUEL plan alimente « Aujourd'hui » : c'est un écran de la section Plan, et son fil le
+          dit. */}
+      <AppHeader variant="detail" trail={['Plan', 'Mes plans']} onBack={onBack} />
 
       <div className={styles.column}>
         {/* 41 l. 3844-3847 */}

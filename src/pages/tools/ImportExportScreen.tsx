@@ -5,6 +5,7 @@ import { todayIso } from '../../domain/planWeek'
 import { exportBackup } from '../../storage/backup'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
+import { useBackupImport } from '../system/useBackupImport'
 import { ENGINE_SOURCES, EXPORT_ROWS, type SourceMark } from './engineSources'
 import { TOOLS_PATH } from './toolsRoutes'
 import styles from './ImportExportScreen.module.css'
@@ -47,6 +48,7 @@ export function ImportExportScreen() {
   const navigate = useNavigate()
   const { plans } = usePlans()
   const [error, setError] = useState<string | null>(null)
+  const { input, sheet, open } = useBackupImport()
 
   const activePlan = plans.find((plan) => plan.status === 'active')
   const dated = activePlan ? datedSessionCount(activePlan.weeks) : 0
@@ -101,6 +103,22 @@ export function ImportExportScreen() {
 
         {error && <div className={styles.error}>{error}</div>}
 
+        {/* L'écran s'appelle « Import / export » et n'exportait que : la moitié de son nom n'avait
+            aucune commande. Le fichier est d'abord validé, puis la feuille montre ce que
+            l'appareil perd et ce qu'il gagne — un import remplace tout, il ne se confirme pas à
+            l'aveugle (règle nº 2). */}
+        <section className={styles.import}>
+          <div className={styles.label}>Importer une sauvegarde</div>
+          <p className={styles.importNote}>
+            Un fichier .JSON exporté depuis Zoned Tri. Il remplace tout ce qui est écrit sur cet
+            appareil — l’application te montre quoi avant d’écrire.
+          </p>
+          {input}
+          <SecondaryAction shape="block" className={styles.importAction} onClick={open}>
+            Choisir un fichier .JSON
+          </SecondaryAction>
+        </section>
+
         <div className={styles.sources}>
           <div className={styles.label}>Sources du moteur</div>
           <div className={styles.sourceList}>
@@ -121,6 +139,8 @@ export function ImportExportScreen() {
           engagement qui la sépare d’un coach en boîte noire.
         </div>
       </div>
+
+      {sheet}
     </div>
   )
 }
