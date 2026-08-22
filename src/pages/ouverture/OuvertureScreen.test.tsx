@@ -40,7 +40,12 @@ describe('OuvertureScreen', () => {
 
     expect(await screen.findByText("Rien pour l'instant")).toBeInTheDocument()
     expect(screen.getByText('aucun plan')).toBeInTheDocument()
-    expect(screen.getByText('≈ 4 min · 6 questions')).toBeInTheDocument()
+    // L'écran promettait « ≈ 4 min · 6 questions » sous une liste qui n'en montrait que trois,
+    // dont une — la discipline dominante — que le générateur ne pose nulle part. Il annonce
+    // désormais ce que `GENERATOR_QUESTIONS` contient, et rien de plus.
+    expect(screen.getByText('5 questions · 1 récapitulatif')).toBeInTheDocument()
+    expect(screen.getByText('Tes allures de référence')).toBeInTheDocument()
+    expect(screen.queryByText(/4 min/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Commencer/ })).toBeInTheDocument()
     expect(screen.getByText("Rien n'est enregistré avant la fin")).toBeInTheDocument()
   })

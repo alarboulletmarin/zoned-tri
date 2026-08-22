@@ -12,6 +12,7 @@ import { MonoHint } from '../GeneratorRows'
 import { GeneratorSection, GeneratorStepFrame } from '../GeneratorStepFrame'
 import type { GeneratorStepProps } from '../stepProps'
 import styles from './StepAvailability.module.css'
+import { peakWeekMin } from '../../../domain/planGenerator/generatePlan'
 
 /** Index 0 = lundi, même convention que `GeneratorForm.availableDays`. */
 const DAY_INITIALS = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
@@ -38,12 +39,16 @@ function freeDaysLabel(days: AvailableDays): string {
  * G3 · Disponibilité — « Combien de temps ? »
  *
  * Trois réglages, aucun deviné : le volume hebdomadaire visé, les jours réellement disponibles et
- * le plafond de séances par discipline. Le repère « maxi tenable » est le plafond déclaré par
- * l'athlète : quand la cible le dépasse, l'écran le dit au lieu de laisser le repère décoratif.
+ * le plafond de séances par discipline.
+ *
+ * Le repère central annonçait « maxi tenable : 9 h », présenté comme « le plafond déclaré par
+ * l'athlète ». Personne ne le déclarait : c'était une constante du code (`sustainableMaxMin: 540`)
+ * — et `generatePlan` l'appliquait vraiment, bornant le volume de toutes les semaines à un chiffre
+ * que l'athlète n'avait jamais donné. Le plafond est retiré ; le repère dit désormais la seule
+ * conséquence vérifiable du curseur, la semaine la plus chargée que le plan produira.
  */
 export function StepAvailability({ form, onChange, onBack, onContinue }: GeneratorStepProps) {
   const volumeRatio = (form.weeklyVolumeTargetMin - VOLUME_MIN_MIN) / (VOLUME_MAX_MIN - VOLUME_MIN_MIN)
-  const overSustainable = form.weeklyVolumeTargetMin > form.sustainableMaxMin
   const dayCount = availableDayCount(form.availableDays)
 
   function toggleDay(index: number) {
@@ -92,9 +97,8 @@ export function StepAvailability({ form, onChange, onBack, onContinue }: Generat
 
         <div className={styles.marks}>
           <span>{formatDurationMin(VOLUME_MIN_MIN)}</span>
-          <span className={overSustainable ? styles.markOver : styles.markCurrent}>
-            maxi tenable : {formatDurationMin(form.sustainableMaxMin)}
-            {overSustainable ? ' · dépassé' : ''}
+          <span className={styles.markCurrent}>
+            semaine la plus chargée : {formatDurationMin(peakWeekMin(form.weeklyVolumeTargetMin))}
           </span>
           <span>{formatDurationMin(VOLUME_MAX_MIN)}</span>
         </div>

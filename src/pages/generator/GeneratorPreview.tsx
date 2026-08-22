@@ -48,7 +48,6 @@ function canvasForm(today: string): GeneratorForm {
     // Le dimanche à onze semaines, comme l'écrit le canevas sous le champ de date.
     raceDate: defaultRaceDate(today, CANVAS_WEEKS_TO_RACE),
     weeklyVolumeTargetMin: 450,
-    sustainableMaxMin: 540,
     availableDays: [true, true, true, true, false, true, true],
     maxSessionsPerDiscipline: { N: 2, V: 3, C: 3 },
     constraints: {

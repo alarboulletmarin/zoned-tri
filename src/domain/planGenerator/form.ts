@@ -20,6 +20,50 @@ export const GENERATOR_STEPS: readonly GeneratorStepId[] = [
 
 export const GENERATOR_STEP_COUNT = GENERATOR_STEPS.length
 
+/**
+ * Ce que le générateur demande réellement, et la seule source qui le dise.
+ *
+ * L'ouverture promettait « ≈ 4 min · 6 questions », n'en listait que trois, et annonçait une
+ * question sur la « discipline dominante » que le parcours ne pose nulle part. Trois écarts pour
+ * une promesse de deux lignes. Les six étapes ne sont d'ailleurs pas six questions : la dernière
+ * est un récapitulatif, qui ne demande rien. Les libellés vivent donc ici, à côté des étapes
+ * qu'ils décrivent — l'ouverture les lit, elle ne les réécrit pas.
+ *
+ * Les « ≈ 4 min » ne se mesurent nulle part : ils ne sont pas remplacés, ils sont retirés.
+ */
+export interface GeneratorQuestion {
+  id: GeneratorStepId
+  /** Rang affiché, « 01 » à « 05 ». Le récapitulatif n'en porte pas : il ne demande rien. */
+  index: string
+  title: string
+  detail: string
+}
+
+export const GENERATOR_QUESTIONS: readonly GeneratorQuestion[] = [
+  { id: 'format', index: '01', title: 'Ton format', detail: 'sprint, olympique, 70.3 ou Ironman' },
+  { id: 'date', index: '02', title: 'Ta date de course', detail: 'ou aucune course, pour un plan sans échéance' },
+  {
+    id: 'availability',
+    index: '03',
+    title: 'Tes disponibilités',
+    detail: 'heures par semaine, jours d’entraînement, séances par discipline',
+  },
+  {
+    id: 'constraints',
+    index: '04',
+    title: 'Ce que tu as sous la main',
+    detail: 'bassin, home-trainer, lieux · et les semaines à alléger',
+  },
+  {
+    id: 'references',
+    index: '05',
+    title: 'Tes allures de référence',
+    detail: 'CSS, FTP, seuil course — ou rien, et le plan les fait tester',
+  },
+] as const
+
+export const GENERATOR_QUESTION_COUNT = GENERATOR_QUESTIONS.length
+
 /** Disciplines réellement planifiables (« R » est une étiquette de récupération, pas un choix). */
 export type TrainingDiscipline = Extract<Discipline, 'N' | 'V' | 'C'>
 
@@ -60,8 +104,6 @@ export interface GeneratorForm {
 
   // --- G3 · Disponibilité
   weeklyVolumeTargetMin: number
-  /** Plafond déclaré (« maxi tenable : 9 h » du canevas), en minutes. */
-  sustainableMaxMin: number
   availableDays: AvailableDays
   maxSessionsPerDiscipline: Record<TrainingDiscipline, number>
 
@@ -111,7 +153,6 @@ export function createInitialForm(profile: AthleteProfile | undefined, todayIso:
     noRace: false,
     raceDate: defaultRaceDate(todayIso, raceFormat(format).minWeeks),
     weeklyVolumeTargetMin: 450,
-    sustainableMaxMin: 540,
     availableDays: [true, true, true, true, false, true, true],
     maxSessionsPerDiscipline: { N: 2, V: 3, C: 3 },
     constraints: {

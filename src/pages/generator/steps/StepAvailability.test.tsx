@@ -38,7 +38,12 @@ describe('StepAvailability', () => {
     expect(onChange).toHaveBeenCalledWith({ weeklyVolumeTargetMin: 600 })
   })
 
-  it('flags the sustainable ceiling once the target goes past it', () => {
+  /**
+   * Le repère annonçait « maxi tenable : 9 h », donné pour une déclaration de l'athlète : c'était
+   * une constante du code, et le moteur bornait vraiment le volume dessus. Il annonce désormais la
+   * seule conséquence vérifiable du curseur — la semaine la plus chargée que le plan produira.
+   */
+  it('annonce la semaine la plus chargée, qui suit le curseur', () => {
     const { unmount } = render(
       <StepAvailability
         form={createInitialForm(undefined, TODAY)}
@@ -49,11 +54,13 @@ describe('StepAvailability', () => {
         today={TODAY}
       />,
     )
-    expect(screen.getByText(/maxi tenable : 9 h$/)).toBeInTheDocument()
+    // 450 min visées × 1,05 (phase spécifique) = 473 min, soit 7 h 53.
+    expect(screen.getByText(/semaine la plus chargée : 7 h 53/)).toBeInTheDocument()
+    expect(screen.queryByText(/maxi tenable/)).not.toBeInTheDocument()
     unmount()
 
     renderStep({ weeklyVolumeTargetMin: 600 })
-    expect(screen.getByText(/maxi tenable : 9 h · dépassé/)).toBeInTheDocument()
+    expect(screen.getByText(/semaine la plus chargée : 10 h 30/)).toBeInTheDocument()
   })
 
   it('toggles a training day at the right index', async () => {

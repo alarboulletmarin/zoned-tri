@@ -235,10 +235,18 @@ function weekVolumeTarget(form: GeneratorForm, shape: Omit<WeekShape, 'targetMin
 
   if (shape.blockedReason !== undefined) factor *= BLOCKED_WEEK_FACTOR
 
-  const target = form.weeklyVolumeTargetMin * factor
-  // Le « maxi tenable » déclaré à l'étape G3 est un plafond, pas une suggestion.
-  const capped = form.sustainableMaxMin > 0 ? Math.min(target, form.sustainableMaxMin) : target
-  return Math.round(capped)
+  return Math.round(form.weeklyVolumeTargetMin * factor)
+}
+
+/**
+ * Facteur de la semaine la plus chargée du plan — la phase spécifique, hors semaine de récupération
+ * et hors affûtage. C'est la seule conséquence du curseur de volume que l'athlète puisse vérifier
+ * après coup, et donc la seule qu'on ait le droit de lui annoncer pendant qu'il le déplace.
+ */
+export const PEAK_WEEK_FACTOR = PHASE_VOLUME_FACTOR.Specific
+
+export function peakWeekMin(weeklyVolumeTargetMin: number): number {
+  return Math.round(weeklyVolumeTargetMin * PEAK_WEEK_FACTOR)
 }
 
 interface Slot {

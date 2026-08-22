@@ -37,6 +37,8 @@
 // principe invoque est deja etabli ailleurs dans l'app (transition brick, protocole de test FTP).
 
 import type { Workout } from './types'
+import { DISCIPLINE_ORDER, type DisciplineShare } from './planWeek'
+import { DISCIPLINE_LABELS } from './workoutFormat'
 
 // --- Course a pied (portees depuis zoned) --------------------------------------------------
 
@@ -667,3 +669,35 @@ const restWorkouts: Workout[] = [
 ]
 
 export const SEED_WORKOUTS: Workout[] = [...runWorkouts, ...swimWorkouts, ...bikeWorkouts, ...restWorkouts]
+
+/* --- Ce que le catalogue porte, lu et jamais écrit ----------------------------------------------
+ *
+ * L'ouverture annonçait « la répartition des 32 séances » sous quatre pourcentages tapés à la main
+ * — N 27 / V 31 / C 28 / R 14 — qui ne correspondaient ni au nombre de séances (C 38 / N 28 /
+ * V 25 / R 9) ni à leur durée (C 39 / N 20 / V 36 / R 6). Un chiffre affiché trace sa source ou
+ * n'est pas affiché : ces trois dérivés SONT la source.
+ */
+
+export const CATALOGUE_COUNT = SEED_WORKOUTS.length
+
+export const CATALOGUE_TOTAL_MIN = SEED_WORKOUTS.reduce((sum, workout) => sum + workout.durationMin, 0)
+
+/**
+ * Répartition du catalogue par discipline, à l'échelle du TEMPS — comme toutes les barres de
+ * répartition du système (`computeDisciplineShares`). Compter les séances ferait passer trois
+ * séances de renforcement de 20 minutes pour l'équivalent d'une sortie longue de deux heures.
+ */
+export function catalogueDisciplineShares(): DisciplineShare[] {
+  return DISCIPLINE_ORDER.map((discipline) => {
+    const totalMin = SEED_WORKOUTS.filter((workout) => workout.discipline === discipline).reduce(
+      (sum, workout) => sum + workout.durationMin,
+      0,
+    )
+    return {
+      discipline,
+      label: DISCIPLINE_LABELS[discipline],
+      totalMin,
+      percent: (totalMin / CATALOGUE_TOTAL_MIN) * 100,
+    }
+  }).filter((share) => share.totalMin > 0)
+}

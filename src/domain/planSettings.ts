@@ -273,10 +273,6 @@ function lastAvailableWeekendDay(days: AvailableDays): string {
  * Le plan enregistré, relu comme le formulaire des six étapes. C'est l'inverse exact de ce que
  * `generatePlan` a écrit : format, date, volume, jours, plafonds, contraintes et références y sont
  * tous conservés par `TrainingPlan`. Rien n'est reconstitué au jugé.
- *
- * `sustainableMaxMin` est la seule valeur que le plan ne porte pas — c'est une déclaration de
- * l'athlète, pas une sortie du moteur. On reprend le volume visé : le curseur n'annonce alors aucun
- * dépassement qu'on ne saurait justifier.
  */
 export function formFromPlan(plan: TrainingPlan, race?: Race, profile?: AthleteProfile): GeneratorForm {
   const references = {
@@ -292,7 +288,6 @@ export function formFromPlan(plan: TrainingPlan, race?: Race, profile?: AthleteP
     noRace: race === undefined,
     raceDate: race?.date ?? plan.endDate,
     weeklyVolumeTargetMin: plan.settings.weeklyVolumeTargetMin,
-    sustainableMaxMin: plan.settings.weeklyVolumeTargetMin,
     availableDays: plan.settings.availableDays,
     maxSessionsPerDiscipline: {
       N: plan.settings.maxSessionsPerDiscipline.N ?? 0,

@@ -74,7 +74,7 @@ export function ProgressBar({
         role: 'img' as const,
         'aria-label': segments
           ? named
-            ? `${label} : ${segments.map((s) => `${s.label ?? s.key} ${s.percent} %`).join(', ')}`
+            ? `${label} : ${segments.map((s) => `${s.label ?? s.key} ${Math.round(s.percent)} %`).join(', ')}`
             : label
           : `${label} : ${Math.round(percent ?? 0)} %`,
       })

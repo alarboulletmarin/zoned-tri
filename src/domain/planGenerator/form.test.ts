@@ -63,7 +63,6 @@ describe('createInitialForm', () => {
     expect(form.format).toBe('70.3')
     expect(form.noRace).toBe(false)
     expect(form.weeklyVolumeTargetMin).toBe(450) // 7 h 30
-    expect(form.sustainableMaxMin).toBe(540) // maxi tenable : 9 h
     expect(availableDayCount(form.availableDays)).toBe(6)
     expect(form.availableDays[4]).toBe(false) // vendredi laissé libre
     expect(form.maxSessionsPerDiscipline).toEqual({ N: 2, V: 3, C: 3 })

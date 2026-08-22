@@ -9,11 +9,20 @@ import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { useProfile, usePlans, useRaces, useWorkouts } from '../../context/AppDataContext'
-import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
+import {
+  CATALOGUE_COUNT,
+  CATALOGUE_TOTAL_MIN,
+  catalogueDisciplineShares,
+} from '../../domain/seedWorkouts'
 import { CALCULATORS } from '../tools/calculators/registry'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { selectOpeningState, type OpeningState, type OpeningStateKind } from '../../domain/openingState'
+import {
+  GENERATOR_QUESTIONS,
+  GENERATOR_QUESTION_COUNT,
+} from '../../domain/planGenerator/form'
 import { todayIso } from '../../domain/planWeek'
+import { formatDurationCompact } from '../../domain/workoutFormat'
 import { PLANS_PATH } from '../../navigation'
 import styles from './OuvertureScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
@@ -74,7 +83,7 @@ const OFFLINE_KICKER = 'Hors-ligne · sans compte'
  * calculateurs. On lit donc la donnée — un compte affiché qui ne correspond à rien est exactement
  * ce que le produit s'interdit.
  */
-const catalogueCount = SEED_WORKOUTS.length
+const catalogueCount = CATALOGUE_COUNT
 const calculatorCount = CALCULATORS.length
 
 const COPY: Record<OpeningStateKind, StateCopy> = {
@@ -82,7 +91,7 @@ const COPY: Record<OpeningStateKind, StateCopy> = {
     primaryAction: 'Générer mon plan',
     secondaryAction: "Voir une séance d'exemple",
     desktopNote: () =>
-      'Six questions : discipline dominante, course visée, temps disponible, matériel, références mesurées, jours interdits.',
+      'Cinq questions : ton format, ta date de course, tes disponibilités, ton matériel, tes allures de référence. Puis un récapitulatif, avant que rien ne soit écrit.',
     mobileKicker: () => OFFLINE_KICKER,
     calloutTitle: "Générer n'écrase rien",
     calloutBody: "le plan en cours passe en archive et se reprend là où il s'était arrêté",
@@ -116,20 +125,19 @@ const COPY: Record<OpeningStateKind, StateCopy> = {
 
 /**
  * Répartition des disciplines dans la bibliothèque — la frise de 14 px sous le bandeau (artboard 01).
- * Elle est à l'échelle du temps réel, comme toute barre de répartition du système.
+ *
+ * Elle annonçait quatre pourcentages tapés à la main sous l'étiquette « Répartition des 32
+ * séances » : N 27 / V 31 / C 28 / R 14. Le catalogue réel donne, en temps, C 39 / N 20 / V 36 /
+ * R 6 — et en nombre, C 38 / N 28 / V 25 / R 9. Aucune des deux lectures ne correspondait : la
+ * frise nommait une source qu'elle ne lisait pas, ce que la règle nº 4 interdit précisément.
+ * Elle la lit maintenant, à l'échelle du temps comme toute barre de répartition du système.
  */
-const STRIPE: ProgressSegment[] = [
-  { key: 'N', percent: 27, color: 'var(--color-discipline-n)', label: 'natation' },
-  { key: 'V', percent: 31, color: 'var(--color-discipline-v)', label: 'vélo' },
-  { key: 'C', percent: 28, color: 'var(--color-discipline-c)', label: 'course' },
-  { key: 'R', percent: 14, color: 'var(--color-discipline-r)', label: 'renforcement' },
-]
-
-const QUESTIONS: { index: string; title: string; detail: string }[] = [
-  { index: '01', title: 'Ta course', detail: 'date, distance, format' },
-  { index: '02', title: 'Tes disponibilités', detail: 'heures par semaine, jours interdits' },
-  { index: '03', title: 'Tes références', detail: 'ou une estimation, corrigeable plus tard' },
-]
+const STRIPE: ProgressSegment[] = catalogueDisciplineShares().map((share) => ({
+  key: share.discipline,
+  percent: share.percent,
+  color: `var(--color-discipline-${share.discipline.toLowerCase()})`,
+  label: share.label,
+}))
 
 /* --- Mise en page mobile (mockups 01 / 01b / 01c) ----------------------------------------- */
 
@@ -146,7 +154,7 @@ function MobileLayout({ state }: { state: OpeningState }) {
       <section className={styles.heroBanner}>
         <HeroTitle className={styles.heroTitle} />
         <p className={styles.heroLead}>
-          Six questions, puis un plan jusqu'à ta course : chaque séance dit ce qu'elle vise.
+          Cinq questions, puis un plan jusqu'à ta course : chaque séance dit ce qu'elle vise.
         </p>
         <div className={styles.heroKicker}>{copy.mobileKicker(state)}</div>
       </section>
@@ -156,7 +164,7 @@ function MobileLayout({ state }: { state: OpeningState }) {
         segments={STRIPE}
         height={14}
         underlined
-        label={`Répartition des ${catalogueCount} séances`}
+        label={`Répartition des ${catalogueCount} séances · ${formatDurationCompact(CATALOGUE_TOTAL_MIN)} de catalogue`}
       />
 
       {/* Dès la tablette, l'état passe en deux colonnes `1fr / 292px` (README §3) : la largeur sert
@@ -214,7 +222,7 @@ function DesktopLayout({ state }: { state: OpeningState }) {
 
         <HeroTitle className={styles.heroTitleDesktop} />
         <p className={styles.heroLeadDesktop}>
-          Six questions, puis un plan complet jusqu'à ta course — chaque séance annonce ce qu'elle vise, sur quelle
+          Cinq questions, puis un plan complet jusqu'à ta course — chaque séance annonce ce qu'elle vise, sur quelle
           mesure elle s'appuie, et ce qu'elle coûte à la suivante.
         </p>
 
@@ -377,11 +385,14 @@ function QuestionsBlock({ layout }: { layout: Layout }) {
         <span className={styles.blockLabel}>
           {layout === 'desktop' ? "Ce que l'on va te demander" : "Ce qu'on va te demander"}
         </span>
-        <span className={styles.blockMeta}>≈ 4 min · 6 questions</span>
+        {/* Les « ≈ 4 min » ne se mesuraient nulle part : ils ne sont pas remplacés, ils partent. */}
+        <span className={styles.blockMeta}>
+          {GENERATOR_QUESTION_COUNT} questions · 1 récapitulatif
+        </span>
       </div>
       <div className={styles.rows}>
-        {QUESTIONS.map((question) => (
-          <div key={question.index} className={styles.row}>
+        {GENERATOR_QUESTIONS.map((question) => (
+          <div key={question.id} className={styles.row}>
             <span className={styles.rowIndex}>{question.index}</span>
             <span className={styles.rowText}>
               <span className={styles.rowTitle}>{question.title}</span>
@@ -391,7 +402,7 @@ function QuestionsBlock({ layout }: { layout: Layout }) {
         ))}
       </div>
       {layout === 'desktop' && (
-        <div className={styles.blockNote}>+ matériel, discipline à prioriser, semaines de coupure</div>
+        <div className={styles.blockNote}>rien n’est écrit avant le récapitulatif</div>
       )}
     </div>
   )
