@@ -53,7 +53,7 @@ const TEST_SESSIONS: Record<TrainingDiscipline, { label: string; meta: string }>
  * ne donne accès qu'au formulaire. On affiche donc un tiret — « valeur absente = tiret » — plutôt
  * qu'une date inventée.
  */
-export function StepReferences({ form, onChange, onBack, onContinue }: GeneratorStepProps) {
+export function StepReferences({ form, onChange, onBack, onContinue, onGoToStep }: GeneratorStepProps) {
   const { references, testSessions } = form
 
   /** Écrit une référence et synchronise le test de la discipline : mesurée ⇒ plus de test. */
@@ -97,6 +97,7 @@ export function StepReferences({ form, onChange, onBack, onContinue }: Generator
       titleScale="sm"
       intro="Reprises de ton profil. Sans référence, l'app place un test en semaine 1 plutôt que de deviner."
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Continuer"
       onContinue={onContinue}
     >

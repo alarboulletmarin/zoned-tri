@@ -12,13 +12,14 @@ import styles from './StepFormat.module.css'
  * libre et l'aide sous le champ le dit. Annoncer une recherche absente serait la seule chose que
  * l'écran promet et ne tient pas.
  */
-export function StepFormat({ form, onChange, onBack, onContinue }: GeneratorStepProps) {
+export function StepFormat({ form, onChange, onBack, onContinue, onGoToStep }: GeneratorStepProps) {
   return (
     <GeneratorStepFrame
       stepIndex={1}
       titleLines={['Quel', 'format ?']}
       intro="Le format fixe la durée du plan et la distribution d'intensité. Rien n'est définitif : tu pourras changer."
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Continuer"
       onContinue={onContinue}
       footerNote="Aucune donnée envoyée : tout reste sur l'appareil."

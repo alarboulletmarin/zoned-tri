@@ -47,7 +47,7 @@ function freeDaysLabel(days: AvailableDays): string {
  * que l'athlète n'avait jamais donné. Le plafond est retiré ; le repère dit désormais la seule
  * conséquence vérifiable du curseur, la semaine la plus chargée que le plan produira.
  */
-export function StepAvailability({ form, onChange, onBack, onContinue }: GeneratorStepProps) {
+export function StepAvailability({ form, onChange, onBack, onContinue, onGoToStep }: GeneratorStepProps) {
   const volumeRatio = (form.weeklyVolumeTargetMin - VOLUME_MIN_MIN) / (VOLUME_MAX_MIN - VOLUME_MIN_MIN)
   const dayCount = availableDayCount(form.availableDays)
 
@@ -68,6 +68,7 @@ export function StepAvailability({ form, onChange, onBack, onContinue }: Generat
       titleLines={['Combien', 'de temps ?']}
       titleScale="md"
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Continuer"
       onContinue={onContinue}
     >

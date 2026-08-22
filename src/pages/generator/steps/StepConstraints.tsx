@@ -58,7 +58,14 @@ function joinWeeks(weekNumbers: number[]): string {
  * montre qu'une (« sem. 04 et 05 — déplacement pro… ») et rien ne justifie d'en collecter une par
  * semaine tant que le produit ne l'affiche pas.
  */
-export function StepConstraints({ form, onChange, onBack, onContinue, today }: GeneratorStepProps) {
+export function StepConstraints({
+  form,
+  onChange,
+  onBack,
+  onContinue,
+  onGoToStep,
+  today,
+}: GeneratorStepProps) {
   const reasonInputId = useId()
   const { constraints } = form
 
@@ -97,6 +104,7 @@ export function StepConstraints({ form, onChange, onBack, onContinue, today }: G
       titleLines={['Ce que tu as', 'sous la main']}
       titleScale="sm"
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Continuer"
       onContinue={onContinue}
       footerNote="Ces contraintes façonnent le plan ; elles ne servent à rien d'autre."

@@ -3,7 +3,12 @@ import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { StepDots } from '../../components/navigation/StepDots/StepDots'
 import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
-import { GENERATOR_STEP_COUNT } from '../../domain/planGenerator/form'
+import {
+  GENERATOR_QUESTIONS,
+  GENERATOR_STEPS,
+  GENERATOR_STEP_COUNT,
+  type GeneratorStepId,
+} from '../../domain/planGenerator/form'
 import styles from './GeneratorStepFrame.module.css'
 
 /**
@@ -47,7 +52,16 @@ export interface GeneratorStepFrameProps {
   ctaDisabled?: boolean
   /** Ligne mono au-dessus du bouton (« Aucune donnée envoyée : tout reste sur l'appareil. »). */
   footerNote?: ReactNode
+  /** Retour à une étape déjà franchie depuis la barre à segments. */
+  onGoToStep?: (step: GeneratorStepId) => void
   children: ReactNode
+}
+
+/** Le nom d'une étape, tel que l'ouverture le liste. Le récapitulatif n'est pas une question. */
+function stepName(step: number): string {
+  const id = GENERATOR_STEPS[step - 1]
+  const question = GENERATOR_QUESTIONS.find((candidate) => candidate.id === id)
+  return question?.title ?? 'Récapitulatif'
 }
 
 /**
@@ -73,6 +87,7 @@ export function GeneratorStepFrame({
   onContinue,
   ctaDisabled = false,
   footerNote,
+  onGoToStep,
   children,
 }: GeneratorStepFrameProps) {
   const counter = `${String(stepIndex).padStart(2, '0')} / ${String(GENERATOR_STEP_COUNT).padStart(2, '0')}`
@@ -92,10 +107,15 @@ export function GeneratorStepFrame({
       <div className={styles.column}>
         {/* Canevas : `padding:14px 20px 0`, six segments de 6 px espacés de 4 px. */}
         <div className={styles.steps}>
+          {/* Les segments franchis ramènent à leur étape : la barre montrait le chemin parcouru
+              sans permettre d'y retourner autrement qu'une étape à la fois. */}
           <StepDots
             total={GENERATOR_STEP_COUNT}
             current={stepIndex}
             label={`Étape ${stepIndex} sur ${GENERATOR_STEP_COUNT}`}
+            {...(onGoToStep
+              ? { onSelect: (step: number) => onGoToStep(GENERATOR_STEPS[step - 1]!), stepName }
+              : {})}
           />
         </div>
 

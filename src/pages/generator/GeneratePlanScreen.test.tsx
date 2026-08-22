@@ -35,6 +35,16 @@ async function walkToSummary(user: ReturnType<typeof userEvent.setup>) {
   }
 }
 
+/**
+ * « Générer le plan » ne génère plus : il MONTRE ce qu'il va écrire, puis attend. Trois écritures
+ * partaient jusqu'ici d'un seul clic — le plan, ses séances datées, une fiche de course — et le
+ * plan en cours passait en archive sans un mot (règle nº 2).
+ */
+async function generateAndConfirm(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(await screen.findByRole('button', { name: /Générer le plan/i }))
+  await user.click(await screen.findByRole('button', { name: /^Écrire le plan$/ }))
+}
+
 describe("GeneratePlanScreen — parcours complet depuis une base vide", () => {
   it('enregistre un plan actif, ses séances et la course visée, puis renvoie sur Aujourd’hui', async () => {
     const user = userEvent.setup()
@@ -42,7 +52,7 @@ describe("GeneratePlanScreen — parcours complet depuis une base vide", () => {
 
     await user.type(await screen.findByRole('textbox', { name: /course/i }), '70.3 Vichy')
     await walkToSummary(user)
-    await user.click(await screen.findByRole('button', { name: /Générer le plan/i }))
+    await generateAndConfirm(user)
 
     // La redirection vers « Aujourd'hui » prouve que l'écriture est allée au bout.
     expect(await screen.findByText('Aujourd’hui')).toBeInTheDocument()
@@ -72,14 +82,14 @@ describe("GeneratePlanScreen — parcours complet depuis une base vide", () => {
     const first = renderGenerator()
 
     await walkToSummary(user)
-    await user.click(await screen.findByRole('button', { name: /Générer le plan/i }))
+    await generateAndConfirm(user)
     await screen.findByText('Aujourd’hui')
     const [initialPlan] = await getAllPlans()
     first.unmount()
 
     renderGenerator()
     await walkToSummary(user)
-    await user.click(await screen.findByRole('button', { name: /Générer le plan/i }))
+    await generateAndConfirm(user)
     await screen.findByText('Aujourd’hui')
 
     await waitFor(async () => {

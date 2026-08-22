@@ -6,6 +6,18 @@ export interface StepDotsProps {
   current: number
   /** Libellé lu par les technologies d'assistance (l'affichage, lui, est purement graphique). */
   label?: string
+  /**
+   * Rend les segments DÉJÀ franchis cliquables (index 1-indexé). Sans lui, la barre reste
+   * l'indicateur purement graphique du canevas.
+   *
+   * Revenir sur une étape passée n'était possible qu'en reculant une à une, ou depuis le
+   * récapitulatif : la barre montrait le chemin parcouru sans permettre d'y retourner. On ne rend
+   * pas les segments À VENIR cliquables — sauter une question qu'on n'a pas encore vue produirait
+   * un plan bâti sur une valeur par défaut jamais regardée.
+   */
+  onSelect?: (step: number) => void
+  /** Nom de l'étape, pour le libellé du segment cliquable (« Revenir à l'étape 02 · Ta date »). */
+  stepName?: (step: number) => string
 }
 
 /**
@@ -16,7 +28,7 @@ export interface StepDotsProps {
  * `navigation/StepDots`) l'énonce explicitement. Le compteur mono « 01 / 06 » vit dans le fil
  * d'Ariane, pas ici.
  */
-export function StepDots({ total, current, label }: StepDotsProps) {
+export function StepDots({ total, current, label, onSelect, stepName }: StepDotsProps) {
   return (
     <div
       className={styles.dots}
@@ -26,13 +38,29 @@ export function StepDots({ total, current, label }: StepDotsProps) {
       aria-valuenow={current}
       aria-label={label ?? `Étape ${current} sur ${total}`}
     >
-      {Array.from({ length: total }, (_, index) => (
-        <span
-          key={index}
-          className={index < current ? styles.filled : styles.empty}
-          data-filled={index < current}
-        />
-      ))}
+      {Array.from({ length: total }, (_, index) => {
+        const step = index + 1
+        const filled = index < current
+        // Le segment de l'étape courante n'est pas une destination : on y est déjà.
+        const reachable = onSelect !== undefined && step < current
+
+        if (!reachable) {
+          return <span key={index} className={filled ? styles.filled : styles.empty} data-filled={filled} />
+        }
+
+        return (
+          <button
+            key={index}
+            type="button"
+            className={`${styles.filled} ${styles.reachable}`}
+            data-filled={filled}
+            aria-label={
+              stepName ? `Revenir à l’étape ${String(step).padStart(2, '0')} · ${stepName(step)}` : `Revenir à l’étape ${step}`
+            }
+            onClick={() => onSelect(step)}
+          />
+        )
+      })}
     </div>
   )
 }

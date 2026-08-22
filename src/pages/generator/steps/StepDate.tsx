@@ -24,6 +24,7 @@ export function StepDate({ form, onChange, onBack, onContinue, onGoToStep, today
       stepIndex={2}
       titleLines={['Quelle', 'date ?']}
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Continuer"
       onContinue={onContinue}
       ctaDisabled={!form.noRace && form.raceDate === ''}

@@ -17,3 +17,20 @@
 .empty {
   background: var(--color-hairline);
 }
+
+/* Un segment franchi devient une cible. Il garde son dessin de 6 px ; sa cible tactile est portée
+   à 44 px par un pseudo-élément, comme les jetons de `SecondaryAction`. */
+.reachable {
+  position: relative;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.reachable::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}

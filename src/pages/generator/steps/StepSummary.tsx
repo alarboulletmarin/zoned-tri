@@ -136,9 +136,10 @@ export function StepSummary({ form, onBack, onContinue, onGoToStep, today }: Gen
       titleLines={['Récapi-', 'tulatif']}
       headNote="chaque ligne renvoie à son étape"
       onBack={onBack}
+      onGoToStep={onGoToStep}
       ctaLabel="Générer le plan"
       onContinue={onContinue}
-      footerNote="L'étape suivante est une simulation : rien n'est enregistré avant que tu l'acceptes."
+      footerNote="Rien n’est écrit tant que tu n’as pas confirmé : l’app montre d’abord ce qu’elle pose sur l’appareil, et ce que devient ton plan en cours."
     >
       <GeneratorSection noRule gap="sm">
         <div className={styles.table}>
