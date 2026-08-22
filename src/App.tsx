@@ -24,6 +24,7 @@ import {
 } from './pages/races/RacesRoute'
 import { RacesPreview } from './pages/races/RacesPreview'
 import { ToolsScreen } from './pages/tools/ToolsScreen'
+import { ReferencesScreen } from './pages/tools/ReferencesScreen'
 import { CalculatorsScreen } from './pages/tools/CalculatorsScreen'
 import { CalculatorScreen } from './pages/tools/CalculatorScreen'
 import { ImportExportScreen } from './pages/tools/ImportExportScreen'
@@ -77,6 +78,8 @@ function App() {
             <Route path="/races/:id/checklist" element={<RaceChecklistRoute />} />
             {/* Outils — artboards 12 (profil et références), 13 (les douze calculateurs) et S8. */}
             <Route path="/tools" element={<ToolsScreen />} />
+            {/* L'écriture des références : le canevas dessine le bouton, pas l'écran derrière. */}
+            <Route path="/tools/references" element={<ReferencesScreen />} />
             <Route path="/tools/calculateurs" element={<CalculatorsScreen />} />
             <Route path="/tools/calculateurs/:id" element={<CalculatorScreen />} />
             {/* Système — artboards S2 (réglages), S3 (langue), 17 (hors-ligne), 19 (import refusé).

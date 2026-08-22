@@ -19,7 +19,7 @@ import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAc
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { CalculatorCard } from './CalculatorCard'
 import { CALCULATORS, CALCULATOR_COUNT } from './calculators/registry'
-import { CALCULATORS_PATH, IMPORT_EXPORT_PATH } from './toolsRoutes'
+import { CALCULATORS_PATH, IMPORT_EXPORT_PATH, REFERENCES_PATH } from './toolsRoutes'
 import styles from './ToolsScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -55,9 +55,7 @@ export interface ToolsScreenProps {
  * la grille des calculateurs et une colonne qui dit d'où viennent les références.
  *
  * LIMITATIONS assumées, faute de données ou d'artboard :
- * — « Enregistrer une référence » et l'export `.CSV` (S8) sont rendus inertes : écrire une
- *   référence change les allures du plan, et le canevas ne donne aucun écran pour montrer d'abord
- *   quelles séances bougent — ce que la règle « rien dans le dos de l'utilisateur » exige ;
+ * — l'export `.CSV` (S8) reste inerte, avec son motif à l'écran ;
  * — « Prochain test au plan » se résout par le titre de la séance : le modèle ne porte aucun
  *   marqueur « test de référence » (voir `REFERENCE_TEST_TITLES`).
  */
@@ -165,6 +163,15 @@ function MobileColumn({ view }: { view: ToolsReferencesView }) {
         <PrimaryAction tone="ink" className={styles.ctaButton} onClick={() => navigate(CALCULATORS_PATH)}>
           Ouvrir les calculateurs
         </PrimaryAction>
+        {/* L'écran s'intitule « Mes références » et n'avait, en mobile, aucun moyen d'en écrire
+            une : les six lignes se lisaient, dont la moitié en tirets, sans jamais se remplir. */}
+        <SecondaryAction
+          shape="block"
+          className={styles.ctaSecondary}
+          onClick={() => navigate(REFERENCES_PATH)}
+        >
+          Enregistrer une référence
+        </SecondaryAction>
         {/* L'écran 14 porte le fil « Outils / Import-export » et son carré de retour mène ici —
             mais rien ici n'y menait. Un fil qui ne se descend pas est aussi faux qu'un fil qui ne
             se remonte pas. */}
@@ -223,8 +230,8 @@ function DesktopLayout({
         </div>
 
         <NoteBox className={styles.gridNote} title="Un calcul ne modifie rien tout seul">
-          le résultat s’affiche ici ; pour qu’il devienne ta référence et change les allures du plan,
-          il faut l’enregistrer — et l’app montre d’abord quelles séances bougent
+          le résultat s’affiche ici ; pour qu’il devienne ta référence, il faut l’enregistrer — et
+          l’app montre d’abord l’avant / après de chaque ligne, et ce que ton plan en cours devient
         </NoteBox>
 
         <div className={styles.gridFooter}>
@@ -317,8 +324,7 @@ function DesktopLayout({
           <PrimaryAction
             tone="ink"
             className={styles.sidePrimary}
-            disabled
-            aria-describedby="inert-enregistrer-reference"
+            onClick={() => navigate(REFERENCES_PATH)}
           >
             Enregistrer une référence
           </PrimaryAction>
@@ -326,11 +332,6 @@ function DesktopLayout({
             .CSV
           </SecondaryAction>
         </div>
-        <InertNote id="inert-enregistrer-reference">
-          Écrire une référence change les allures de toutes les séances à venir : l’écran qui montre
-          d’abord lesquelles bougent n’existe pas encore. En attendant, le générateur les demande à
-          l’étape 05.
-        </InertNote>
         <InertNote id="inert-csv">
           La sauvegarde complète sort en .JSON, depuis Import / export : un .CSV de références perdrait
           la date de chaque mesure, qui est ce qui les rend lisibles.

@@ -101,3 +101,30 @@ describe('CalculatorsScreen · la liste des douze', () => {
     expect(screen.getAllByRole('button', { name: /^Ouvrir le calculateur/ })).toHaveLength(12)
   })
 })
+
+/**
+ * Trois des douze calculateurs produisent exactement une référence du profil. Sans lien, on
+ * calculait sa FTP et il fallait la retaper à la main dans un autre écran.
+ */
+describe('CalculatorScreen · reporter un résultat dans ses références', () => {
+  it('propose d’enregistrer le résultat, avec sa valeur dans l’adresse', () => {
+    render(
+      <MemoryRouter>
+        <CalculatorScreen id="test-20-min-ftp" profile={demoAthleteProfile} />
+      </MemoryRouter>,
+    )
+
+    const report = screen.getByRole('link', { name: /comme ma référence/ })
+    expect(report).toHaveAttribute('href', expect.stringContaining('/tools/references?ref=ftp&valeur='))
+  })
+
+  it('ne le propose pas sur un calculateur qui ne produit aucune référence', () => {
+    render(
+      <MemoryRouter>
+        <CalculatorScreen id="glucides-course" profile={demoAthleteProfile} />
+      </MemoryRouter>,
+    )
+
+    expect(screen.queryByRole('link', { name: /comme ma référence/ })).not.toBeInTheDocument()
+  })
+})

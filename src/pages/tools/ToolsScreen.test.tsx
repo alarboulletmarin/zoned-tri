@@ -133,16 +133,22 @@ describe('ToolsScreen · artboard S8 (desktop)', () => {
   })
 
   /** Les deux motifs vivaient dans des `title` : sur téléphone, deux commandes grises et rien. */
-  it('garde les deux actions inertes, chacune avec son motif LISIBLE', () => {
+  it('ouvre l’écriture des références au lieu de la refuser', () => {
     renderDesktop()
 
+    // « Enregistrer une référence » était gris, avec un motif qui reposait sur une lecture fausse
+    // du code : un plan porte son propre instantané d'allures, écrire une référence ne le réécrit
+    // pas. L'écran existe donc, et le bouton y mène.
     const save = screen.getByRole('button', { name: 'Enregistrer une référence' })
-    expect(save).toBeDisabled()
-    expect(save).not.toHaveAttribute('title')
-    expect(save).toHaveAccessibleDescription(/lesquelles bougent/)
+    expect(save).toBeEnabled()
+  })
+
+  it('garde le .CSV inerte, avec son motif LISIBLE', () => {
+    renderDesktop()
 
     const csv = screen.getByRole('button', { name: '.CSV' })
     expect(csv).toBeDisabled()
+    expect(csv).not.toHaveAttribute('title')
     expect(csv).toHaveAccessibleDescription(/\.JSON/)
   })
 })

@@ -1,0 +1,140 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.column {
+  padding: var(--space-18) var(--space-gutter-mobile) var(--space-26);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-18);
+  max-width: 560px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.title {
+  font-size: var(--fs-title-section);
+  line-height: var(--lh-display-min);
+  letter-spacing: var(--ls-display-min);
+  text-transform: uppercase;
+}
+
+.lead {
+  margin: 0;
+  max-width: var(--measure-prose);
+  font-size: var(--fs-prose);
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Une ligne par référence, séparée par un filet : la même grammaire que les tableaux du produit. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-10) 0;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* Le champ encadré du produit : contour de 2 px, ombre lime portée — jamais d'arrondi. */
+.fieldInput {
+  display: flex;
+  align-items: center;
+  gap: var(--space-9);
+  box-sizing: border-box;
+  min-height: var(--action-height-min);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  padding: 0 var(--space-10);
+  background: var(--color-paper);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--color-ink);
+}
+
+.input:focus {
+  outline: none;
+}
+
+/* Toute quantité est en Space Mono, y compris son unité (interdit de forme nº 5). */
+.unit {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.feeds,
+.error {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+}
+
+.feeds {
+  color: var(--color-label);
+}
+
+.error {
+  color: var(--color-signal-red);
+}
+
+.note {
+  max-width: var(--measure-prose);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: 340px;
+}
+
+.save {
+  width: 100%;
+}
+
+.diff {
+  margin: 0;
+  padding-left: var(--space-16);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.7;
+}

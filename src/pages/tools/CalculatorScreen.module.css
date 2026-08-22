@@ -487,3 +487,16 @@
     padding-block: var(--space-4) 56px;
   }
 }
+
+/* Le report vers « Mes références » : une sortie, pas un bouton — d'où le lien souligné du
+   Design System (`SecondaryAction shape="link"`), à la même chasse. */
+.report {
+  display: inline-block;
+  margin-top: var(--space-10);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

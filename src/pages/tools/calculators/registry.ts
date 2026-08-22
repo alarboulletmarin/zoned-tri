@@ -11,6 +11,7 @@
 // spécification dit explicitement que l'ordre est libre.
 
 import { cssFrom400And200 } from '../../../domain/calculators/css'
+import type { ReferenceKey } from '../../../domain/toolsReferences'
 import { carbsForDuration } from '../../../domain/calculators/carbs'
 import { ftpFrom20MinTest } from '../../../domain/calculators/ftpFrom20MinTest'
 import { heartRateZones } from '../../../domain/calculators/heartRateZones'
@@ -104,6 +105,14 @@ export type CalculatorOutcome = CalculatorSuccess | CalculatorFailure
 export interface CalculatorDefinition {
   id: string
   index: number
+  /**
+   * La référence du profil que ce calculateur PRODUIT, quand il en produit une.
+   *
+   * Trois des douze rendent exactement une valeur que « Mes références » sait retenir — la FTP,
+   * l'allure au seuil, la CSS. Sans ce lien, on calculait sa FTP et il fallait la retaper à la
+   * main dans un autre écran, en espérant ne pas se tromper de champ.
+   */
+  reference?: ReferenceKey
   /** Titre de la fiche, coupé en lignes comme l'artboard 13 le coupe. */
   titleLines: string[]
   /** Titre d'une carte de liste / de grille (artboard S8). */
@@ -510,6 +519,7 @@ export const CALCULATORS: CalculatorDefinition[] = [
 
   {
     id: 'test-20-min-ftp',
+    reference: 'ftp',
     index: 7,
     titleLines: ['Test 20 min', '→ FTP'],
     cardTitle: 'FTP vélo',
@@ -556,6 +566,7 @@ export const CALCULATORS: CalculatorDefinition[] = [
 
   {
     id: 'test-30-min-course',
+    reference: 'runThreshold',
     index: 8,
     titleLines: ['Test 30 min', '→ seuil'],
     cardTitle: 'Allures course',
@@ -592,6 +603,7 @@ export const CALCULATORS: CalculatorDefinition[] = [
 
   {
     id: 'css-400-200',
+    reference: 'css',
     index: 9,
     titleLines: ['CSS', '400 / 200'],
     cardTitle: 'CSS natation',

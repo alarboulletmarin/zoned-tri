@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useProfile } from '../../context/AppDataContext'
 import type { AthleteProfile } from '../../domain/types'
 import type { CalculatorProofLevel, ProofLevel } from '../../domain/calculators/types'
@@ -15,7 +15,7 @@ import {
   type CalculatorSuccess,
   type CalculatorValues,
 } from './calculators/registry'
-import { CALCULATORS_PATH } from './toolsRoutes'
+import { CALCULATORS_PATH, referencesPath } from './toolsRoutes'
 import styles from './CalculatorScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 
@@ -139,6 +139,18 @@ export function CalculatorScreen({ id: idProp, profile: profileProp }: Calculato
             <Result outcome={outcome} noteNumber={definition.footnote ? definition.footnote.mark : undefined} />
           ) : (
             <EmptyState className={styles.resultEmpty} sentence={outcome.reason} />
+          )}
+
+          {/* Trois des douze calculateurs produisent exactement une référence du profil. Sans ce
+              lien, on calculait sa FTP et il fallait la retaper à la main dans un autre écran.
+              Le lien REPORTE, il n'écrit pas : l'écran des références montre l'avant / après. */}
+          {definition.reference && outcome.ok && outcome.headline !== undefined && (
+            <Link
+              className={styles.report}
+              to={referencesPath({ ref: definition.reference, value: outcome.headline })}
+            >
+              Enregistrer {outcome.headline} {outcome.headlineUnit ?? ''} comme ma référence →
+            </Link>
           )}
         </section>
 
