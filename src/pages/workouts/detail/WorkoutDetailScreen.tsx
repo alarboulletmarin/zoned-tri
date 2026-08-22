@@ -7,26 +7,34 @@ import { useBreakpoint } from '../../../hooks/useBreakpoint'
 import { WorkoutDetailContent } from './WorkoutDetailContent'
 import styles from './WorkoutDetailScreen.module.css'
 
-/** Segment courant du fil d'Ariane — le canevas y écrit le mot « Séance », jamais le titre de la séance. */
-const CURRENT_TRAIL_SEGMENT = 'Séance'
-
 interface DetailLocationState {
   /** Écran d'origine, pour le segment du milieu (« Aujourd'hui » ou « Semaine »). */
   from?: string
 }
 
 /**
- * Fil d'Ariane des artboards : « Plan / Aujourd'hui / Séance » (05 l. 563), « Plan / Semaine /
- * Séance » (28 l. 3055, 29 l. 3116). Le segment du milieu nomme l'écran d'où l'on vient — c'est ce
- * que dit la légende de 05, « depuis Aujourd'hui ou Semaine → appui sur une séance ».
+ * Fil d'Ariane des artboards : « Plan / Semaine / … » (28 l. 3055, 29 l. 3116). Le segment du
+ * milieu nomme l'écran d'où l'on vient — c'est ce que dit la légende de 05, « depuis Aujourd'hui
+ * ou Semaine → appui sur une séance ».
  *
  * L'origine n'est connue que si l'appelant la passe en `state`. À défaut, on ne l'invente pas : on
  * s'en tient à ce qui est certain, l'onglet propriétaire de la séance — le Plan quand elle est une
  * instance enregistrée du plan, les Séances quand elle vient du catalogue.
+ *
+ * Deux corrections par rapport au canevas, et elles se tiennent :
+ *
+ * - **Le dernier segment est le titre de la séance**, pas le mot « Séance ». Le canevas écrit le
+ *   mot générique parce qu'un artboard ne connaît pas ses données ; l'application les a. Un fil
+ *   qui finit par « Séance » ne nomme pas la page — il nomme son gabarit.
+ * - **Un segment ne se répète pas.** « Aujourd'hui » passait `from: 'Plan'` sur une séance du
+ *   plan : le fil rendu était « Plan / Plan / Séance ». Et depuis la bibliothèque, « Séances » et
+ *   « Bibliothèque » sont deux noms du même écran, donc deux liens vers `/workouts`.
  */
-function buildTrail(fromCatalogue: boolean, from: string | undefined): string[] {
+function buildTrail(fromCatalogue: boolean, from: string | undefined, title: string): string[] {
   const root = fromCatalogue ? 'Séances' : 'Plan'
-  return from ? [root, from, CURRENT_TRAIL_SEGMENT] : [root, CURRENT_TRAIL_SEGMENT]
+  const isOwnRoot = from === root || (fromCatalogue && from === 'Bibliothèque')
+  const middle = from && !isOwnRoot ? [from] : []
+  return [root, ...middle, title]
 }
 
 export interface WorkoutDetailViewProps {
@@ -51,7 +59,7 @@ export function WorkoutDetailView({ workout, trail, profile, onBack }: WorkoutDe
 
   return (
     <>
-      <AppHeader variant="detail" trail={trail} desktopTitle={workout.title} onBack={onBack} />
+      <AppHeader variant="detail" trail={trail} onBack={onBack} />
       <div className={breakpoint === 'mobile' ? styles.column : styles.columnBounded}>
         <WorkoutDetailContent workout={workout} profile={profile} />
       </div>
@@ -89,7 +97,11 @@ export function WorkoutDetailScreen() {
     )
   }
 
-  const trail = buildTrail(stored === undefined, (location.state as DetailLocationState | null)?.from)
+  const trail = buildTrail(
+    stored === undefined,
+    (location.state as DetailLocationState | null)?.from,
+    workout.title,
+  )
 
   return (
     <WorkoutDetailView

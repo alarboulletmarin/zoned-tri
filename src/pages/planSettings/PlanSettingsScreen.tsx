@@ -73,7 +73,6 @@ export function PlanSettingsScreen({
         variant="detail"
         trail={['Plan', 'Réglages du plan']}
         onBack={onBack}
-        desktopTitle="Plan · réglages"
       />
 
       <div className={styles.column}>

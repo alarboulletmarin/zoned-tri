@@ -73,6 +73,7 @@ const TRAIL_DESTINATIONS: Record<string, string> = {
   Mois: '/plan/mois',
   Saison: PLAN_MACRO_PATH,
   'Vue macro': PLAN_MACRO_PATH,
+  'Mes plans': PLANS_PATH,
   Séances: '/workouts',
   Bibliothèque: '/workouts',
   Courses: '/races',
@@ -80,6 +81,9 @@ const TRAIL_DESTINATIONS: Record<string, string> = {
   Calculateurs: '/tools/calculateurs',
   'Import-export': '/import-export',
   Réglages: '/settings',
+  /* « Réglages » tout court mène aux réglages de l'application. Les écrans du plan écrivent donc
+     « Réglages du plan » — le libellé qui mène à `/plan/reglages`. Deux écrans différents ne
+     peuvent pas partager un segment : un fil d'Ariane qui ment est pire que pas de fil du tout. */
   'Réglages du plan': '/plan/reglages',
   Menu: OPENING_PATH,
 }
@@ -95,4 +99,20 @@ export function trailLabel(segment: TrailSegment): string {
 export function trailDestination(segment: TrailSegment): string | undefined {
   if (typeof segment !== 'string') return segment.to
   return TRAIL_DESTINATIONS[segment]
+}
+
+/**
+ * Titre de l'onglet du navigateur, construit depuis le fil d'Ariane : « Semaine · Plan · Zoned Tri ».
+ *
+ * Sans lui, les dix-huit écrans du produit partagent un seul et même titre — l'historique du
+ * navigateur, les favoris et les onglets deviennent illisibles, et un lien partagé ne dit pas ce
+ * qu'il ouvre. Le fil est déjà la hiérarchie de l'écran : on le lit à l'envers, du courant au
+ * parent, comme le fait tout navigateur.
+ */
+export const APP_NAME = 'Zoned Tri'
+
+export function documentTitleFromTrail(trail: TrailSegment[]): string {
+  const labels = trail.map(trailLabel).filter(Boolean)
+  if (labels.length === 0) return APP_NAME
+  return [...labels].reverse().concat(APP_NAME).join(' · ')
 }

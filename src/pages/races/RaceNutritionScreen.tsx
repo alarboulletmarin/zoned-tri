@@ -49,7 +49,6 @@ export function RaceNutritionScreen({ race }: RaceNutritionScreenProps) {
       <AppHeader
         variant="detail"
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Nutrition']}
-        desktopTitle={`${race.name} · nutrition`}
         onBack={() => navigate(racePath(race.id))}
       />
 

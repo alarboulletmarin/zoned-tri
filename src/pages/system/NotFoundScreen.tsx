@@ -57,7 +57,7 @@ export function NotFoundScreen({ pathname, catalogue }: NotFoundScreenProps) {
     <div className={styles.screen}>
       <AppHeader
         variant="detail"
-        trail={[section?.label ?? 'Séances', 'Introuvable']}
+        trail={section ? [section.label, 'Introuvable'] : ['Introuvable']}
         onBack={() => navigate(-1)}
       />
 

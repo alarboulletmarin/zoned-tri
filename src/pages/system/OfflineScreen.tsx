@@ -59,7 +59,11 @@ export function OfflineScreen({ workoutCount, hasActivePlan }: OfflineScreenProp
 
   return (
     <div className={styles.screen}>
-      <AppHeader variant="root" label="Plan" />
+      <AppHeader
+        variant="detail"
+        trail={['Plan', 'Hors-ligne']}
+        onBack={() => navigate(PLAN_PATH)}
+      />
 
       <div className={styles.column}>
         {/* `background:#0B0B0A; color:#EFEDE6; padding:12px 16px` avec un carré jaune de 10 px. */}

@@ -53,12 +53,11 @@ export function RaceSheetScreen({ race, today, variant = 'root' }: RaceSheetScre
   return (
     <div className={s.screen}>
       {variant === 'root' ? (
-        <AppHeader variant="root" label="Courses" desktopTitle={race.name} />
+        <AppHeader variant="root" label="Courses" />
       ) : (
         <AppHeader
           variant="detail"
           trail={['Courses', race.name]}
-          desktopTitle={race.name}
           onBack={() => navigate('/races')}
         />
       )}

@@ -5,7 +5,7 @@ import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
 import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
-import { BurgerIcon } from './ui/AppHeader/AppHeader'
+import { BurgerIcon, SearchIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
 import { BurgerMenu } from './BurgerMenu'
 import { SearchOverlay } from '../pages/workouts/SearchOverlay'
@@ -58,6 +58,18 @@ function AppShellLayout() {
             <NavLink to={OPENING_PATH} className={styles.railWordmark}>
               Zoned Tri
             </NavLink>
+            {/* La recherche n'existait à AUCUNE largeur desktop : le bandeau S4/S5/S6 ne porte pas
+                de loupe et le rail n'en avait pas. Un produit qui embarque 32 séances et douze
+                calculateurs sans moyen de les chercher au-delà de 1024 px n'est pas explorable —
+                elle prend donc place ici, à côté du mot-symbole, comme en mobile. */}
+            <button
+              type="button"
+              className={styles.railSearch}
+              aria-label="Rechercher"
+              onClick={openSearch}
+            >
+              <SearchIcon />
+            </button>
           </div>
           <div className={styles.railSectionLabel}>Sections</div>
           <div className={styles.railNav}>
@@ -107,11 +119,14 @@ function AppShellLayout() {
         </nav>
       )}
 
-      <div className={styles.main}>
+      {/* Repère principal : la coquille ne rendait qu'un `div`, si bien qu'aucun des dix-huit
+          écrans n'avait de `main` — un lecteur d'écran n'avait aucun moyen de sauter la
+          navigation pour atteindre le contenu. */}
+      <main className={styles.main}>
         <ShellChromeProvider openMenu={openMenu} openSearch={openSearch}>
           {isSearching ? <SearchOverlay onClose={() => setSearching(false)} /> : <Outlet />}
         </ShellChromeProvider>
-      </div>
+      </main>
 
       {/* `!showRail` : un menu ouvert en mobile puis élargi jusqu'au desktop se referme, le rail
           prenant le relais — le panneau d'encre ne doit jamais recouvrir la mise en page desktop. */}

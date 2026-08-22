@@ -77,8 +77,9 @@ describe('AppShell', () => {
     const banners = screen.getAllByRole('banner')
     expect(banners).toHaveLength(1)
     expect(within(banners[0]).getByText('Plan')).toBeInTheDocument()
-    // Le mot-symbole n'apparaît que dans l'ouverture (01) et dans le rail desktop.
-    expect(within(banners[0]).queryByText('Zoned Tri')).not.toBeInTheDocument()
+    // Le mot-symbole est désormais DANS ce bandeau unique, à toutes les largeurs : c'est le logo
+    // du produit et son retour à l'accueil, et il manquait sur quinze écrans sur seize.
+    expect(within(banners[0]).getByRole('link', { name: 'Zoned Tri' })).toHaveAttribute('href', '/')
   })
 
   it('renders exactly one banner on desktop too, next to the rail wordmark', () => {

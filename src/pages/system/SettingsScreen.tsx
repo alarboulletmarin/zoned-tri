@@ -111,7 +111,7 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
 
   return (
     <div className={styles.screen}>
-      <AppHeader variant="detail" trail={['Menu', 'Réglages']} onBack={() => navigate(-1)} />
+      <AppHeader variant="detail" trail={['Réglages']} onBack={() => navigate(-1)} />
 
       <div className={styles.column}>
         <div className={styles.head}>

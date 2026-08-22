@@ -93,7 +93,6 @@ function RaceNotFound() {
       <AppHeader
         variant="detail"
         trail={['Courses', 'Introuvable']}
-        desktopTitle="Course introuvable"
         onBack={() => navigate('/races')}
       />
       <div className={s.column}>

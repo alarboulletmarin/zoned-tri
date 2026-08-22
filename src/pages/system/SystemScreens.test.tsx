@@ -36,10 +36,13 @@ function renderScreen(ui: React.ReactElement) {
 // --- S2 · Réglages ---------------------------------------------------------------------------
 
 describe('SettingsScreen · artboard S2', () => {
-  it('titre l’écran comme l’artboard, sous le fil « Menu / Réglages »', () => {
+  it('titre l’écran comme l’artboard, sous un fil qui ne passe plus par un « Menu » inexistant', () => {
     renderScreen(<SettingsScreen />)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Réglages')
-    expect(screen.getByText('Menu', { exact: false })).toBeInTheDocument()
+    // Le canevas coiffait S2 de « Menu / Réglages ». En desktop il n'y a pas de menu — le rail EST
+    // la navigation — et le segment menait à l'ouverture, qui n'est pas le parent des réglages.
+    expect(screen.getByRole('navigation', { name: "Fil d'Ariane" })).toHaveTextContent('Réglages')
+    expect(screen.queryByText('Menu')).not.toBeInTheDocument()
   })
 
   it('pose les quatre intitulés de section du canevas', () => {

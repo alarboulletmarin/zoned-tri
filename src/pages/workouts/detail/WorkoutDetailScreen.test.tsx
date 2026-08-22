@@ -72,11 +72,15 @@ describe('WorkoutDetailScreen', () => {
     expect(screen.getAllByRole('heading', { name: restWorkout.title })).toHaveLength(1)
   })
 
-  it('names the current breadcrumb segment « Séance », never the workout title', () => {
+  it('names the current breadcrumb segment after the workout itself', () => {
     renderDetail(swim.id)
-    // Canevas 05 l. 563 / 28 l. 3055 : « Plan / Aujourd'hui / Séance ».
-    expect(screen.getByText('Séance')).toBeInTheDocument()
-    expect(screen.getAllByText(swim.title)).toHaveLength(1)
+    // Le canevas écrit le mot générique « Séance » parce qu'un artboard ne connaît pas ses données.
+    // L'application les a : le dernier segment nomme la page, donc la séance ouverte.
+    const trail = screen.getByRole('navigation', { name: "Fil d'Ariane" })
+    expect(trail).toHaveTextContent(swim.title)
+    expect(trail).not.toHaveTextContent(/^.*\bSéance\b\s*$/)
+    // Deux occurrences désormais : le fil et le titre de la fiche.
+    expect(screen.getAllByText(swim.title).length).toBeGreaterThanOrEqual(1)
   })
 
   /** Le titre de la séance est le seul `h1` de l'écran : le fil d'Ariane n'est pas un titre. */

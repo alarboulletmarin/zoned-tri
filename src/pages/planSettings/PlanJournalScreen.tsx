@@ -65,9 +65,8 @@ export function PlanJournalScreen({ entries, onBack, now }: PlanJournalScreenPro
     <div className={styles.screen}>
       <AppHeader
         variant="detail"
-        trail={['Plan', 'Réglages', 'Journal']}
+        trail={['Plan', 'Réglages du plan', 'Journal']}
         onBack={onBack}
-        desktopTitle="Plan · journal"
       />
 
       <div className={styles.column}>
