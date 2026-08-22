@@ -214,16 +214,15 @@ describe('RacesListScreen · artboard 27', () => {
   })
 
   /**
-   * La commande était grise sous « Bientôt disponible ». Le générateur crée pourtant bien une
-   * course — il en demande le nom et la date, et `saveRace` l'écrit avec le plan : c'est le seul
-   * chemin qui existe, autant y mener.
+   * La commande était grise sous « Bientôt disponible », puis renvoyée au générateur faute
+   * d'écran : ajouter une course voulait dire refaire un plan. Elle a le sien.
    */
-  it('mène « Ajouter une course » au générateur, qui en écrit une', () => {
+  it('mène « Ajouter une course » à l’écran de création', () => {
     renderScreen(<RacesListScreen races={demoRaces} today={TODAY} />)
     const add = screen.getByRole('button', { name: 'Ajouter une course' })
     expect(add).toBeEnabled()
     expect(add).not.toHaveAttribute('title')
-    expect(screen.getByText(/Une course s’ajoute avec son plan/)).toBeVisible()
+    expect(screen.queryByText(/Une course s’ajoute avec son plan/)).not.toBeInTheDocument()
   })
 })
 

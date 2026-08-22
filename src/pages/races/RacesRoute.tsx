@@ -13,6 +13,9 @@ import { RaceSheetScreen } from './RaceSheetScreen'
 import { RacesDesktopScreen } from './RacesDesktopScreen'
 import { RacesListScreen, type PlanPosition } from './RacesListScreen'
 import s from './RaceScreens.module.css'
+import { MissingScreen } from '../../components/MissingScreen'
+import { GENERATOR_PATH } from '../../navigation'
+import { NEW_RACE_PATH } from './routes'
 import { PageLoading } from '../../components/PageLoading'
 
 /** Plan actif qui vise cette course — c'est lui qui donne « semaine 07 / 18 » et l'affûtage. */
@@ -51,19 +54,19 @@ export function RacesRoute() {
   // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
   if (loading) return <PageLoading variant="root" label="Courses" />
 
+  // La section s'ouvrait sur un cadre pointillé et RIEN d'autre : pas un lien, pas un bouton.
+  // C'était le cul-de-sac le plus simple du produit — un vide qui se nomme mais ne se remplit pas.
   if (races.length === 0) {
     return (
-      <div className={s.screen}>
-        <AppHeader variant="root" label="Courses" desktopTitle="Courses" />
-        <div className={s.column}>
-          <div className={s.emptyBlock}>
-            <EmptyState
-              headline="Aucune course"
-              sentence="Aucune course n’est enregistrée : c’est une course objectif qui donne au plan sa date de fin et son affûtage."
-            />
-          </div>
-        </div>
-      </div>
+      <MissingScreen
+        trail={['Courses']}
+        headline={['Aucune', 'course']}
+        sentence="C’est une course objectif qui donne au plan sa date de fin et son affûtage. Tu peux en enregistrer une seule, et générer le plan plus tard."
+        exits={[
+          { label: 'Enregistrer une course', to: NEW_RACE_PATH, primary: true },
+          { label: 'Générer un plan', to: GENERATOR_PATH },
+        ]}
+      />
     )
   }
 

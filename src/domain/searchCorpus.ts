@@ -1,6 +1,12 @@
 import { CALCULATORS, calculatorCounter } from '../pages/tools/calculators/registry'
-import { calculatorPath, IMPORT_EXPORT_PATH, CALCULATORS_PATH, TOOLS_PATH } from '../pages/tools/toolsRoutes'
-import { racePath, RACES_PATH } from '../pages/races/routes'
+import {
+  calculatorPath,
+  CALCULATORS_PATH,
+  IMPORT_EXPORT_PATH,
+  REFERENCES_PATH,
+  TOOLS_PATH,
+} from '../pages/tools/toolsRoutes'
+import { NEW_RACE_PATH, racePath, RACES_PATH } from '../pages/races/routes'
 import { PLAN_JOURNAL_PATH, PLAN_SETTINGS_PATH } from '../pages/planSettings/planSettingsRoutes'
 import { EXPORTS_PATH } from '../pages/exports/exportsRoutes'
 import {
@@ -92,7 +98,23 @@ export const SEARCHABLE_SCREENS: SearchEntry[] = [
   },
   { id: 'screen-workouts', nature: 'screen', title: 'Bibliothèque', meta: 'Séances', to: WORKOUTS_PATH },
   { id: 'screen-races', nature: 'screen', title: 'Mes courses', meta: 'Courses', to: RACES_PATH },
+  {
+    id: 'screen-new-race',
+    nature: 'screen',
+    title: 'Nouvelle course',
+    meta: 'Courses / Nouvelle',
+    to: NEW_RACE_PATH,
+    keywords: ['ajouter une course', 'prépa', 'objectif'],
+  },
   { id: 'screen-tools', nature: 'screen', title: 'Mes références', meta: 'Outils', to: TOOLS_PATH, keywords: ['profil', 'FTP', 'CSS', 'VMA', 'seuil'] },
+  {
+    id: 'screen-references-edit',
+    nature: 'screen',
+    title: 'Enregistrer une référence',
+    meta: 'Outils / Mes références',
+    to: REFERENCES_PATH,
+    keywords: ['FTP', 'CSS', 'seuil', 'poids', 'FC max', 'sudation', 'mesure'],
+  },
   { id: 'screen-calculateurs', nature: 'screen', title: 'Calculateurs', meta: 'Outils / Calculateurs', to: CALCULATORS_PATH },
   {
     id: 'screen-import-export',

@@ -15,11 +15,9 @@ import {
   racesOverview,
 } from '../../domain/raceView'
 import type { Race } from '../../domain/types'
-import { racePath } from './routes'
-import { GENERATOR_PATH } from '../../navigation'
+import { NEW_RACE_PATH, racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RacesListScreen.module.css'
-import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /** Position du plan lié à l'objectif — « plan : semaine 07 / 18 » sur la carte de l'artboard 27. */
 export interface PlanPosition {
@@ -194,16 +192,11 @@ export function RacesListScreen({ races, today, planPosition }: RacesListScreenP
             Une seule course est l’objectif principal : elle seule façonne le plan et son affûtage. Une
             prépa apparaît encadrée « PRÉPA », avec ses jours faciles avant.
           </div>
-          {/* La commande était grise sous « Bientôt disponible ». Le générateur, lui, crée bien une
-              course : il en demande le nom et la date, et `saveRace` l'écrit avec le plan. C'est le
-              seul chemin qui existe aujourd'hui — autant y mener plutôt que d'éteindre le bouton. */}
-          <PrimaryAction tone="ink" className={s.primary} onClick={() => navigate(GENERATOR_PATH)}>
+          {/* La commande était grise sous « Bientôt disponible », puis renvoyée au générateur
+              faute d'écran : ajouter une course voulait dire refaire un plan. Elle a le sien. */}
+          <PrimaryAction tone="ink" className={s.primary} onClick={() => navigate(NEW_RACE_PATH)}>
             Ajouter une course
           </PrimaryAction>
-          <InertNote id="note-ajouter-course">
-            Une course s’ajoute avec son plan : le générateur en demande le nom et la date, puis les
-            écrit ensemble. Une course sans plan n’a pas encore d’écran.
-          </InertNote>
         </div>
       </div>
     </div>

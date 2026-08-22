@@ -1,0 +1,152 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.column {
+  padding: var(--space-18) var(--space-gutter-mobile) var(--space-26);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-18);
+  max-width: 560px;
+}
+
+.title {
+  font-size: var(--fs-title-section);
+  line-height: var(--lh-display-min);
+  letter-spacing: var(--ls-display-min);
+  text-transform: uppercase;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-10) 0;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: var(--action-height-min);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  padding: 0 var(--space-10);
+  background: var(--color-paper);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--color-ink);
+}
+
+.input:focus {
+  outline: none;
+}
+
+/* Choix uniques : la même grammaire que les lignes du générateur — aplat d'encre pour le retenu. */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.option,
+.optionSelected {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--action-height-min);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  padding: var(--space-9) var(--space-10);
+  text-align: left;
+  cursor: pointer;
+}
+
+.option {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.optionSelected {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+}
+
+.optionLabel {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.optionMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  color: var(--color-label);
+}
+
+.optionSelected .optionMeta {
+  color: var(--color-on-ink-soft);
+}
+
+.hint,
+.error {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+}
+
+.hint {
+  color: var(--color-label);
+}
+
+.error {
+  color: var(--color-signal-red);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: 340px;
+}
+
+.save {
+  width: 100%;
+}
+
+/* La suppression garde le contour du produit : pas de bouton rouge, le rouge est réservé aux
+   signaux d'erreur. C'est la feuille qui porte le poids de l'acte, pas la couleur du bouton. */
+.delete {
+  color: var(--color-signal-red);
+  border-color: var(--color-signal-red);
+}

@@ -15,7 +15,7 @@ import {
 } from '../../domain/raceView'
 import { formatDayMonthLong } from '../../domain/planGenerator/dates'
 import { splitName } from './splitName'
-import { racePath } from './routes'
+import { raceEditPath, racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceSheetScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -236,6 +236,17 @@ export function RaceSheetScreen({ race, today, variant = 'root' }: RaceSheetScre
               vélo, départ) se saisissent course par course, et cet écran n’existe pas encore.
             </InertNote>
           )}
+
+          {/* La fiche se lisait et ne se corrigeait pas : une date décalée, un nom mal écrit, une
+              heure de départ manquante n'avaient aucun chemin. */}
+          <SecondaryAction
+            shape="block"
+            className={s.navAction}
+            onClick={() => navigate(raceEditPath(race.id))}
+          >
+            Modifier cette course
+            <span aria-hidden="true">→</span>
+          </SecondaryAction>
         </div>
       </div>
     </div>

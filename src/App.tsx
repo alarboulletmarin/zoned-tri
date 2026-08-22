@@ -22,6 +22,7 @@ import {
   RaceSheetRoute,
   RacesRoute,
 } from './pages/races/RacesRoute'
+import { RaceFormScreen } from './pages/races/RaceFormScreen'
 import { RacesPreview } from './pages/races/RacesPreview'
 import { ToolsScreen } from './pages/tools/ToolsScreen'
 import { ReferencesScreen } from './pages/tools/ReferencesScreen'
@@ -71,7 +72,11 @@ function App() {
             {/* Courses — artboards 08, 09, 10, 11, 27, 30 et S7. `RacesRoute` choisit la racine :
                 S7 en desktop, 27 dès qu'il y a plusieurs courses, sinon la fiche 08 directement. */}
             <Route path="/races" element={<RacesRoute />} />
+            {/* Créer, corriger, supprimer une course : le canevas ne dessine aucun de ces écrans,
+                et sans eux une course n'entre dans l'app que par le générateur. */}
+            <Route path="/races/nouvelle" element={<RaceFormScreen mode="create" />} />
             <Route path="/races/:id" element={<RaceSheetRoute />} />
+            <Route path="/races/:id/modifier" element={<RaceFormScreen mode="edit" />} />
             <Route path="/races/:id/pacing" element={<RacePacingRoute />} />
             <Route path="/races/:id/nutrition" element={<RaceNutritionRoute />} />
             <Route path="/races/:id/jour-j" element={<RaceDayRoute />} />
