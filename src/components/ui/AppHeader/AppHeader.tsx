@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { useShellChrome } from '../../../context/shellChrome'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
+import { trailDestination, trailLabel, type TrailSegment } from '../../../navigation'
 import { BackSquare } from '../BackSquare/BackSquare'
 import styles from './AppHeader.module.css'
 
@@ -72,8 +74,13 @@ export interface AppHeaderOpeningProps extends CommonProps {
 
 export interface AppHeaderDetailProps extends CommonProps {
   variant: 'detail'
-  /** Segments du fil d'Ariane, du parent au courant (canevas 03 : `['Plan', 'Semaine']`). */
-  trail: string[]
+  /**
+   * Segments du fil d'Ariane, du parent au courant (canevas 03 : `['Plan', 'Semaine']`). Chaque
+   * segment autre que le dernier devient un lien dès qu'une destination lui est connue — par son
+   * intitulé (`trailDestination`) ou explicitement, sous la forme `{ label, to }` quand la cible
+   * dépend des données, comme la fiche d'une course.
+   */
+  trail: TrailSegment[]
   onBack: () => void
   /** Intitulé accessible du bouton de retour (« Étape précédente » dans le générateur). */
   backLabel?: string
@@ -104,7 +111,7 @@ export function AppHeader(props: AppHeaderProps) {
     (props.variant === 'root'
       ? props.label
       : props.variant === 'detail'
-        ? (props.trail.at(-1) ?? '')
+        ? (props.trail.length > 0 ? trailLabel(props.trail[props.trail.length - 1]) : '')
         : 'Zoned Tri')
 
   if (isDesktop) {
@@ -127,18 +134,29 @@ export function AppHeader(props: AppHeaderProps) {
         <span className={styles.detailLeft}>
           <BackSquare onClick={props.onBack} label={props.backLabel ?? 'Retour'} />
           <span className={styles.trail}>
-            {props.trail.map((segment, index) =>
-              index === props.trail.length - 1 ? (
-                <span key={segment} className={styles.trailCurrent}>
-                  {segment}
-                </span>
-              ) : (
-                <span key={segment} className={styles.trailMuted}>
-                  {segment}
+            {props.trail.map((segment, index) => {
+              const label = trailLabel(segment)
+              if (index === props.trail.length - 1) {
+                return (
+                  <span key={label} className={styles.trailCurrent}>
+                    {label}
+                  </span>
+                )
+              }
+              const to = trailDestination(segment)
+              return (
+                <span key={label} className={styles.trailMuted}>
+                  {to ? (
+                    <Link className={styles.trailLink} to={to}>
+                      {label}
+                    </Link>
+                  ) : (
+                    label
+                  )}
                   {' / '}
                 </span>
-              ),
-            )}
+              )
+            })}
           </span>
         </span>
         {props.counter && <span className={styles.counter}>{props.counter}</span>}

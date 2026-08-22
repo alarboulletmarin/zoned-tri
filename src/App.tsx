@@ -3,7 +3,13 @@ import { AppShell } from './components/AppShell'
 import { AppDataProvider } from './context/AppDataContext'
 import { OuvertureScreen } from './pages/ouverture/OuvertureScreen'
 import { GeneratePlanScreen } from './pages/generator/GeneratePlanScreen'
-import { PlanMacroRoute, PlanRoute, PlanWeekRoute, SemainePreviewRoute } from './pages/plan/PlanRoute'
+import {
+  PlanMacroRoute,
+  PlanMonthRoute,
+  PlanRoute,
+  PlanWeekRoute,
+  SemainePreviewRoute,
+} from './pages/plan/PlanRoute'
 import { PlansRoute } from './pages/plan/PlansRoute'
 import { PlanMacroPreview } from './pages/plan/PlanMacroPreview'
 import { PlansPreview } from './pages/plan/PlansPreview'
@@ -53,7 +59,9 @@ function App() {
             <Route index element={<OuvertureScreen />} />
             <Route path="/plan" element={<PlanRoute />} />
             <Route path="/plan/semaine" element={<PlanWeekRoute />} />
-            {/* Artboard 04 · vue macro, atteinte depuis le titre de la Semaine. */}
+            {/* Artboard 04m · le mois, entre la semaine et la saison. */}
+            <Route path="/plan/mois" element={<PlanMonthRoute />} />
+            {/* Artboard 04 · vue macro, désormais le segment SAISON du plan. */}
             <Route path="/plan/macro" element={<PlanMacroRoute />} />
             {/* Artboard 41 · mes plans — l'ouverture y envoie ses archives. */}
             <Route path="/plans" element={<PlansRoute />} />

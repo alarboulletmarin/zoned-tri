@@ -1,0 +1,42 @@
+/* Artboards 02 / 03 / 04m / 04 : bande pleine largeur sous le bandeau, filet de 2 px en dessous,
+   quatre cellules égales séparées par un filet de 2 px. */
+.segment {
+  flex: none;
+  display: flex;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cell {
+  flex: 1;
+  min-width: 0;
+  /* 44 px et non les 40 px du canevas : cible tactile (cf. le commentaire du composant). */
+  min-height: var(--action-height-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  text-decoration: none;
+  background: none;
+}
+
+.cell + .cell {
+  border-left: var(--border-width-structure) solid var(--color-ink);
+}
+
+.cell:hover,
+.cell:focus-visible {
+  background: var(--color-neutral-fill);
+  color: var(--color-ink);
+}
+
+/* Niveau courant : aplat d'encre, texte accent — le seul endroit de la bande qui porte l'accent. */
+.cellCurrent,
+.cellCurrent:hover {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  font-weight: var(--fw-bold);
+}

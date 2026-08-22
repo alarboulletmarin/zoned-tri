@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { AppDataProvider } from '../context/AppDataContext'
@@ -48,9 +48,16 @@ describe('BurgerMenu', () => {
     expect(screen.getByRole('button', { name: 'Fermer le menu' })).toBeInTheDocument()
   })
 
+  it('sends the wordmark back to the opening screen', async () => {
+    renderMenu()
+    expect(await screen.findByRole('link', { name: 'Zoned Tri' })).toHaveAttribute('href', '/')
+  })
+
   it('renders the 4 root sections in the canvas order', async () => {
     renderMenu()
-    const links = await screen.findAllByRole('link')
+    // Portée à la seule liste des sections : l'en-tête du panneau porte lui aussi un lien.
+    const sections = await screen.findByRole('navigation', { name: 'Sections' })
+    const links = within(sections).getAllByRole('link')
     expect(links.slice(0, 4).map((link) => link.textContent)).toEqual([
       expect.stringContaining('Plan'),
       expect.stringContaining('Séances'),
@@ -120,18 +127,20 @@ describe('BurgerMenu', () => {
     expect(onClose).toHaveBeenCalledOnce()
   })
 
-  it('moves focus onto the close button and traps Tab inside the panel', async () => {
+  it('moves focus onto the first control of the panel and traps Tab inside it', async () => {
     const user = userEvent.setup()
     renderMenu()
-    const close = await screen.findByRole('button', { name: 'Fermer le menu' })
-    expect(close).toHaveFocus()
+    // Premier élément focalisable du panneau : le mot-symbole, qui ramène à l'ouverture.
+    const wordmark = await screen.findByRole('link', { name: 'Zoned Tri' })
+    expect(wordmark).toHaveFocus()
 
     const panel = screen.getByRole('dialog')
     await user.tab()
-    expect(panel).toContainElement(document.activeElement as HTMLElement)
+    expect(screen.getByRole('button', { name: 'Fermer le menu' })).toHaveFocus()
 
     await user.tab({ shift: true })
-    expect(close).toHaveFocus()
+    expect(wordmark).toHaveFocus()
+    // Shift+Tab depuis le premier élément repart sur le dernier, sans quitter le panneau.
     await user.tab({ shift: true })
     expect(panel).toContainElement(document.activeElement as HTMLElement)
   })

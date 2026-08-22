@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
+import { render } from '../../../testing/render'
 import userEvent from '@testing-library/user-event'
 import { AppHeader } from './AppHeader'
 import { ShellChromeProvider } from '../../../context/ShellChromeContext'

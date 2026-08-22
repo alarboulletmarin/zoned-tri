@@ -14,7 +14,18 @@ export const OPENING_PATH = '/'
  */
 export const PLANS_PATH = '/plans'
 
-/** Vue macro du plan (artboard 04), atteinte depuis la Semaine. */
+/**
+ * Les quatre niveaux de zoom du plan, dans l'ordre du segment JOUR · SEMAINE · MOIS · SAISON du
+ * canevas. Ils forment la section Plan à eux seuls : chacun montre le même plan, de plus ou moins
+ * loin, et aucun n'est un cul-de-sac — le segment les relie tous entre eux.
+ */
+export const PLAN_PATH = '/plan'
+export const WEEK_PATH = '/plan/semaine'
+
+/** Mois (artboard 04m) : « le niveau qui manquait entre la semaine et la saison ». */
+export const PLAN_MONTH_PATH = '/plan/mois'
+
+/** Vue macro du plan (artboard 04) — le canevas l'intitule désormais « segment SAISON ». */
 export const PLAN_MACRO_PATH = '/plan/macro'
 
 /** 4 sections racines du produit (§8 de la research, écran S1/S4) — partagées entre BurgerMenu et AppShell. */
@@ -45,4 +56,43 @@ const SECTION_ALIASES: Record<string, string> = {
 export function sectionForPath(pathname: string): RootSection | undefined {
   const aliased = SECTION_ALIASES[pathname] ?? pathname
   return ROOT_SECTIONS.find((section) => aliased.startsWith(section.to))
+}
+
+/**
+ * Destination des segments du fil d'Ariane, par intitulé.
+ *
+ * Le canevas écrit le fil « Plan / Semaine », « Courses / 70.3 Vichy / Pacing » : chaque segment
+ * nomme un écran qui existe, il doit donc y mener. Un fil qui ne se remonte pas est un cul-de-sac,
+ * et la méthode l'interdit. Les intitulés sont peu nombreux et stables — ce sont les sections et
+ * leurs écrans intermédiaires ; tout le reste (le nom d'une course, « Introuvable ») n'a pas de
+ * destination fixe et reste du texte, ou passe une destination explicite (`{ label, to }`).
+ */
+const TRAIL_DESTINATIONS: Record<string, string> = {
+  Plan: '/plan',
+  Semaine: '/plan/semaine',
+  Mois: '/plan/mois',
+  Saison: PLAN_MACRO_PATH,
+  'Vue macro': PLAN_MACRO_PATH,
+  Séances: '/workouts',
+  Bibliothèque: '/workouts',
+  Courses: '/races',
+  Outils: '/tools',
+  Calculateurs: '/tools/calculateurs',
+  'Import-export': '/import-export',
+  Réglages: '/settings',
+  'Réglages du plan': '/plan/reglages',
+  Menu: OPENING_PATH,
+}
+
+/** Un segment de fil : un intitulé seul (destination déduite) ou un couple explicite. */
+export type TrailSegment = string | { label: string; to: string }
+
+export function trailLabel(segment: TrailSegment): string {
+  return typeof segment === 'string' ? segment : segment.label
+}
+
+/** Destination d'un segment, ou `undefined` s'il ne mène nulle part (nom de course, « Introuvable »). */
+export function trailDestination(segment: TrailSegment): string | undefined {
+  if (typeof segment !== 'string') return segment.to
+  return TRAIL_DESTINATIONS[segment]
 }

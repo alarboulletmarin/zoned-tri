@@ -5,10 +5,11 @@ import { addDays } from '../../domain/planGenerator/dates'
 import { alignWeekToWeekOf, todayIso, weekdayIndex } from '../../domain/planWeek'
 import { currentWeekOf } from '../../domain/todayState'
 import { demoPlan, demoRace, demoWorkouts } from '../../domain/demoData'
-import { OPENING_PATH } from '../../navigation'
+import { OPENING_PATH, PLAN_PATH } from '../../navigation'
 import type { PlanWeek, TrainingPlan } from '../../domain/types'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
 import { PlanMacroScreen } from './PlanMacroScreen'
+import { PlanMonthScreen } from './PlanMonthScreen'
 import { SemaineScreen } from './SemaineScreen'
 import { TodayScreen } from './TodayScreen'
 
@@ -66,8 +67,21 @@ export function PlanWeekRoute() {
 
   if (loading) return null
 
+  // `?semaine=N` — le Mois (04m) et, plus tard, les flèches de l'artboard 03 ouvrent une semaine
+  // précise. Une valeur non numérique est ignorée : `SemaineScreen` retombe sur la semaine en cours.
+  const requested = Number(search.get('semaine'))
+  const weekNumber = Number.isInteger(requested) && requested > 0 ? requested : undefined
+
   const activePlan = plans.find((plan) => plan.status === 'active')
-  if (activePlan) return <SemaineScreen plan={activePlan} catalogue={catalogue} races={races} />
+  if (activePlan)
+    return (
+      <SemaineScreen
+        plan={activePlan}
+        catalogue={catalogue}
+        races={races}
+        {...(weekNumber !== undefined ? { weekNumber } : {})}
+      />
+    )
 
   const today = todayIso()
   const demoWeek: TrainingPlan = {
@@ -79,11 +93,12 @@ export function PlanWeekRoute() {
 }
 
 /**
- * `/plan/macro` — écran 04, la vue macro du plan.
+ * `/plan/macro` — écran 04, la saison entière.
  *
- * Le canevas l'atteint « depuis Semaine → appui sur « Semaine 07 » » : le retour renvoie donc à la
- * semaine, pas à « Aujourd'hui ». Sans plan actif il n'y a pas de plan à regarder dans son
- * entier — l'ouverture est l'écran qui sait le dire (même règle que `PlanRoute`).
+ * Le canevas l'atteint désormais par le segment SAISON, depuis n'importe quel niveau de zoom, et
+ * non plus « depuis Semaine → appui sur « Semaine 07 » ». Le carré de retour suit donc le fil
+ * d'Ariane — « Plan / Saison » — et remonte à Aujourd'hui. Sans plan actif il n'y a pas de plan à
+ * regarder dans son entier : l'ouverture est l'écran qui sait le dire (même règle que `PlanRoute`).
  */
 export function PlanMacroRoute() {
   const navigate = useNavigate()
@@ -101,7 +116,39 @@ export function PlanMacroRoute() {
     <PlanMacroScreen
       plan={activePlan}
       {...(race ? { race } : {})}
-      onBack={() => navigate('/plan/semaine')}
+      onBack={() => navigate(PLAN_PATH)}
+    />
+  )
+}
+
+/**
+ * `/plan/mois` — écran 04m, le niveau que le canevas a ajouté entre la semaine et la saison.
+ *
+ * Le mois affiché vit dans l'URL (`?mois=AAAA-MM-JJ`) : les flèches ← → le changent, et le retour
+ * du navigateur remonte donc de mois en mois, sans état caché.
+ */
+export function PlanMonthRoute() {
+  const [search, setSearch] = useSearchParams()
+  const { plans, loading } = usePlans()
+  const { workouts } = useWorkouts()
+  const { races } = useRaces()
+
+  const catalogue = useMemo(() => [...workouts, ...SEED_WORKOUTS, ...demoWorkouts], [workouts])
+
+  if (loading) return null
+
+  const activePlan = plans.find((plan) => plan.status === 'active')
+  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+
+  const anchor = search.get('mois') ?? undefined
+
+  return (
+    <PlanMonthScreen
+      plan={activePlan}
+      catalogue={catalogue}
+      races={races}
+      {...(anchor ? { anchor } : {})}
+      onNavigateMonth={(firstDay) => setSearch({ mois: firstDay })}
     />
   )
 }

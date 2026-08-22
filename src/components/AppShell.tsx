@@ -52,7 +52,11 @@ function AppShellLayout() {
             <span className={styles.railBurger} aria-hidden="true">
               <BurgerIcon />
             </span>
-            <span className={styles.railWordmark}>Zoned Tri</span>
+            {/* Le mot-symbole est la seule sortie de secours du rail : il ramène à l'ouverture,
+                d'où l'on rejoint « Mes plans », la génération et le bilan de course. */}
+            <NavLink to={OPENING_PATH} className={styles.railWordmark}>
+              Zoned Tri
+            </NavLink>
           </div>
           <div className={styles.railSectionLabel}>Sections</div>
           <div className={styles.railNav}>

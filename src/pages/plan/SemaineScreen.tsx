@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
+import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
+import { WeekNavigator } from './WeekNavigator'
 import { DisciplineTag, ZoneTag, type TagTone, type ZoneNumber } from '../../components/ui/Badge/Badge'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { WeekStrip, type WeekStripDay } from '../../components/ui/WeekStrip/WeekStrip'
@@ -25,9 +27,9 @@ import {
   type WeekListCounts,
 } from '../../domain/planWeek'
 import { DAY_LABELS, computeWeekBars, type WeekBar } from '../../domain/weekContext'
+import { buildWeekNav } from '../../domain/weekNav'
 import { formatDurationCompact, formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
 import styles from './SemaineScreen.module.css'
-import { PLAN_MACRO_PATH } from '../../navigation'
 
 /**
  * Catalogue de résolution des identifiants du plan : la bibliothèque d'abord, les séances de
@@ -53,6 +55,12 @@ export interface SemaineScreenProps {
   races?: Race[]
   /** Injecté par les tests ; par défaut le jour courant du navigateur. */
   today?: string
+  /**
+   * Semaine à afficher. Absente, c'est celle d'aujourd'hui — le comportement d'origine. Le Mois
+   * (04m) ouvre une semaine passée par ce biais : sans elle, « appui sur une ligne de semaine →
+   * la semaine » ramènerait toujours à la semaine en cours, quelle que soit la ligne touchée.
+   */
+  weekNumber?: number
   /** Vrai quand la semaine affichée vient du jeu de démonstration et non d'un plan enregistré. */
   isDemo?: boolean
 }
@@ -87,12 +95,19 @@ export function SemaineScreen({
   catalogue = WORKOUT_CATALOGUE,
   races = [],
   today,
+  weekNumber: requestedWeek,
   isDemo = false,
 }: SemaineScreenProps) {
   const navigate = useNavigate()
+  const [, setSearch] = useSearchParams()
   const isDesktop = useBreakpoint() === 'desktop'
   const reference = today ?? todayIso()
-  const week = findCurrentWeek(plan, reference)
+  // Un rang demandé qui ne correspond à aucune semaine retombe sur la semaine courante : on
+  // n'affiche jamais un écran vide pour une URL bricolée.
+  const week =
+    (requestedWeek !== undefined
+      ? plan.weeks.find((candidate) => candidate.weekNumber === requestedWeek)
+      : undefined) ?? findCurrentWeek(plan, reference)
 
   const days = useMemo(
     () => (week ? buildWeekDays(week, catalogue, reference) : []),
@@ -143,6 +158,9 @@ export function SemaineScreen({
   }
 
   const weekNumber = String(week.weekNumber).padStart(2, '0')
+  // Le volume passé à la barre est celui des séances RÉSOLUES, pas `week.totalVolumeMin` : la
+  // barre annoncerait sinon un volume que la liste des jours en dessous ne montre pas.
+  const weekNav = buildWeekNav({ plan, week, today: reference, plannedMin: totals.totalMin })
 
   return (
     <div className={styles.screen}>
@@ -169,16 +187,22 @@ export function SemaineScreen({
         }
       />
 
+      {/* Segment des quatre niveaux de zoom (artboard 03) — la semaine n'est plus le seul chemin
+          vers la vue macro, et le mois cesse d'être invisible. */}
+      <PlanSegment current="semaine" />
+
+      {/* 03 l. 415-435 : flèches ← →, état de la semaine, rail des dix-huit. Sans elle, la Semaine
+          ne montrait que la semaine en cours et rien ne permettait d'en sortir. */}
+      <WeekNavigator view={weekNav} onSelect={(number) => setSearch({ semaine: String(number) })} />
+
       {isDesktop ? (
         <DesktopWeek days={days} shares={shares} isDemo={isDemo} />
       ) : (
         <MobileWeek
           week={week}
-          weekNumber={weekNumber}
           days={days}
           shares={shares}
           counts={counts}
-          totalMin={totals.totalMin}
           isDemo={isDemo}
           onOpenWorkout={(id) => navigate(`/workouts/${id}`, { state: { from: 'Semaine' } })}
         />
@@ -207,40 +231,22 @@ function proportionSegments(shares: DisciplineShare[]): ProgressSegment[] {
 
 interface MobileWeekProps {
   week: PlanWeek
-  weekNumber: string
   days: WeekDay[]
   shares: DisciplineShare[]
   counts: WeekListCounts
-  totalMin: number
   isDemo: boolean
   onOpenWorkout: (id: string) => void
 }
 
-function MobileWeek({
-  week,
-  weekNumber,
-  days,
-  shares,
-  counts,
-  totalMin,
-  isDemo,
-  onOpenWorkout,
-}: MobileWeekProps) {
+function MobileWeek({ week, days, shares, counts, isDemo, onOpenWorkout }: MobileWeekProps) {
   // Artboard 16 dès qu'un jour porte plus d'une séance ; artboard 03 sinon.
   const dense = counts.doubledDayCount > 0
   const bars = useMemo(() => computeWeekBars(days), [days])
 
   return (
     <>
-      {/* 03 l. 422-425 · 16 l. 2468-2470 : le titre et le volume, sur la même ligne de base. */}
-      <div className={cls(styles.titleRow, dense && styles.titleRowDense)}>
-        {/* « depuis Semaine → appui sur "Semaine 07" » : c'est la ligne grise de l'artboard 04 qui
-            désigne ce titre comme la porte de la vue macro. Aucun élément ajouté. */}
-        <Link className={styles.titleLink} to={PLAN_MACRO_PATH}>
-          <h1 className={styles.title}>Semaine {weekNumber}</h1>
-        </Link>
-        <span className={cls(styles.total, dense && styles.totalDense)}>{formatDurationCompact(totalMin)}</span>
-      </div>
+      {/* Le titre « Semaine 07 » et son volume vivent désormais dans `WeekNavigator`, entre les
+          deux flèches (artboard 03 l. 424-428). Il n'y en a qu'un par écran. */}
 
       {/* `framed` : 14 px de couleur entre deux filets de 2 px, soit 18 px occupés — le canevas
           écrit cette frise en `content-box` (03 l. 426, 16 l. 2471). */}

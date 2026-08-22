@@ -1,0 +1,412 @@
+/* Écran 04m · Plan / Mois — un seul artboard, mobile (390 × 960).
+ *
+ * Le canevas ne donne pas d'artboard large à cet écran : au-delà de la tablette la colonne se
+ * borne au lieu de s'étirer (méthode §7). Rien n'apparaît, rien ne disparaît — les cases du
+ * calendrier respirent, c'est tout. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* --- Barre de mois (04m : `padding:13px 16px 10px`) --------------------------------------- */
+
+.monthNav {
+  flex: none;
+  padding: 13px var(--space-16) var(--space-10);
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+/* `width:38px; height:38px; border:2px solid` — porté à 44 px pour la cible tactile. */
+.navArrow {
+  width: var(--action-height-min);
+  height: var(--action-height-min);
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: none;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* Un mois hors du plan n'existe pas : la flèche reste dessinée, éteinte, et ne ment pas. */
+.navArrow:disabled {
+  border-color: var(--color-hairline);
+  color: var(--color-inactive);
+  cursor: default;
+}
+
+.monthHeading {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.spanLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:32px; line-height:.95; letter-spacing:-.05em` */
+.monthTitle {
+  margin: 3px 0 0;
+  font-weight: var(--fw-bold);
+  font-size: 32px;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.totals {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-label);
+  margin-top: 3px;
+}
+
+.proportion {
+  flex: none;
+}
+
+/* Mobile : les deux blocs s'empilent, l'un après l'autre. La grille arrive au-delà de 1024 px. */
+.split {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendarCol {
+  min-width: 0;
+}
+
+/* --- Grille du mois ----------------------------------------------------------------------- */
+
+.grid {
+  flex: none;
+}
+
+.gridHead {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.gridHeadCell {
+  text-align: center;
+  padding: var(--space-6) 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+.gridBody {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* `min-height:56px; padding:5px 6px 6px`, filets de 1 px à droite et en dessous. */
+.cell {
+  box-sizing: border-box;
+  min-height: 56px;
+  padding: 5px var(--space-6) var(--space-6);
+  border: none;
+  border-right: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+  background: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+
+.cell:hover,
+.cell:focus-visible {
+  background: var(--color-neutral-fill);
+}
+
+/* Débords de la première et de la dernière ligne : le mois voisin, en retrait. */
+.cellOutside {
+  background: #f4f2ea;
+}
+
+.cellOutside .cellNumber {
+  color: #b4b1a6;
+}
+
+/* Aujourd'hui : aplat lime, chiffre en gras — la seule case colorée de la grille. */
+.cellToday,
+.cellToday:hover {
+  background: var(--color-signal-lime);
+}
+
+.cellToday .cellNumber {
+  font-weight: var(--fw-bold);
+}
+
+/* Jour hors des dates du plan : rien à ouvrir, donc pas de curseur ni de survol. */
+.cellInert {
+  cursor: default;
+}
+
+.cellInert:hover {
+  background: none;
+}
+
+.cellInert.cellOutside:hover {
+  background: #f4f2ea;
+}
+
+.cellNumber {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+/* Les séances du jour, l'une sous l'autre — deux au plus dans un plan que le moteur produit,
+   mais rien n'empêche la case d'en porter trois si le plan en contient. */
+.cellMarks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.cellMark {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--color-label);
+}
+
+/* `width:9px; height:9px` — la pastille de discipline, couleur posée en ligne. */
+.cellSwatch {
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+
+.cellMarkEmpty {
+  color: #b4b1a6;
+}
+
+/* Deux séances tiennent dans la case : elle grandit d'autant plutôt que d'en cacher une. */
+.cellMarks .cellMark + .cellMark {
+  margin-top: 0;
+}
+
+/* --- Légende et note de course ------------------------------------------------------------ */
+
+.legend {
+  padding: 9px var(--space-gutter-mobile) 0;
+  display: flex;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-label);
+}
+
+.legendToday {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legendToday::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  background: var(--color-signal-lime);
+}
+
+.legendDash {
+  white-space: nowrap;
+}
+
+.raceNote {
+  margin: 0;
+  padding: 4px var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-ink);
+}
+
+/* --- Charge par semaine -------------------------------------------------------------------- */
+
+.weeks {
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+}
+
+.weeksLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+  padding: 9px 0 3px;
+}
+
+.weekRow {
+  width: 100%;
+  display: flex;
+  gap: var(--space-10);
+  align-items: center;
+  /* `padding:9px 0` donne 47 px de haut avec le contenu : la cible est acquise sans retouche. */
+  padding: 9px 0;
+  border: none;
+  border-bottom: 1px solid var(--color-hairline);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.weekRow:hover,
+.weekRow:focus-visible {
+  background: var(--color-neutral-fill);
+}
+
+.weekLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-label);
+  flex: none;
+}
+
+/* Semaine en cours : son rang passe en aplat d'encre, comme le segment. */
+.weekRowCurrent .weekLabel {
+  font-weight: var(--fw-bold);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  padding: 2px var(--space-6);
+}
+
+.weekBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.weekVolume {
+  display: block;
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+}
+
+.weekRowCurrent .weekVolume {
+  font-weight: var(--fw-bold);
+}
+
+.weekRange {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--color-label);
+  margin-top: 2px;
+}
+
+.weekGauge {
+  width: 58px;
+  height: 9px;
+  background: var(--color-neutral-fill);
+  flex: none;
+}
+
+.weekGaugeFill {
+  display: block;
+  height: 9px;
+  background: var(--color-discipline-r);
+}
+
+.weekRowCurrent .weekGaugeFill {
+  background: var(--color-ink);
+}
+
+.weekArrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-label);
+  flex: none;
+}
+
+/* --- Note de bas d'écran ------------------------------------------------------------------- */
+
+.footnote {
+  margin: auto 0 0;
+  padding: var(--space-10) var(--space-gutter-mobile) var(--space-14);
+  border-top: 1px solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* --- Desktop -------------------------------------------------------------------------------
+ *
+ * Le canevas ne donne pas d'artboard large au Mois. Il donne en revanche la GRAMMAIRE des écrans
+ * larges, sur S4 et S6 : bandeau et bandes de navigation pleine largeur à droite du rail, puis le
+ * contenu en deux colonnes — la matière à gauche, le contexte à droite. Le Mois s'y plie, il ne
+ * reste pas une colonne de 390 px flottant au milieu de l'écran.
+ *
+ * Répartition : le calendrier prend la largeur (c'est lui qu'on vient lire), la charge par semaine
+ * tient la colonne de droite de 400 px, celle de l'histogramme de S4. */
+@media (min-width: 1024px) {
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    align-items: start;
+  }
+
+  .calendarCol {
+    min-width: 0;
+    border-right: var(--border-width-structure) solid var(--color-ink);
+  }
+
+  /* Les cases respirent : la grille cesse d'être une frise écrasée en haut de l'écran. */
+  .cell {
+    min-height: 88px;
+    padding: var(--space-8) var(--space-10) var(--space-10);
+  }
+
+  .cellNumber {
+    font-size: 13px;
+  }
+
+  .cellMark {
+    font-size: 10px;
+  }
+
+  .weeks {
+    margin: 0;
+    padding: 0 var(--space-20) var(--space-20);
+    border-top: none;
+  }
+
+  /* Les lignes de semaine gagnent la hauteur que la colonne leur laisse. */
+  .weekRow {
+    padding: var(--space-12) 0;
+  }
+
+  .footnote {
+    border-top: var(--border-width-structure) solid var(--color-ink);
+  }
+}

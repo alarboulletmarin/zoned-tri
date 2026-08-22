@@ -44,7 +44,7 @@ export function RacePacingScreen({ race }: RacePacingScreenProps) {
     <div className={s.screen}>
       <AppHeader
         variant="detail"
-        trail={['Courses', race.name, 'Pacing']}
+        trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Pacing']}
         desktopTitle={`${race.name} · pacing`}
         onBack={() => navigate(racePath(race.id))}
       />

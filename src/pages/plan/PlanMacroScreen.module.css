@@ -323,7 +323,7 @@
   margin-top: var(--space-3);
 }
 
-/* --- Au-delà de la tablette : la colonne se borne, elle ne s'étire pas ---------------------- */
+/* --- Tablette : la colonne se borne, elle ne s'étire pas ----------------------------------- */
 
 @media (min-width: 768px) {
   .screen {
@@ -335,5 +335,77 @@
     max-width: 560px;
     margin-inline: auto;
     padding-bottom: var(--space-28);
+  }
+}
+
+/* --- Desktop : deux colonnes -----------------------------------------------------------------
+ *
+ * Le canevas ne donne pas d'artboard large à la Saison. Borner la colonne à 560 px y laissait
+ * 320 px de vide de chaque côté, ce qu'aucun autre écran large du canevas ne fait : S4 et S6
+ * posent tous deux la matière à gauche et le contexte à droite. La Saison suit.
+ *
+ * Ce qui va où : à gauche ce qu'on vient lire — l'objectif, la répartition, les compteurs et
+ * surtout l'histogramme des dix-huit semaines, qui se compare d'autant mieux qu'il est large ;
+ * à droite les quatre phases et le pied (export et notes de preuve), qui se lisent en liste.
+ * Aucun bloc n'apparaît ni ne disparaît : ce sont les mêmes six, autrement disposés. */
+@media (min-width: 1024px) {
+  .column {
+    /* Aucun plafond : la Saison remplit le cadre comme le Mois. Un `max-width` centré y laissait
+       260 px de vide de chaque côté à 1920 px — de l'espace occupé par rien. */
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-areas:
+      'goal       phases'
+      'proportion phases'
+      'counters   phases'
+      'volume     footer';
+    align-content: start;
+    column-gap: var(--space-28);
+  }
+
+  .goal {
+    grid-area: goal;
+  }
+
+  .proportion {
+    grid-area: proportion;
+  }
+
+  .counters {
+    grid-area: counters;
+  }
+
+  .volume {
+    grid-area: volume;
+  }
+
+  /* Les deux blocs de la colonne de droite partagent la même gouttière : leurs filets s'alignent. */
+  .phases {
+    grid-area: phases;
+    margin: 0;
+    padding: var(--space-12) var(--space-gutter-mobile) 0;
+    border-top: none;
+  }
+
+  /* Le pied cesse d'être collé en bas par `margin-top:auto` : il suit les phases dans sa colonne. */
+  .footer {
+    grid-area: footer;
+    margin-top: 0;
+  }
+}
+
+/* Très grand écran : l'objectif et les trois compteurs se rangent côte à côte plutôt que de
+ * s'étirer chacun sur 1 270 px — même correction que sur la colonne de séance d'Aujourd'hui.
+ * La frise et l'histogramme, eux, gagnent vraiment à courir sur toute la largeur : ils se lisent
+ * en comparant. */
+@media (min-width: 1600px) {
+  .column {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-areas:
+      'goal       counters   phases'
+      'proportion proportion phases'
+      'volume     volume     footer';
+    align-items: start;
   }
 }

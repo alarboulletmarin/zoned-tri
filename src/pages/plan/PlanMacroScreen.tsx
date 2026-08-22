@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
+import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { ProofPip } from '../../components/ui/ProofBadge/ProofBadge'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
@@ -31,7 +32,8 @@ export interface PlanMacroScreenProps {
 }
 
 /**
- * Écran 04 · Plan / Vue macro — artboard 04 (canevas l. 491-548), atteint « depuis Semaine →
+ * Écran 04 · Plan / Saison — artboard 04 (canevas l. 491-548). Le canevas le rattache désormais
+ * au segment SAISON du plan ; il restait atteint « depuis Semaine →
  * appui sur « Semaine 07 » ».
  *
  * Le seul écran qui parle du plan dans son ENTIER, et il le dit dans cet ordre : l'objectif et sa
@@ -58,8 +60,9 @@ export function PlanMacroScreen({ plan, race, today, onBack }: PlanMacroScreenPr
 
   return (
     <div className={styles.screen}>
-      {/* 04 l. 492-498 : carré de retour, fil « Plan / Vue macro », burger. */}
-      <AppHeader variant="detail" trail={['Plan', 'Vue macro']} onBack={onBack} desktopTitle="Plan · vue macro" />
+      {/* Le canevas rebaptise cet écran : « Plan → segment SAISON ». Le fil le suit. */}
+      <AppHeader variant="detail" trail={['Plan', 'Saison']} onBack={onBack} desktopTitle="Plan · saison" />
+      <PlanSegment current="saison" />
 
       <div className={styles.column}>
         {/* 04 l. 499-503 */}

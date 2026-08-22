@@ -71,6 +71,24 @@
   color: var(--color-label);
 }
 
+/* Un segment parent mène à son écran. Le fil est en mono 11 px : la cible tactile ne peut pas
+   venir de la hauteur du texte, elle vient du padding vertical, qui remplit les 46 px du bandeau
+   sans en changer la hauteur (`line-height` inchangé, marge négative compensée par le padding). */
+.trailLink {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  padding: 15px 2px;
+  margin: -15px 0;
+}
+
+.trailLink:hover,
+.trailLink:focus-visible {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .trailCurrent {
   font-weight: var(--fw-bold);
   color: var(--color-ink);

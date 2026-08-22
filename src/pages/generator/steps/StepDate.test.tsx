@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
+import { render } from '../../../testing/render'
 import userEvent from '@testing-library/user-event'
 import { createInitialForm, defaultRaceDate } from '../../../domain/planGenerator/form'
 import type { GeneratorForm } from '../../../domain/planGenerator/form'

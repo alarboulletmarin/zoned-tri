@@ -75,8 +75,10 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
   it('titles the week and shows its total volume', () => {
     renderScreen(singleSessionPerDay())
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Semaine 07')
-    // 364 min résolues sur la semaine de démonstration (55 + 65 + 62 + 30 + 90 + 62).
-    expect(screen.getByText('6 h 04')).toBeInTheDocument()
+    // 364 min résolues sur la semaine de démonstration (55 + 65 + 62 + 30 + 90 + 62). Le volume
+    // s'écrit désormais sous le titre, dans la barre de navigation de l'artboard 03 : « 6 h 04
+    // planifiées · 7 / 18 ».
+    expect(screen.getByText(/6 h 04 planifiées/)).toBeInTheDocument()
   })
 
   it('shows the per-discipline volumes and the seven-bar histogram, as the artboard does', () => {

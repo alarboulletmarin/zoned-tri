@@ -24,6 +24,18 @@ export const DISCIPLINE_ORDER: Discipline[] = ['N', 'V', 'C', 'R']
 export const TRIATHLON_DISCIPLINES: Discipline[] = ['N', 'V', 'C']
 
 /**
+ * Nom de phase du moteur → la formule que le canevas écrit à côté d'une plage de semaines
+ * (« 24 → 30 août · bloc construction » sur 03, « Semaines 03 → 07 · bloc construction » sur 04m).
+ * Un seul endroit pour les quatre : le Mois et la Semaine ne peuvent pas les nommer autrement.
+ */
+export const PHASE_LABELS: Record<string, string> = {
+  Base: 'bloc fondation',
+  Build: 'bloc construction',
+  Specific: 'bloc spécifique',
+  Taper: 'affûtage',
+}
+
+/**
  * Jour courant en ISO `YYYY-MM-DD`, lu sur le fuseau local et non en UTC :
  * la colonne « aujourd'hui » suit le calendrier de l'utilisateur.
  */

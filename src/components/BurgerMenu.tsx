@@ -4,7 +4,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap'
 import { usePlans, useRaces } from '../context/AppDataContext'
 import { buildMenuCounts } from '../domain/menuCounts'
 import { todayIso } from '../domain/planWeek'
-import { ROOT_SECTIONS } from '../navigation'
+import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
 import styles from './BurgerMenu.module.css'
 import { APP_VERSION } from '../domain/types'
 
@@ -38,7 +38,11 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
   return (
     <div ref={panelRef} className={styles.panel} role="dialog" aria-modal="true" aria-label="Menu">
       <div className={styles.header}>
-        <span className={styles.wordmark}>Zoned Tri</span>
+        {/* En mobile, le panneau est le seul endroit où le mot-symbole reste visible hors de
+            l'ouverture : c'est donc lui qui doit y ramener. */}
+        <Link to={OPENING_PATH} className={styles.wordmark} onClick={onClose}>
+          Zoned Tri
+        </Link>
         <button type="button" className={styles.closeButton} aria-label="Fermer le menu" onClick={onClose}>
           <span className={styles.closeGlyph} aria-hidden="true">
             <span className={styles.closeBar} />
