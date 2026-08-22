@@ -1,9 +1,17 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useBreakpoint } from '../hooks/useBreakpoint'
 import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
+import { useDeviceHasContent } from '../context/AppDataContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
-import { MENU_ACTIONS, OPENING_PATH, ROOT_SECTIONS, SETTINGS_ACTION, sectionForPath } from '../navigation'
+import {
+  MENU_ACTIONS,
+  OPENING_PATH,
+  ROOT_SECTIONS,
+  SETTINGS_ACTION,
+  sectionForPath,
+  showsPermanentNav,
+} from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
 import { BurgerIcon, SearchIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
@@ -36,13 +44,22 @@ function AppShellLayout() {
   const [isSearching, setSearching] = useState(false)
   const location = useLocation()
 
-  // L'ouverture est une porte d'entrée, pas une section : sur desktop le canevas est explicite
-  // — « aucun rail, rien n'est encore ouvert » (S9) — et sa colonne sombre porte elle-même le
-  // mot-symbole. La coquille s'y efface entièrement. Voir `OPENING_PATH` dans src/navigation.ts.
-  const showRail = breakpoint === 'desktop' && location.pathname !== OPENING_PATH
+  // L'ouverture d'un appareil VIDE est une porte d'entrée, pas une section : le canevas est
+  // explicite — « aucun rail, rien n'est encore ouvert » (S9) — et sa colonne sombre porte
+  // elle-même le mot-symbole. Dès que l'appareil porte quelque chose (S9b), c'est un écran
+  // d'accueil comme un autre, et il retrouve le rail. Voir `showsPermanentNav`.
+  const deviceHasContent = useDeviceHasContent()
+  const showRail = breakpoint === 'desktop' && showsPermanentNav(location.pathname, deviceHasContent)
   const activeSection = sectionForPath(location.pathname)
   const openMenu = useCallback(() => setMenuOpen(true), [])
   const openSearch = useCallback(() => setSearching(true), [])
+
+  // Élargir la fenêtre pendant que le panneau est ouvert le faisait disparaître SANS le refermer :
+  // le rétrécissement suivant le faisait donc réapparaître tout seul, sur un écran qu'on n'avait
+  // pas demandé. Le rail prend le relais, l'état du panneau doit suivre.
+  useEffect(() => {
+    if (showRail) setMenuOpen(false)
+  }, [showRail])
 
   return (
     <div className={styles.shell}>

@@ -4,6 +4,7 @@ import { useShellChrome } from '../../../context/shellChrome'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
 import { APP_NAME, OPENING_PATH, trailDestination, trailLabel, type TrailSegment } from '../../../navigation'
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
+import { SectionsBar } from '../../navigation/SectionsBar/SectionsBar'
 import { BackSquare } from '../BackSquare/BackSquare'
 import styles from './AppHeader.module.css'
 
@@ -170,6 +171,11 @@ export function AppHeader(props: AppHeaderProps) {
   // à l'affiche pour ne rien apprendre.
   const showTrailBar = isDetail
 
+  // Entre le burger et le rail, la tablette avait la place d'une navigation permanente et n'en
+  // avait aucune : voir `SectionsBar`. Elle vit dans le bandeau parce que le bandeau EST la
+  // coquille de l'écran — la poser au-dessus dans `AppShell` la mettrait avant le mot-symbole.
+  const showSectionsBar = breakpoint === 'tablet'
+
   return (
     <header className={styles.chrome}>
       <div className={styles.brandBar}>
@@ -208,6 +214,8 @@ export function AppHeader(props: AppHeaderProps) {
           )}
         </div>
       )}
+
+      {showSectionsBar && <SectionsBar />}
     </header>
   )
 }

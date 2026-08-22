@@ -48,7 +48,9 @@ describe('AppShell — recherche en place (écran 25)', () => {
 
     expect(screen.queryByRole('banner')).not.toBeInTheDocument()
     expect(screen.queryByText('Contenu Plan')).not.toBeInTheDocument()
-    expect(screen.getByRole('searchbox', { name: 'Rechercher une séance' })).toBeInTheDocument()
+    // La loupe ne cherche plus seulement des séances : elle porte les quatre natures du corpus
+    // (séances, calculateurs, courses, écrans), et son libellé le dit.
+    expect(screen.getByRole('searchbox', { name: 'Rechercher dans l’application' })).toBeInTheDocument()
   })
 
   it('restores the normal header and page content on cancel', async () => {

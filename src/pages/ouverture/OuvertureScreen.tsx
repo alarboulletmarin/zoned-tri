@@ -8,7 +8,13 @@ import { NoteBox } from '../../components/ui/NoteBox/NoteBox'
 import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
-import { useProfile, usePlans, useRaces, useWorkouts } from '../../context/AppDataContext'
+import {
+  useDeviceHasContent,
+  useProfile,
+  usePlans,
+  useRaces,
+  useWorkouts,
+} from '../../context/AppDataContext'
 import {
   CATALOGUE_COUNT,
   CATALOGUE_TOTAL_MIN,
@@ -23,7 +29,7 @@ import {
 } from '../../domain/planGenerator/form'
 import { todayIso } from '../../domain/planWeek'
 import { formatDurationCompact } from '../../domain/workoutFormat'
-import { GENERATOR_PATH, PLANS_PATH } from '../../navigation'
+import { GENERATOR_PATH, OPENING_PATH, PLANS_PATH, showsPermanentNav } from '../../navigation'
 import styles from './OuvertureScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { PageLoading } from '../../components/PageLoading'
@@ -215,11 +221,17 @@ function DesktopLayout({ state }: { state: OpeningState }) {
   const navigate = useNavigate()
   const copy = COPY[state.kind]
 
+  // Dès que l'appareil porte quelque chose, la coquille remet son rail sur l'ouverture — et le
+  // rail porte déjà le mot-symbole. La colonne sombre lui laisse donc la place : deux « Zoned Tri »
+  // côte à côte à 60 px d'intervalle ne sont pas une signature, c'est une redite.
+  const deviceHasContent = useDeviceHasContent()
+  const hasRail = showsPermanentNav(OPENING_PATH, deviceHasContent)
+
   return (
     <div className={styles.desktopScreen}>
-      <section className={styles.heroColumn}>
+      <section className={`${styles.heroColumn} ${hasRail ? styles.heroColumnWithRail : ''}`}>
         <div className={styles.heroColumnTop}>
-          <span className={styles.wordmark}>Zoned Tri</span>
+          {hasRail ? <span /> : <span className={styles.wordmark}>Zoned Tri</span>}
           <span className={styles.heroKickerDesktop}>{OFFLINE_KICKER}</span>
         </div>
 

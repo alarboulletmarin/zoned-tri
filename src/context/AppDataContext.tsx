@@ -247,3 +247,31 @@ export function useJournal() {
   const { journal, addJournalEntry, undoJournalEntry, loading } = useAppData()
   return { journal, addJournalEntry, undoJournalEntry, loading }
 }
+
+/**
+ * Ce que la COQUILLE a besoin de savoir, et rien de plus : l'appareil porte-t-il déjà quelque
+ * chose ?
+ *
+ * Ce hook ne lève pas hors du fournisseur, contrairement aux cinq autres — c'est délibéré. La
+ * coquille est montée par des tests qui n'ont aucune donnée à servir, et surtout elle doit pouvoir
+ * se peindre avant que la base ne réponde : elle rendrait sinon un rail qui apparaît après coup.
+ * Hors fournisseur, ou avant la première lecture, l'appareil est réputé vide — l'état le plus
+ * prudent, celui qui ne promet rien.
+ */
+export function useDeviceHasContent(): boolean {
+  const context = useContext(AppDataContext)
+  if (!context) return false
+  return context.plans.length > 0 || context.races.length > 0 || context.profile !== undefined
+}
+
+/**
+ * Ce que la RECHERCHE globale a besoin de lire.
+ *
+ * Comme `useDeviceHasContent`, ce hook ne lève pas hors du fournisseur : la loupe appartient à la
+ * coquille, qui est montée par des tests sans base, et une recherche qui fait planter l'écran
+ * plutôt que de rendre zéro course serait un cul-de-sac de plus.
+ */
+export function useSearchableData(): { races: Race[] } {
+  const context = useContext(AppDataContext)
+  return { races: context?.races ?? [] }
+}

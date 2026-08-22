@@ -1,8 +1,11 @@
-import { describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { AppDataProvider } from '../context/AppDataContext'
+import { deleteDatabase } from '../storage/db'
+import * as repo from '../storage/repository'
+import { demoPlan } from '../domain/demoData'
 import { AppShell } from './AppShell'
 import { AppHeader } from './ui/AppHeader/AppHeader'
 
@@ -144,5 +147,130 @@ describe('AppShell', () => {
 
     await user.click(screen.getByRole('button', { name: 'Fermer le menu' }))
     expect(screen.queryByRole('dialog', { name: 'Menu' })).not.toBeInTheDocument()
+  })
+})
+
+/**
+ * La tablette (768–1023 px) n'avait AUCUNE navigation permanente : ni le rail, réservé au desktop,
+ * ni rien d'autre — juste le burger, comme sur un téléphone. Changer de section coûtait donc trois
+ * gestes sur un écran qui a la place d'une rangée. C'est la règle nº 3 prise dans l'autre sens.
+ */
+describe('AppShell · la rangée de sections des largeurs tablette', () => {
+  it('montre les quatre sections en permanence, et marque celle qu’on regarde', () => {
+    mockMatchMediaWidth(800)
+    renderShell()
+
+    const bar = screen.getByRole('navigation', { name: 'Sections' })
+    const links = within(bar).getAllByRole('link')
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/plan',
+      '/workouts',
+      '/races',
+      '/tools',
+    ])
+    expect(links[0]).toHaveAttribute('aria-current', 'page')
+    expect(links[1]).not.toHaveAttribute('aria-current')
+  })
+
+  it('n’existe ni en mobile — le burger suffit — ni en desktop, où le rail la remplace', () => {
+    mockMatchMediaWidth(500)
+    const mobile = renderShell()
+    expect(screen.queryByRole('navigation', { name: 'Sections' })).not.toBeInTheDocument()
+    mobile.unmount()
+
+    mockMatchMediaWidth(1200)
+    renderShell()
+    expect(screen.queryByRole('navigation', { name: 'Sections' })).not.toBeInTheDocument()
+  })
+
+  it('laisse le burger en place : il porte les quatre destinations que la rangée n’a pas', () => {
+    mockMatchMediaWidth(800)
+    renderShell()
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument()
+  })
+})
+
+/** `matchMedia` pilotable : les écouteurs sont retenus, et `setWidth` les rejoue comme le ferait
+    un vrai redimensionnement de fenêtre. */
+function mockResizableMatchMedia(initialWidth: number) {
+  let width = initialWidth
+  const listeners: (() => void)[] = []
+
+  window.matchMedia = vi.fn().mockImplementation((query: string) => {
+    const min = query.match(/min-width:\s*(\d+)px/)
+    return {
+      get matches() {
+        return min ? width >= Number(min[1]) : false
+      },
+      media: query,
+      addEventListener: (_: string, handler: () => void) => listeners.push(handler),
+      removeEventListener: vi.fn(),
+    } as unknown as MediaQueryList
+  })
+
+  return (next: number) => {
+    width = next
+    listeners.forEach((handler) => handler())
+  }
+}
+
+describe('AppShell · le panneau burger et le redimensionnement', () => {
+  it('se referme quand le rail prend le relais, au lieu de réapparaître au rétrécissement suivant', async () => {
+    const user = userEvent.setup()
+    const setWidth = mockResizableMatchMedia(500)
+    renderShell({ withData: true })
+
+    await user.click(screen.getByRole('button', { name: 'Menu' }))
+    expect(await screen.findByRole('dialog', { name: 'Menu' })).toBeInTheDocument()
+
+    // On élargit : le rail remplace le panneau, qui disparaît de l'écran…
+    await act(async () => setWidth(1200))
+    expect(screen.queryByRole('dialog', { name: 'Menu' })).not.toBeInTheDocument()
+
+    // … et il ne doit pas revenir tout seul au rétrécissement, sur un écran qu'on n'a pas demandé.
+    await act(async () => setWidth(500))
+    expect(screen.queryByRole('dialog', { name: 'Menu' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument()
+  })
+})
+
+/**
+ * L'ouverture desktop n'avait aucun rail — le canevas S9 est explicite, « rien n'est encore
+ * ouvert ». Mais S9b est l'écran de RETOUR de quelqu'un qui a déjà un plan : sans rail, l'écran
+ * d'accueil du produit était, sur un écran de bureau, le seul d'où l'on n'atteignait ni Séances,
+ * ni Courses, ni Outils.
+ */
+describe('AppShell · le rail sur l’ouverture desktop', () => {
+  beforeEach(async () => {
+    await deleteDatabase()
+  })
+
+  function renderOpening() {
+    return render(
+      <MemoryRouter initialEntries={['/']}>
+        <AppDataProvider>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route path="/" element={<div>Ouverture</div>} />
+            </Route>
+          </Routes>
+        </AppDataProvider>
+      </MemoryRouter>,
+    )
+  }
+
+  it('reste absent tant que l’appareil est vide : il n’y a nulle part où aller', async () => {
+    mockMatchMediaWidth(1200)
+    renderOpening()
+    expect(await screen.findByText('Ouverture')).toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Navigation principale' })).not.toBeInTheDocument()
+  })
+
+  it('revient dès que l’appareil porte un plan', async () => {
+    await repo.putPlan(demoPlan)
+    mockMatchMediaWidth(1200)
+    renderOpening()
+
+    expect(await screen.findByRole('navigation', { name: 'Navigation principale' })).toBeInTheDocument()
   })
 })

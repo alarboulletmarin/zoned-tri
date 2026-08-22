@@ -1,13 +1,19 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
-import { findTextMatch, searchWorkouts } from '../../domain/searchWorkouts'
+import { useSearchableData } from '../../context/AppDataContext'
+import {
+  buildSearchCorpus,
+  searchCorpus,
+  NATURE_LABEL,
+  NATURE_ORDER,
+  type SearchHit,
+  type SearchNature,
+} from '../../domain/searchCorpus'
 import { EmptyState } from '../../components/ui/EmptyState/EmptyState'
-import { CALCULATORS, calculatorCounter } from '../tools/calculators/registry'
-import { calculatorPath } from '../tools/toolsRoutes'
 import { WorkoutListRow } from './WorkoutListRow'
+import type { TextMatch } from '../../domain/searchWorkouts'
 import styles from './SearchOverlay.module.css'
-import { workoutPath } from '../../navigation'
 
 export interface SearchOverlayProps {
   onClose: () => void
@@ -38,13 +44,20 @@ function SearchIcon() {
   )
 }
 
-/** 25 l. 2903 : le terme cherché est surligné à l'accent, DANS le titre — jamais mis en gras. */
-function Highlighted({ text, start, end }: { text: string; start: number; end: number }) {
+/**
+ * 25 l. 2903 : le terme cherché est surligné à l'accent, DANS le titre — jamais mis en gras.
+ *
+ * `match` vaut `null` quand la ligne a été trouvée par un mot-clé (« sauvegarde » pour
+ * l'import-export) : rien n'est alors surligné, parce que le mot cherché n'est pas dans le titre —
+ * surligner à l'approximation serait un mensonge d'affichage.
+ */
+function Highlighted({ text, match }: { text: string; match: TextMatch | null }) {
+  if (!match) return <>{text}</>
   return (
     <>
-      {text.slice(0, start)}
-      <mark className={styles.mark}>{text.slice(start, end)}</mark>
-      {text.slice(end)}
+      {text.slice(0, match.start)}
+      <mark className={styles.mark}>{text.slice(match.start, match.end)}</mark>
+      {text.slice(match.end)}
     </>
   )
 }
@@ -55,35 +68,45 @@ function Highlighted({ text, start, end }: { text: string; start: number; end: n
  *
  * Le champ REMPLACE le bandeau de 46 px : ce n'est pas une route, c'est un état de la coquille
  * (`AppShell`). Les résultats sont groupés par nature, chaque groupe portant son compte, et le
- * terme est surligné à l'accent dans chaque intitulé. La recherche est locale, et le pied le dit.
+ * terme est surligné à l'accent dans chaque intitulé.
  *
- * LIMITATION : le canevas montre trois natures — « Séances · 41 », « Calculateurs · 2 » et « Dans
- * mon plan · 5 ». Les deux premières sont rendues ; la troisième ne l'est pas. Elle demanderait de
- * résoudre chaque séance d'un plan actif jusqu'à son jour (« SEM. 07 · Jeudi »), ce que la
- * coquille ne fait pas et qu'on n'approxime pas avec un titre sans sa semaine.
+ * Ce que la loupe cherche vit dans `src/domain/searchCorpus.ts` — quatre natures, dont deux
+ * ajoutées au canevas (« Courses », « Écrans ») parce que sans elles la seule commande globale du
+ * produit ne menait qu'au catalogue. Le corpus est le raccourci de navigation de l'application :
+ * il doit atteindre ce que le rail atteint, et plus.
+ *
+ * LIMITATION assumée : la nature « Dans mon plan · 5 » du canevas n'est pas rendue. Elle
+ * demanderait de résoudre chaque séance d'un plan actif jusqu'à son jour (« SEM. 07 · Jeudi »),
+ * et on n'approxime pas un repère de semaine avec un titre qui ne le porte pas (règle nº 4).
  */
 export function SearchOverlay({ onClose, initialQuery = '' }: SearchOverlayProps) {
   const [query, setQuery] = useState(initialQuery)
-  const navigate = useNavigate()
+  const { races } = useSearchableData()
 
-  const workoutMatches = useMemo(() => searchWorkouts(SEED_WORKOUTS, query), [query])
-  const calculatorMatches = useMemo(
-    () =>
-      CALCULATORS.map((definition) => ({ definition, match: findTextMatch(definition.cardTitle, query) })).filter(
-        (entry): entry is { definition: (typeof CALCULATORS)[number]; match: { start: number; end: number } } =>
-          entry.match !== null,
-      ),
-    [query],
+  const corpus = useMemo(
+    () => buildSearchCorpus({ workouts: SEED_WORKOUTS, races }),
+    [races],
   )
+  const hits = useMemo(() => searchCorpus(corpus, query), [corpus, query])
+
+  const grouped = useMemo(() => {
+    const map = new Map<SearchNature, SearchHit[]>()
+    for (const hit of hits) {
+      const bucket = map.get(hit.entry.nature)
+      if (bucket) bucket.push(hit)
+      else map.set(hit.entry.nature, [hit])
+    }
+    return map
+  }, [hits])
 
   const trimmed = query.trim()
-  const total = workoutMatches.length + calculatorMatches.length
-  const natures = [workoutMatches.length, calculatorMatches.length].filter((count) => count > 0).length
+  const total = hits.length
+  const natures = NATURE_ORDER.filter((nature) => (grouped.get(nature)?.length ?? 0) > 0)
 
-  function open(path: string) {
-    onClose()
-    navigate(path)
-  }
+  const workoutById = useMemo(
+    () => new Map(SEED_WORKOUTS.map((workout) => [`workout-${workout.id}`, workout])),
+    [],
+  )
 
   return (
     <div className={styles.screen}>
@@ -96,8 +119,8 @@ export function SearchOverlay({ onClose, initialQuery = '' }: SearchOverlayProps
           className={styles.input}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Rechercher une séance"
-          aria-label="Rechercher une séance"
+          placeholder="Rechercher dans l’application"
+          aria-label="Rechercher dans l’application"
           autoFocus
         />
         <button type="button" className={styles.cancel} onClick={onClose}>
@@ -110,7 +133,8 @@ export function SearchOverlay({ onClose, initialQuery = '' }: SearchOverlayProps
           {/* 25 l. 2897 : `48 résultats · 3 natures` à gauche, `tri : pertinence` à droite. */}
           <div className={styles.summaryRow}>
             <span>
-              {total} résultat{total > 1 ? 's' : ''} · {natures} nature{natures > 1 ? 's' : ''}
+              {total} résultat{total > 1 ? 's' : ''} · {natures.length} nature
+              {natures.length > 1 ? 's' : ''}
             </span>
             <span>tri : pertinence</span>
           </div>
@@ -118,52 +142,53 @@ export function SearchOverlay({ onClose, initialQuery = '' }: SearchOverlayProps
           {total === 0 ? (
             <EmptyState
               className={styles.empty}
-              sentence={`Aucune séance ni calculateur ne porte « ${trimmed} » dans son intitulé. La recherche ne lit que les intitulés — pas encore le détail des blocs.`}
+              sentence={`Rien ne porte « ${trimmed} » : ni une séance du catalogue, ni un calculateur, ni une de tes courses, ni un écran de l’application. La recherche lit les intitulés — pas encore le détail des blocs.`}
             />
           ) : (
-            <>
-              {workoutMatches.length > 0 && (
-                <section className={styles.group}>
-                  <h2 className={styles.groupLabel}>Séances · {workoutMatches.length}</h2>
+            natures.map((nature) => {
+              const group = grouped.get(nature) ?? []
+              return (
+                <section key={nature} className={styles.group}>
+                  <h2 className={styles.groupLabel}>
+                    {NATURE_LABEL[nature]} · {group.length}
+                  </h2>
                   <div className={styles.list}>
-                    {workoutMatches.map((match) => (
-                      <WorkoutListRow
-                        key={match.workout.id}
-                        workout={match.workout}
-                        variant="search"
-                        to={workoutPath(match.workout.id)}
-                        onSelect={() => open(workoutPath(match.workout.id))}
-                        titleContent={
-                          <Highlighted text={match.workout.title} start={match.matchStart} end={match.matchEnd} />
-                        }
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
+                    {group.map((hit) => {
+                      const workout = workoutById.get(hit.entry.id)
 
-              {/* 25 l. 2917-2923 : les calculateurs, avec leur compteur `03 / 12` à droite. */}
-              {calculatorMatches.length > 0 && (
-                <section className={styles.group}>
-                  <h2 className={styles.groupLabel}>Calculateurs · {calculatorMatches.length}</h2>
-                  <div className={styles.list}>
-                    {calculatorMatches.map(({ definition, match }) => (
-                      <button
-                        key={definition.id}
-                        type="button"
-                        className={styles.toolRow}
-                        onClick={() => open(calculatorPath(definition.id))}
-                      >
-                        <span className={styles.toolTitle}>
-                          <Highlighted text={definition.cardTitle} start={match.start} end={match.end} />
-                        </span>
-                        <span className={styles.toolCounter}>{calculatorCounter(definition)}</span>
-                      </button>
-                    ))}
+                      // Une séance garde SA ligne — discipline, zone, durée : la recherche ne doit
+                      // pas rendre au rabais ce que la bibliothèque montre en entier.
+                      if (workout) {
+                        return (
+                          <WorkoutListRow
+                            key={hit.entry.id}
+                            workout={workout}
+                            variant="search"
+                            to={hit.entry.to}
+                            onSelect={onClose}
+                            titleContent={<Highlighted text={hit.entry.title} match={hit.match} />}
+                          />
+                        )
+                      }
+
+                      return (
+                        <Link
+                          key={hit.entry.id}
+                          to={hit.entry.to}
+                          className={styles.toolRow}
+                          onClick={onClose}
+                        >
+                          <span className={styles.toolTitle}>
+                            <Highlighted text={hit.entry.title} match={hit.match} />
+                          </span>
+                          <span className={styles.toolCounter}>{hit.entry.meta}</span>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </section>
-              )}
-            </>
+              )
+            })
           )}
         </>
       )}

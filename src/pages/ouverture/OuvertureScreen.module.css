@@ -391,8 +391,9 @@
   background: var(--color-paper);
 }
 
-/* 56 % de la largeur : l'affiche à gauche, ce qui existe déjà à droite. Aucun rail sur cet écran —
- * rien n'est encore ouvert, il n'y a nulle part où naviguer. */
+/* 56 % de la largeur : l'affiche à gauche, ce qui existe déjà à droite. Aucun rail SUR UN APPAREIL
+ * VIDE — rien n'est encore ouvert, il n'y a nulle part où naviguer ; dès qu'il porte un plan, le
+ * rail revient et la colonne se resserre (`.heroColumnWithRail`). */
 .heroColumn {
   /* `width:56%` + `box-sizing:content-box` : c'est exactement ce que fait l'artboard S9, et le
    * détail compte. Sur ses 1276 px de contenu, 56 % font 714,5 px AUXQUELS s'ajoutent les 60 px de
@@ -408,6 +409,12 @@
   background: var(--color-ink);
   color: var(--color-on-ink-text);
   overflow-y: auto;
+}
+
+/* Avec le rail (S9b/S9c), 236 px sont déjà pris à gauche : l'affiche cède de la largeur pour que
+ * le panneau « Sur cet appareil » reste lisible jusqu'à 1024 px. */
+.heroColumnWithRail {
+  width: 48%;
 }
 
 .heroColumnTop {

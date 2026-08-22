@@ -11,15 +11,47 @@ export interface TextMatch {
 }
 
 /**
- * Position du terme dans un intitulé, ou `null`. Insensible à la casse, sensible aux accents :
- * le canevas surligne le terme EXACT tel qu'il est écrit dans le titre (25 l. 2903), et un
- * dépliage d'accents surlignerait des lettres que l'utilisateur n'a pas tapées.
+ * Repli d'un intitulé pour la comparaison : minuscules, accents retirés — mais lettre par lettre,
+ * en gardant l'index d'origine de chacune.
+ *
+ * C'est tout l'enjeu : la recherche doit trouver « seuil velo » dans « Seuil vélo » — personne ne
+ * tape ses accents dans un champ de recherche, et le produit est français. Mais le surlignage doit
+ * porter sur le texte ORIGINAL, à l'accent près (25 l. 2903). Déplier la chaîne entière décalerait
+ * les positions dès le premier accent ; on garde donc, pour chaque caractère replié, l'index du
+ * caractère d'origine dont il vient.
+ */
+function fold(text: string): { folded: string; origin: number[] } {
+  let folded = ''
+  const origin: number[] = []
+
+  for (let index = 0; index < text.length; index += 1) {
+    const stripped = text[index]!.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    for (const character of stripped) {
+      folded += character
+      origin.push(index)
+    }
+  }
+  // Sentinelle : la fin d'une correspondance qui va jusqu'au bout de la chaîne.
+  origin.push(text.length)
+
+  return { folded, origin }
+}
+
+/**
+ * Position du terme dans un intitulé, ou `null`.
+ *
+ * Insensible à la casse ET aux accents pour TROUVER ; les bornes rendues sont celles du texte
+ * original, pour SURLIGNER exactement ce que le titre écrit.
  */
 export function findTextMatch(text: string, query: string): TextMatch | null {
-  const needle = query.trim().toLowerCase()
+  const needle = fold(query.trim()).folded
   if (!needle) return null
-  const start = text.toLowerCase().indexOf(needle)
-  return start === -1 ? null : { start, end: start + needle.length }
+
+  const { folded, origin } = fold(text)
+  const start = folded.indexOf(needle)
+  if (start === -1) return null
+
+  return { start: origin[start]!, end: origin[start + needle.length]! }
 }
 
 export interface WorkoutSearchMatch {

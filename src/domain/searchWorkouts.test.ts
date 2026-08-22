@@ -47,3 +47,36 @@ describe('findTextMatch', () => {
     expect(findTextMatch('Test 20 min', 'seuil')).toBeNull()
   })
 })
+
+/**
+ * Personne ne tape ses accents dans un champ de recherche — et le produit est entièrement en
+ * français. « seuil velo » ne trouvait rien alors que « Seuil vélo » est le titre le plus courant
+ * du catalogue : la recherche était inutilisable sans clavier accentué et sans réflexe d'accent.
+ */
+describe('findTextMatch · accents', () => {
+  it('trouve un titre accentué depuis un terme sans accent', () => {
+    expect(findTextMatch('Seuil vélo 2×20', 'velo')).toEqual({ start: 6, end: 10 })
+  })
+
+  it('trouve un titre sans accent depuis un terme accenté', () => {
+    expect(findTextMatch('Sortie longue velo', 'vélo')).toEqual({ start: 14, end: 18 })
+  })
+
+  it('surligne le texte ORIGINAL, accents compris, et pas sa version dépliée', () => {
+    const title = 'Récupération légère'
+    const match = findTextMatch(title, 'recuperation')
+    expect(match).not.toBeNull()
+    expect(title.slice(match!.start, match!.end)).toBe('Récupération')
+  })
+
+  it('garde les bornes justes quand la correspondance suit plusieurs accents', () => {
+    const title = 'Été · préparation spécifique'
+    const match = findTextMatch(title, 'specifique')
+    expect(title.slice(match!.start, match!.end)).toBe('spécifique')
+  })
+
+  it('borne correctement une correspondance qui va jusqu’au dernier caractère', () => {
+    const title = 'Nage en eau libre'
+    expect(findTextMatch(title, 'libre')).toEqual({ start: 12, end: 17 })
+  })
+})

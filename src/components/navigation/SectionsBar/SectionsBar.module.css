@@ -1,0 +1,43 @@
+/* Une rangée de 38 px, dans la continuité du bandeau : même papier, même filet d'encre en bas.
+   Les quatre sections se partagent la largeur — aucune ne défile hors de l'écran à 768 px. */
+.bar {
+  display: flex;
+  align-items: stretch;
+  height: 38px;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.link {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  border-radius: var(--radius-none);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-inactive);
+}
+
+/* Le filet vertical sépare les sections sans en boîter aucune. */
+.link + .link {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* La section courante : encre pleine et son numéro en lime, comme la ligne active du rail. */
+.linkActive {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+}
+
+.index {
+  color: var(--color-inactive);
+}
+
+.linkActive .index {
+  color: var(--color-signal-lime);
+}

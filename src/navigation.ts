@@ -115,6 +115,21 @@ export function sectionForPath(pathname: string): RootSection | undefined {
 }
 
 /**
+ * La coquille montre-t-elle sa navigation permanente sur cet écran ?
+ *
+ * Le canevas retire le rail de l'ouverture desktop (S9), et il a raison — pour l'écran qu'il
+ * dessine : la PREMIÈRE visite, où rien n'est ouvert et où il n'y a nulle part à aller. Mais
+ * l'ouverture est aussi l'écran de retour de quelqu'un qui a déjà un plan (S9b) : là, sans rail, un
+ * utilisateur de bureau arrivant sur la racine n'atteignait ni Séances, ni Courses, ni Outils —
+ * l'écran d'accueil du produit était son écran le moins navigable.
+ *
+ * La règle devient donc : pas de rail tant que l'appareil est vide, partout ailleurs.
+ */
+export function showsPermanentNav(pathname: string, deviceHasContent: boolean): boolean {
+  return pathname !== OPENING_PATH || deviceHasContent
+}
+
+/**
  * Destination des segments du fil d'Ariane, par intitulé.
  *
  * Le canevas écrit le fil « Plan / Semaine », « Courses / 70.3 Vichy / Pacing » : chaque segment
