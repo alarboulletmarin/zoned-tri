@@ -66,7 +66,19 @@ export function AppDataProvider({ children }: AppDataProviderProps) {
   }, [])
 
   useEffect(() => {
-    void reload()
+    // Amorçage de démonstration, développement uniquement : l'import dynamique sous
+    // `import.meta.env.DEV` laisse le bundler retirer entièrement `devSeed` du build. La base
+    // n'est amorcée que si elle est vide (cf. `seedIfEmpty`), jamais écrasée.
+    async function boot() {
+      // `MODE !== 'test'` : sous Vitest, `DEV` vaut aussi vrai, et amorcer la base fausserait
+      // chaque test qui monte le fournisseur — ils posent leurs propres fixtures.
+      if (import.meta.env.DEV && import.meta.env.MODE !== 'test') {
+        const { seedIfEmpty } = await import('../dev/devSeed')
+        await seedIfEmpty()
+      }
+      await reload()
+    }
+    void boot()
   }, [reload])
 
   const saveProfile = useCallback(
