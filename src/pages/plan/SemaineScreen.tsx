@@ -32,7 +32,7 @@ import { formatDurationCompact, formatDurationMin, zoneToNumber } from '../../do
 import { workoutPath } from '../../navigation'
 import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './SemaineScreen.module.css'
-import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { planSettingPath } from '../planSettings/planSettingsRoutes'
 
 /**
  * Catalogue de résolution des identifiants du plan : la bibliothèque d'abord, les séances de
@@ -40,13 +40,6 @@ import { InertNote } from '../../components/ui/InertNote/InertNote'
  * `seedWorkouts`). Un identifiant introuvable reste visible dans la liste, jamais effacé.
  */
 const WORKOUT_CATALOGUE: Workout[] = [...SEED_WORKOUTS, ...demoWorkouts]
-
-/**
- * Motif de la seule commande encore inerte de l'écran. Il est rendu À L'ÉCRAN par un `InertNote`
- * dans le bandeau desktop, et non dans un `title` qu'un doigt ne survole jamais.
- */
-const BLOCK_WEEK_REASON =
-  'Bloquer une semaine allège toutes les suivantes : l’écran qui montre ce que le plan devient n’existe qu’au niveau du jour, dans « Aujourd’hui ».'
 
 export interface SemaineScreenProps {
   plan: TrainingPlan
@@ -178,17 +171,13 @@ export function SemaineScreen({
               <span className={styles.headerStats}>
                 {formatDurationCompact(totals.totalMin)} prévues · {totals.remainingCount} restantes
               </span>
-              <button
-                type="button"
-                className={styles.headerButton}
-                disabled
-                aria-describedby="inert-bloquer-semaine"
-              >
-                Bloquer la semaine
-              </button>
-              <InertNote id="inert-bloquer-semaine" className={styles.headerInertNote}>
-                {BLOCK_WEEK_REASON}
-              </InertNote>
+              {/* La commande était éteinte au motif que « l'écran qui montre ce que le plan
+                  devient n'existe qu'au niveau du jour ». Il existe : c'est le réglage
+                  « Semaines réduites », qui montre l'avant / après semaine par semaine avant
+                  d'écrire (artboard 38). On y mène plutôt que de s'éteindre. */}
+              <Link className={styles.headerButton} to={planSettingPath('reduced_weeks')}>
+                Alléger des semaines
+              </Link>
               <Link className={styles.headerButton} to={exportSheetPath({ week: week.weekNumber })}>
                 .ICS
               </Link>

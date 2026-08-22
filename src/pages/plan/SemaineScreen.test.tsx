@@ -280,3 +280,18 @@ describe('SemaineScreen · bloc du rail (S6 l. 1791-1795)', () => {
     expect(screen.queryByText(/70\.3 Vichy/)).not.toBeInTheDocument()
   })
 })
+
+/**
+ * « Bloquer la semaine » était éteint au motif que « l'écran qui montre ce que le plan devient
+ * n'existe qu'au niveau du jour ». Il existe : c'est le réglage « Semaines réduites » (artboard
+ * 38), qui montre l'avant / après semaine par semaine avant d'écrire.
+ */
+describe('SemaineScreen · alléger des semaines', () => {
+  it('mène au réglage qui montre l’avant / après, au lieu de s’éteindre', () => {
+    useDesktopBreakpoint()
+    renderScreen()
+
+    const link = screen.getByRole('link', { name: 'Alléger des semaines' })
+    expect(link).toHaveAttribute('href', '/plan/reglages/reduced_weeks')
+  })
+})

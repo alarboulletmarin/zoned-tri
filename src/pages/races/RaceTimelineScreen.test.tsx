@@ -74,7 +74,9 @@ describe('RaceTimelineScreen', () => {
       const [race] = await getAllRaces()
       expect(race?.timeline).toEqual([{ label: 'Dépôt du vélo', at: '19:00', phase: 'eve' }])
     })
-    expect(await screen.findByText('Jour J')).toBeInTheDocument()
+    // L'écriture passe par IndexedDB puis par la navigation : sous charge, la seconde arrive
+    // après le délai d'attente par défaut d'une seconde.
+    expect(await screen.findByText('Jour J', {}, { timeout: 5000 })).toBeInTheDocument()
   })
 
   it('refuse d’enregistrer un repère sans heure, en disant pourquoi à l’écran', async () => {

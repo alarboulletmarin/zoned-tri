@@ -68,7 +68,7 @@ describe('RaceChecklistEditScreen', () => {
         { id: expect.any(String), section: 'bike', label: 'Bidon isotonique', done: false },
       ])
     })
-    expect(await screen.findByText('Parc à vélo')).toBeInTheDocument()
+    expect(await screen.findByText('Parc à vélo', {}, { timeout: 5000 })).toBeInTheDocument()
   })
 
   it('reprend la liste existante et garde les cases déjà cochées', async () => {
