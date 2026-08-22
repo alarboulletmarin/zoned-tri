@@ -794,6 +794,35 @@
   border-left: var(--border-width-hairline) solid var(--color-hairline);
 }
 
+/* Les états sans artboard large (02a/02b/02c, journée à deux séances) rendent leurs blocs dans
+ * `.body`, qui porte déjà la gouttière mobile. Dans la colonne de S4, c'est `.mainCol` qui la
+ * donne : sans cette remise à zéro, les deux s'additionneraient. */
+.mainCol > .body,
+.mainCol > .footnote,
+.mainCol > .exportRow,
+.mainCol > .cardSlot {
+  padding-inline: 0;
+  margin-inline: 0;
+}
+
+/* La ligne de cumuls d'une journée doublée ouvre la colonne : sa gouttière haute vient déjà de
+ * `.mainCol`. */
+.dayTotalsFlush {
+  padding-top: 0;
+}
+
+/* Ce qui se lit ligne à ligne — phrases, encarts, boutons pleine largeur — se borne au lieu de
+ * courir sur les 1 150 px de la colonne : « le desktop n'allonge pas les lignes » (méthode §2).
+ * Un bouton de 1 150 px n'est pas une cible plus facile, c'est une ligne illisible. */
+.mainCol .dashedBox,
+.mainCol .yellowBox,
+.mainCol .hairlineNote,
+.mainCol .fullButton,
+.mainCol .ctaColumn,
+.mainCol .waitingBlock {
+  max-width: 620px;
+}
+
 /* `h1Size` tablette. La ligne reste courte : le desktop n'allonge pas les lignes (méthode §2). */
 .mainCol .sessionTitle {
   font-size: 38px;
@@ -832,7 +861,10 @@
  * gagner en hauteur. La rangée d'action reste en bas, sur toute la largeur. Aucun bloc n'apparaît
  * ni ne disparaît : ce sont les mêmes huit, autrement disposés. */
 @media (min-width: 1600px) {
-  .mainCol {
+  /* `.mainColSession` et non `.mainCol` : cette grille nomme les blocs de la carte de séance.
+     Appliquée à toute colonne principale, elle plaçait au hasard les blocs des autres états —
+     02a, 02b, 02c — dans ses cellules restantes, et les posait côte à côte. */
+  .mainColSession {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: repeat(6, auto) 1fr;
@@ -848,38 +880,38 @@
     align-content: start;
   }
 
-  .mainCol .badgeRow {
+  .mainColSession .badgeRow {
     grid-area: badges;
   }
 
-  .mainCol .sessionTitle {
+  .mainColSession .sessionTitle {
     grid-area: title;
   }
 
-  .mainCol .sessionMeta {
+  .mainColSession .sessionMeta {
     grid-area: meta;
   }
 
-  .mainCol .timeline {
+  .mainColSession .timeline {
     grid-area: timeline;
   }
 
-  .mainCol .legend {
+  .mainColSession .legend {
     grid-area: legend;
   }
 
-  .mainCol .statGrid {
+  .mainColSession .statGrid {
     grid-area: stats;
   }
 
   /* Le déroulé occupe toute la hauteur de la colonne de droite : il n'y a plus de trou sous lui. */
-  .mainCol .setsTable {
+  .mainColSession .setsTable {
     grid-area: sets;
     margin-top: 0;
     align-self: stretch;
   }
 
-  .mainCol .doneRow {
+  .mainColSession .doneRow {
     grid-area: done;
     margin-top: 0;
     align-self: end;

@@ -173,6 +173,23 @@ describe('TodayScreen · deux colonnes (S4)', () => {
     expect(within(table).getAllByText(/% FTP/).length).toBeGreaterThan(0)
   })
 
+  // Les états sans artboard large — 02a, 02b, 02c — restaient sur leur colonne mobile bornée,
+  // soit 540 px perdus au milieu d'un écran de 1 850. Ils prennent le même cadre que S4, et la
+  // liste de la semaine passe à droite au lieu d'être écrite deux fois.
+  it.each([
+    ['jour de repos', '2026-06-18', 'Reste cette semaine'],
+    ['journée finie', '2026-06-15', 'Prochaine échéance'],
+  ])('gives the %s state the two-column frame, without doubling its week list', (_name, day, label) => {
+    mockMatchMediaWidth(1280)
+    catalogue = demoWorkouts.map((workout) =>
+      day === '2026-06-15' ? completed(workout, '2026-06-15T08:00:00.000Z') : workout,
+    )
+    renderScreen(day)
+
+    expect(screen.getByRole('img', { name: /Charge de la semaine/ })).toBeInTheDocument()
+    expect(screen.getAllByText(label)).toHaveLength(1)
+  })
+
   // Un plan généré sans profil enregistré faisait disparaître la colonne de contexte, et donc la
   // disposition à deux colonnes : l'écran retombait sur son flux mobile au milieu du desktop.
   it('keeps the week context on desktop even without an athlete profile', () => {

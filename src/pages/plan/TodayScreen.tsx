@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { usePlans, useProfile, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { usePublishRailBlock } from '../../context/RailBlockContext'
@@ -158,10 +158,18 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
 
   if (view.kind === 'out_of_range') return null
 
-  // Deux colonnes : seule la journée à une séance a un artboard large (S4). La journée à deux
-  // séances (15) et les états 02a/02b/02c n'en ont pas — ils gardent leur colonne bornée.
-  const split =
-    breakpoint !== 'mobile' && view.kind === 'sessions' && view.cards.length === 1 && weekContext !== null
+  /**
+   * Deux colonnes dès qu'on sort du mobile.
+   *
+   * Le canevas ne donne d'artboard large qu'à la journée à une séance (S4) : les autres états —
+   * jour de repos (02a), journée finie (02b), semaine en pause (02c), journée à deux séances (15)
+   * — n'en ont pas. Les laisser sur leur colonne mobile bornée donnait une colonne de 540 px
+   * perdue au milieu d'un écran de 1 850, avec les trois quarts du cadre vides.
+   *
+   * Ils prennent donc le MÊME cadre que S4 : leur contenu à gauche, la semaine à droite. Rien
+   * n'est ajouté ni retiré à aucun état — c'est la disposition qui change, pas le contenu.
+   */
+  const split = breakpoint !== 'mobile' && weekContext !== null
 
   const remaining =
     view.kind === 'sessions' && view.rest.length > 0 ? (
@@ -198,23 +206,63 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
         </div>
       )}
 
-      {view.kind === 'sessions' && (
-        <SessionsState
-          view={view}
-          context={split ? weekContext : null}
-          onMarkDone={markDone}
-        />
-      )}
-      {view.kind === 'rest_day' && <RestDayState view={view} />}
-      {view.kind === 'all_done' && <AllDoneState view={view} onUndo={undoDone} />}
-      {view.kind === 'week_paused' && (
-        <WeekPausedState
-          view={view}
-          onResume={() => resumePlan(view.weekNumber)}
-          onBlockMore={() => blockOneMoreWeek(view.weekNumber, view.reason)}
-        />
+      {view.kind === 'sessions' ? (
+        <SessionsState view={view} context={split ? weekContext : null} onMarkDone={markDone} />
+      ) : (
+        <StateFrame view={view} context={split ? weekContext : null}>
+          {view.kind === 'rest_day' && <RestDayState view={view} listInAside={split} />}
+          {view.kind === 'all_done' && <AllDoneState view={view} onUndo={undoDone} listInAside={split} />}
+          {view.kind === 'week_paused' && (
+            <WeekPausedState
+              view={view}
+              onResume={() => resumePlan(view.weekNumber)}
+              onBlockMore={() => blockOneMoreWeek(view.weekNumber, view.reason)}
+            />
+          )}
+        </StateFrame>
       )}
       </div>
+    </div>
+  )
+}
+
+/**
+ * Cadre à deux colonnes des états sans artboard large — 02a, 02b, 02c.
+ *
+ * `context` nul (mobile) : l'état est rendu tel quel, dans le flux vertical du canevas. Sinon il
+ * passe à gauche et la semaine à droite, exactement comme S4 le fait pour la journée à une séance.
+ *
+ * Ce que la colonne de droite liste change avec l'état, et l'intitulé le dit : une semaine en
+ * pause n'a pas un « reste », elle a une attente.
+ */
+function StateFrame({
+  view,
+  context,
+  children,
+}: {
+  view: TodayRestDayView | TodayAllDoneView | TodayWeekPausedView
+  context: WeekContext | null
+  children: ReactNode
+}) {
+  if (!context) return <>{children}</>
+
+  // 02c garde sa propre liste d'attente : elle dit ce qu'une simple liste ne dit pas — la séance
+  // suivante ET le nombre de celles qui patientent derrière. La colonne de droite n'en met donc
+  // aucune, plutôt que d'en montrer une version appauvrie à côté.
+  const aside =
+    view.kind === 'rest_day'
+      ? { label: 'Reste cette semaine', sessions: view.rest }
+      : view.kind === 'all_done'
+        ? { label: 'Prochaine échéance', sessions: view.next }
+        : null
+
+  return (
+    <div className={styles.split}>
+      <div className={styles.mainCol}>{children}</div>
+      <WeekAside
+        context={context}
+        {...(aside ? { rest: aside.sessions, restLabel: aside.label } : {})}
+      />
     </div>
   )
 }
@@ -353,6 +401,43 @@ function SessionsState({
   const framed = view.cards.length > 1
 
   if (context) {
+    // Journée à DEUX séances (artboard 15) : le canevas ne lui donne pas de disposition large,
+    // mais elle prend le même cadre — ses cartes empilées à gauche, la semaine à droite. Les deux
+    // cartes restent encadrées et numérotées comme en mobile ; aucune n'est perdue.
+    if (framed) {
+      return (
+        <div className={styles.split}>
+          <div className={styles.mainCol}>
+            {view.totalLabel && (
+              <div className={`${styles.dayTotals} ${styles.dayTotalsFlush}`}>
+                <span>{view.totalLabel}</span>
+                {view.brickNote && <span>{view.brickNote}</span>}
+              </div>
+            )}
+            {view.cards.map((card, index) => (
+              <SessionBlock
+                key={card.workout.id}
+                card={card}
+                framed
+                first={index === 0}
+                onMarkDone={onMarkDone}
+              />
+            ))}
+            {view.brickWhy && (
+              <section className={styles.whyBlock}>
+                <div className={styles.whyHeader}>
+                  <span className={styles.sectionLabel}>Pourquoi les deux le même jour</span>
+                  <ProofGauge level={view.brickWhy.level} />
+                </div>
+                <p className={styles.whyText}>{view.brickWhy.text}</p>
+              </section>
+            )}
+          </div>
+          <WeekAside context={context} rest={view.rest} />
+        </div>
+      )
+    }
+
     const card = view.cards[0]
     return (
       <>
@@ -566,7 +651,8 @@ function SessionBlock({
     </>
   )
 
-  if (wide) return <div className={styles.mainCol}>{inner}</div>
+  // `mainColSession` : la grille très grand écran ne nomme que les blocs de cette carte-là.
+  if (wide) return <div className={`${styles.mainCol} ${styles.mainColSession}`}>{inner}</div>
   if (!framed) return <div className={styles.body}>{inner}</div>
 
   // Artboard 15 : la première carte respire de 14 px sous la ligne des cumuls, les suivantes de 10.
@@ -687,7 +773,17 @@ function toStripDay(bar: WeekBar): WeekStripDay {
  * semaine, et le pied « prochaine référence » collé en bas. Tout vient de `buildWeekContext`,
  * sauf la liste — celle de `TodayView`, la même qu'en mobile, qui exclut les séances déjà faites.
  */
-function WeekAside({ context, rest }: { context: WeekContext; rest: UpcomingSession[] }) {
+function WeekAside({
+  context,
+  rest,
+  restLabel = 'Reste cette semaine',
+}: {
+  context: WeekContext
+  /** Absent = aucune liste dans cette colonne : l'état la porte déjà, mieux, dans la sienne. */
+  rest?: UpcomingSession[]
+  /** Ce que la liste montre selon l'état : le reste de la semaine, la prochaine échéance. */
+  restLabel?: string
+}) {
   return (
     <aside className={styles.sideCol} aria-label="Contexte de la semaine">
       <div>
@@ -707,19 +803,20 @@ function WeekAside({ context, rest }: { context: WeekContext; rest: UpcomingSess
         {context.freeDayNote && <p className={styles.chartNote}>{context.freeDayNote}</p>}
       </div>
 
-      {rest.length > 0 ? (
-        <SessionList
-          label="Reste cette semaine"
-          sessions={rest.slice(0, REST_LIMIT)}
-          className={styles.sideList}
-          linkToWeek={false}
-        />
-      ) : (
-        <section className={`${styles.listBlock} ${styles.sideList}`}>
-          <div className={styles.sectionLabel}>Reste cette semaine</div>
-          <p className={styles.chartNote}>plus aucune séance d’ici dimanche</p>
-        </section>
-      )}
+      {rest !== undefined &&
+        (rest.length > 0 ? (
+          <SessionList
+            label={restLabel}
+            sessions={rest.slice(0, REST_LIMIT)}
+            className={styles.sideList}
+            linkToWeek={false}
+          />
+        ) : (
+          <section className={`${styles.listBlock} ${styles.sideList}`}>
+            <div className={styles.sectionLabel}>{restLabel}</div>
+            <p className={styles.chartNote}>plus aucune séance d’ici dimanche</p>
+          </section>
+        ))}
 
       {context.nextReference && (
         <p className={styles.sideFooter}>
@@ -734,7 +831,14 @@ function WeekAside({ context, rest }: { context: WeekContext; rest: UpcomingSess
 
 // --- 02a · jour de repos -------------------------------------------------------------------
 
-function RestDayState({ view }: { view: TodayRestDayView }) {
+function RestDayState({
+  view,
+  listInAside = false,
+}: {
+  view: TodayRestDayView
+  /** En deux colonnes, « Reste cette semaine » vit à droite : la répéter ici la dédoublerait. */
+  listInAside?: boolean
+}) {
   return (
     <>
       <div className={styles.body}>
@@ -770,7 +874,7 @@ function RestDayState({ view }: { view: TodayRestDayView }) {
         Ajouter une séance légère
       </SecondaryAction>
 
-      <SessionList label="Reste cette semaine" sessions={view.rest.slice(0, REST_LIMIT)} />
+      {!listInAside && <SessionList label="Reste cette semaine" sessions={view.rest.slice(0, REST_LIMIT)} />}
       </div>
 
       <FooterNote>Aucune notification envoyée : un jour vide n’a pas besoin d’être annoncé.</FooterNote>
@@ -780,7 +884,16 @@ function RestDayState({ view }: { view: TodayRestDayView }) {
 
 // --- 02b · séance faite ----------------------------------------------------------------------
 
-function AllDoneState({ view, onUndo }: { view: TodayAllDoneView; onUndo: (workout: Workout) => void }) {
+function AllDoneState({
+  view,
+  onUndo,
+  listInAside = false,
+}: {
+  view: TodayAllDoneView
+  onUndo: (workout: Workout) => void
+  /** En deux colonnes, « Prochaine échéance » vit à droite : la répéter ici la dédoublerait. */
+  listInAside?: boolean
+}) {
   return (
     <>
       <div className={styles.body}>
@@ -826,12 +939,14 @@ function AllDoneState({ view, onUndo }: { view: TodayAllDoneView; onUndo: (worko
 
       {/* Artboard 02b : « Prochaine échéance », sans le lien « voir la semaine → » — la journée
           est finie, l'écran ne pousse plus nulle part. */}
-      <SessionList
-        label="Prochaine échéance"
-        sessions={view.next.slice(0, NEXT_LIMIT)}
-        withSublineOnFirst
-        linkToWeek={false}
-      />
+      {!listInAside && (
+        <SessionList
+          label="Prochaine échéance"
+          sessions={view.next.slice(0, NEXT_LIMIT)}
+          withSublineOnFirst
+          linkToWeek={false}
+        />
+      )}
 
       </div>
 
