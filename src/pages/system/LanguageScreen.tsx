@@ -54,7 +54,7 @@ export function LanguageScreen({ workoutCount }: LanguageScreenProps) {
     <div className={styles.screen}>
       <AppHeader
         variant="detail"
-        trail={['Menu', 'Réglages', 'Langue']}
+        trail={['Réglages', 'Langue']}
         onBack={() => navigate(SETTINGS_PATH)}
       />
 

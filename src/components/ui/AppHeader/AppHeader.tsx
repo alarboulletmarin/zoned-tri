@@ -1,12 +1,20 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useShellChrome } from '../../../context/shellChrome'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
-import { trailDestination, trailLabel, type TrailSegment } from '../../../navigation'
+import {
+  APP_NAME,
+  OPENING_PATH,
+  documentTitleFromTrail,
+  trailDestination,
+  trailLabel,
+  type TrailSegment,
+} from '../../../navigation'
 import { BackSquare } from '../BackSquare/BackSquare'
 import styles from './AppHeader.module.css'
 
-function SearchIcon() {
+/** Loupe de 18 px — rendue aussi dans l'en-tête du rail desktop (`AppShell`). */
+export function SearchIcon() {
   return (
     <svg
       width="18"
@@ -48,8 +56,9 @@ export function BurgerIcon() {
 
 interface CommonProps {
   /**
-   * Titre du bandeau desktop (canevas S4/S5/S6 : 17 px, gras, capitales, `letter-spacing:-.03em`).
-   * Par défaut le libellé mobile, ou le dernier segment du fil d'Ariane.
+   * Titre du bandeau desktop d'un écran RACINE (canevas S4/S5/S6 : 17 px, gras, capitales).
+   * Les écrans non racines n'en prennent pas : leur titre desktop **est** leur fil d'Ariane, et
+   * deux titres écrits à deux endroits finissent toujours par diverger.
    */
   desktopTitle?: string
   /** Commandes propres à l'écran, bandeau desktop uniquement (S5 : Filtres/Tri/.PDF ; S6 : .ICS). */
@@ -79,6 +88,11 @@ export interface AppHeaderDetailProps extends CommonProps {
    * segment autre que le dernier devient un lien dès qu'une destination lui est connue — par son
    * intitulé (`trailDestination`) ou explicitement, sous la forme `{ label, to }` quand la cible
    * dépend des données, comme la fiche d'une course.
+   *
+   * **Le dernier segment est le nom de la page.** Il n'y en a pas d'autre : il titre l'onglet du
+   * navigateur, il titre le bandeau desktop, et c'est lui que l'utilisateur lit pour savoir où il
+   * est. Écrire « Séance » là où la page montre « Transition course après vélo » revient à ne pas
+   * nommer la page.
    */
   trail: TrailSegment[]
   onBack: () => void
@@ -91,100 +105,164 @@ export interface AppHeaderDetailProps extends CommonProps {
 export type AppHeaderProps = AppHeaderRootProps | AppHeaderOpeningProps | AppHeaderDetailProps
 
 /**
- * **Le** bandeau d'un écran — il n'y en a jamais deux. Le canevas ouvre chaque artboard mobile par
- * une barre unique de 46 px filetée de 2 px d'encre (01, 02, 03, 05, 07, G1), et chaque artboard
- * desktop par une barre unique de 52 px à droite du rail (S4, S5, S6). C'est donc l'écran qui rend
- * son bandeau, pas la coquille : le contenu varie d'un artboard à l'autre, la coquille ne peut pas
- * le deviner. Elle ne fournit que les deux commandes globales via `ShellChromeContext`.
+ * Fil d'Ariane effectif d'un écran.
  *
- * Écart assumé : le canevas ne donne pas d'artboard desktop aux écrans non racines (Semaine mobile
- * 03, Séance 05, Générateur G1→G6). Le carré de retour y est conservé sur desktop — le retirer
- * priverait le générateur de son seul retour d'étape, ce que la méthode interdit (pas de cul-de-sac).
+ * Un écran racine a un fil d'un seul segment — sa section. Ce n'est pas une commodité de code :
+ * c'est ce qui permet à *tout* écran du produit d'avoir un nom de page, et au titre d'onglet
+ * d'exister partout. L'ouverture n'en a pas : elle n'est dans aucune section, elle est la porte.
+ */
+function resolveTrail(props: AppHeaderProps): TrailSegment[] {
+  if (props.variant === 'root') return [props.label]
+  if (props.variant === 'detail') return props.trail
+  return []
+}
+
+/**
+ * **Le** bandeau d'un écran — il n'y en a jamais deux.
+ *
+ * Il porte trois choses, et les porte à TOUTES les largeurs :
+ *
+ * 1. **Le mot-symbole**, qui est le logo du produit et son bouton d'accueil. Il manquait sur
+ *    quinze écrans sur seize en mobile et en tablette : seule l'ouverture le montrait, si bien
+ *    qu'une fois entré dans l'application, plus rien ne disait de quel produit il s'agissait ni
+ *    comment revenir au point de départ. En desktop c'est le rail qui le porte (`AppShell`), et
+ *    le bandeau ne le redouble donc pas.
+ * 2. **Le nom de la page** — le dernier segment du fil, jamais un libellé écrit deux fois.
+ * 3. **Le fil d'Ariane**, dès que la page a un parent, et **cliquable** : chaque segment mène à
+ *    l'écran qu'il nomme. Il était jusqu'ici absent de toutes les largeurs desktop, où le bandeau
+ *    aplatissait la hiérarchie en un titre inerte (« Plan · semaine ») : la profondeur était
+ *    visible en mobile et perdue en grand écran, exactement à l'inverse de ce que la place permet.
+ *
+ * Les deux commandes globales (recherche, menu) restent à la coquille (`ShellChromeContext`) mais
+ * s'affichent désormais sur tous les écrans mobiles, y compris les écrans profonds : une loupe qui
+ * disparaît dès qu'on descend d'un niveau n'est pas une recherche globale.
  */
 export function AppHeader(props: AppHeaderProps) {
   const breakpoint = useBreakpoint()
   const { openMenu, openSearch } = useShellChrome()
   const isDesktop = breakpoint === 'desktop'
 
-  const title =
-    props.desktopTitle ??
-    (props.variant === 'root'
-      ? props.label
-      : props.variant === 'detail'
-        ? (props.trail.length > 0 ? trailLabel(props.trail[props.trail.length - 1]) : '')
-        : 'Zoned Tri')
+  const trail = resolveTrail(props)
+  const isDetail = props.variant === 'detail'
+  const pageName = trail.length > 0 ? trailLabel(trail[trail.length - 1]) : APP_NAME
+
+  useDocumentTitle(trail)
 
   if (isDesktop) {
+    // Le rail porte déjà le mot-symbole et les commandes globales : le bandeau desktop n'a que la
+    // hiérarchie à dire, et la largeur pour la dire en entier.
     return (
       <header className={styles.desktopBar}>
         <span className={styles.desktopLeft}>
-          {props.variant === 'detail' && (
-            <BackSquare onClick={props.onBack} label={props.backLabel ?? 'Retour'} />
+          {isDetail && <BackSquare onClick={props.onBack} label={props.backLabel ?? 'Retour'} />}
+          {isDetail ? (
+            <Trail segments={trail} className={styles.desktopTrail} />
+          ) : (
+            <span className={styles.desktopTitle}>{props.desktopTitle ?? pageName}</span>
           )}
-          <span className={styles.desktopTitle}>{title}</span>
         </span>
-        {props.desktopActions && <span className={styles.desktopActions}>{props.desktopActions}</span>}
+        <span className={styles.desktopRight}>
+          {props.variant === 'detail' && props.counter && (
+            <span className={styles.counter}>{props.counter}</span>
+          )}
+          {props.desktopActions && <span className={styles.desktopActions}>{props.desktopActions}</span>}
+        </span>
       </header>
     )
   }
 
-  if (props.variant === 'detail') {
-    return (
-      <header className={styles.detailBar}>
-        <span className={styles.detailLeft}>
-          <BackSquare onClick={props.onBack} label={props.backLabel ?? 'Retour'} />
-          <span className={styles.trail}>
-            {props.trail.map((segment, index) => {
-              const label = trailLabel(segment)
-              if (index === props.trail.length - 1) {
-                return (
-                  <span key={label} className={styles.trailCurrent}>
-                    {label}
-                  </span>
-                )
-              }
-              const to = trailDestination(segment)
-              return (
-                <span key={label} className={styles.trailMuted}>
-                  {to ? (
-                    <Link className={styles.trailLink} to={to}>
-                      {label}
-                    </Link>
-                  ) : (
-                    label
-                  )}
-                  {' / '}
-                </span>
-              )
-            })}
-          </span>
-        </span>
-        {props.counter && <span className={styles.counter}>{props.counter}</span>}
-        <button type="button" className={styles.iconButton} aria-label="Menu" onClick={openMenu}>
-          <BurgerIcon />
-        </button>
-      </header>
-    )
-  }
+  // Le fil ne prend sa propre ligne que sur un écran de détail : sur un écran racine, la section
+  // est déjà écrite à côté du mot-symbole, et une deuxième ligne qui la répéterait volerait 30 px
+  // à l'affiche pour ne rien apprendre.
+  const showTrailBar = isDetail
 
   return (
-    <header className={styles.rootBar}>
-      {props.variant === 'opening' ? (
-        <span className={styles.wordmark}>Zoned Tri</span>
-      ) : (
-        <span className={styles.sectionLabel}>{props.label}</span>
+    <header className={styles.chrome}>
+      <div className={styles.brandBar}>
+        <span className={styles.brandLeft}>
+          {isDetail && <BackSquare onClick={props.onBack} label={props.backLabel ?? 'Retour'} />}
+          <Link to={OPENING_PATH} className={styles.wordmark}>
+            {APP_NAME}
+          </Link>
+          {props.variant === 'root' && (
+            <>
+              <span className={styles.brandSeparator} aria-hidden="true">
+                ·
+              </span>
+              <span className={styles.sectionLabel}>{props.label}</span>
+            </>
+          )}
+        </span>
+        <span className={styles.actions}>
+          {props.variant === 'root' && props.rootActions && (
+            <span className={styles.rootActions}>{props.rootActions}</span>
+          )}
+          <button type="button" className={styles.iconButton} aria-label="Rechercher" onClick={openSearch}>
+            <SearchIcon />
+          </button>
+          <button type="button" className={styles.iconButton} aria-label="Menu" onClick={openMenu}>
+            <BurgerIcon />
+          </button>
+        </span>
+      </div>
+
+      {showTrailBar && (
+        <div className={styles.trailBar}>
+          <Trail segments={trail} className={styles.trail} />
+          {props.variant === 'detail' && props.counter && (
+            <span className={styles.counter}>{props.counter}</span>
+          )}
+        </div>
       )}
-      <span className={styles.actions}>
-        {props.variant === 'root' && props.rootActions && (
-          <span className={styles.rootActions}>{props.rootActions}</span>
-        )}
-        <button type="button" className={styles.iconButton} aria-label="Rechercher" onClick={openSearch}>
-          <SearchIcon />
-        </button>
-        <button type="button" className={styles.iconButton} aria-label="Menu" onClick={openMenu}>
-          <BurgerIcon />
-        </button>
-      </span>
     </header>
   )
+}
+
+/**
+ * Le fil lui-même, identique aux trois largeurs : les parents sont des liens, le courant est en
+ * gras et n'en est pas un — on ne met pas un lien vers la page qu'on regarde.
+ *
+ * `aria-current="page"` sur le dernier segment : c'est ce qui fait de ce fil une navigation
+ * lisible au lecteur d'écran, et non une suite de mots séparés par des barres obliques.
+ */
+function Trail({ segments, className }: { segments: TrailSegment[]; className: string }) {
+  return (
+    <nav className={className} aria-label="Fil d'Ariane">
+      <ol className={styles.trailList}>
+        {segments.map((segment, index) => {
+          const label = trailLabel(segment)
+          const isLast = index === segments.length - 1
+          const to = isLast ? undefined : trailDestination(segment)
+
+          return (
+            <li key={`${label}-${index}`} className={isLast ? styles.trailCurrent : styles.trailMuted}>
+              {to ? (
+                <Link className={styles.trailLink} to={to}>
+                  {label}
+                </Link>
+              ) : (
+                <span {...(isLast ? { 'aria-current': 'page' as const } : {})}>{label}</span>
+              )}
+              {!isLast && (
+                <span className={styles.trailSeparator} aria-hidden="true">
+                  /
+                </span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+/**
+ * Titre de l'onglet. Il vient du fil et de lui seul : un écran qui nomme sa page nomme son onglet,
+ * sans avoir à l'écrire une deuxième fois.
+ */
+function useDocumentTitle(trail: TrailSegment[]) {
+  const title = documentTitleFromTrail(trail)
+  useEffect(() => {
+    document.title = title
+  }, [title])
 }

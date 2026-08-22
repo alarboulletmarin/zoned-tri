@@ -114,6 +114,23 @@
   border-bottom: var(--border-width-hairline) solid var(--color-on-ink-hairline);
 }
 
+/* Section courante. Le rail desktop la marque d'un aplat d'encre et d'un libellé lime ; sur le
+   panneau, qui EST déjà un aplat d'encre, c'est le libellé qui passe en lime et un carré de 8 px
+   qui le désigne — même signal, autre support. */
+.sectionLinkActive .sectionLabel {
+  color: var(--color-signal-lime);
+}
+
+.sectionLinkActive .sectionLabel::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  vertical-align: 0.28em;
+  background: var(--color-signal-lime);
+}
+
 .sectionLabel {
   font-family: var(--font-display);
   font-weight: var(--fw-bold);

@@ -61,7 +61,7 @@ export function PlanMacroScreen({ plan, race, today, onBack }: PlanMacroScreenPr
   return (
     <div className={styles.screen}>
       {/* Le canevas rebaptise cet écran : « Plan → segment SAISON ». Le fil le suit. */}
-      <AppHeader variant="detail" trail={['Plan', 'Saison']} onBack={onBack} desktopTitle="Plan · saison" />
+      <AppHeader variant="detail" trail={['Plan', 'Saison']} onBack={onBack} />
       <PlanSegment current="saison" />
 
       <div className={styles.column}>

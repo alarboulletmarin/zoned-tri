@@ -51,7 +51,6 @@ export function RaceChecklistScreen({ race, onToggle }: RaceChecklistScreenProps
       <AppHeader
         variant="detail"
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Checklist']}
-        desktopTitle={`${race.name} · checklist`}
         onBack={() => navigate(racePath(race.id))}
       />
 

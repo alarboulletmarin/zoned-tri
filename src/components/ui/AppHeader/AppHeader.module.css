@@ -1,44 +1,80 @@
 /*
- * Bandeau unique d'écran. Trois formes, toutes littérales dans le canevas :
+ * Bandeau unique d'écran. Trois formes :
  *
- * - `.rootBar`  → artboards 01, 02, 07 : `padding:12px 16px` (soit 46 px de haut avec l'icône de
- *   20 px), filet bas de 2 px d'encre, libellé à gauche, recherche 18 px + burger 20 px à droite.
- * - `.detailBar` → artboards 03, 05, G1 : `height:46px; padding:0 14px 0 12px`, carré de retour
- *   38×38, fil d'Ariane mono 11 px, burger 20 px. Le retrait gauche est plus court (12 px) parce
- *   que le carré porte déjà sa bordure.
- * - `.desktopBar` → artboards S4, S5, S6 : `padding:0 20px; min-height:52px`, titre 17 px gras
- *   capitales, commandes de l'écran à droite. Son filet bas s'aligne sur celui de l'en-tête du rail.
+ * - `.chrome`     → mobile et tablette. Une barre de marque de 46 px (mot-symbole, section ou
+ *   retour, recherche, burger) et, dès que la page a un parent, une barre de fil de 34 px. Le
+ *   canevas n'ouvrait ses artboards que par la première ; la seconde est l'écart assumé qui donne
+ *   au produit un fil d'Ariane et un nom de page sur tous les écrans, à toutes les largeurs.
+ * - `.desktopBar` → artboards S4, S5, S6 : `padding:0 20px; min-height:52px`. Le rail portant le
+ *   mot-symbole, ce bandeau n'a que la hiérarchie à dire — le fil en entier, cliquable.
  */
 
-.rootBar,
-.detailBar {
+.chrome {
   flex: none;
   box-sizing: border-box;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.brandBar {
+  box-sizing: border-box;
   height: var(--screen-header-height-mobile);
+  padding: 0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   overflow: hidden;
-  border-bottom: var(--border-width-structure) solid var(--color-ink);
-  background: var(--color-paper);
-  color: var(--color-ink);
 }
 
-.rootBar {
-  padding: 0 16px;
+/* Le carré de retour porte déjà sa bordure : le retrait gauche se raccourcit de 4 px pour que le
+   contour tombe sur la même verticale que le mot-symbole des écrans racines. */
+.brandBar:has(> .brandLeft > button[aria-label]) {
+  padding-left: 12px;
 }
 
-.detailBar {
-  padding: 0 14px 0 12px;
+.brandLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
 }
 
+/* Le carré de retour est le seul enfant de la rangée qui ne s'aligne pas sur la ligne de base. */
+.brandLeft > button {
+  align-self: center;
+}
+
+/*
+ * Le mot-symbole. C'est le logo du produit ET son bouton d'accueil : il ramène à l'ouverture,
+ * d'où l'on rejoint « Mes plans », la génération et le bilan de course. Sa cible fait les 46 px
+ * du bandeau, bien au-delà des 44 px exigés, sans changer la hauteur de la barre.
+ */
 .wordmark {
+  flex: none;
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
   font-size: 15px;
   letter-spacing: -0.03em;
   text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  padding: 14px 0;
+  margin: -14px 0;
+}
+
+.wordmark:hover,
+.wordmark:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.brandSeparator {
+  flex: none;
+  color: var(--color-inactive);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 .sectionLabel {
@@ -47,22 +83,83 @@
   font-weight: var(--fw-bold);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.detailLeft {
+/* --- Barre de fil (mobile / tablette) --------------------------------------------------------- */
+
+/* 34 px : la hauteur qu'il faut au mono de 11 px pour respirer et donner aux segments une cible
+   qui se touche, et pas un pixel de plus — c'est autant de pris sur l'affiche. Le filet est un
+   cheveu, pas une structure : les deux barres sont un seul bloc de chrome, c'est `.chrome` qui
+   porte le trait d'encre en bas.
+
+   Écart assumé au plancher de 44 px du README §3 : un segment parent est un lien de texte en
+   ligne, pas une commande principale — le retour au parent, lui, passe par le carré de 38 px du
+   bandeau au-dessus, qui porte bien sa cible de 44 px. Monter cette barre à 44 px coûterait
+   10 px de chrome sur CHAQUE écran de détail, et le pseudo-élément d'extension habituel
+   mordrait soit sur le carré de retour, soit sur le segment JOUR·SEMAINE·MOIS·SAISON en
+   dessous. On élargit donc la cible horizontalement plutôt que verticalement. */
+.trailBar {
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 0;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  overflow: hidden;
 }
 
-.trail {
+/* --- Le fil, identique aux trois largeurs ----------------------------------------------------- */
+
+.trail,
+.desktopTrail {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.trailList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1.3;
+}
+
+.desktopTrail .trailList {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.trailList > li {
+  display: flex;
+  align-items: center;
+  min-width: 0;
   white-space: nowrap;
+}
+
+/* Le fil se coupe par le début, jamais par la fin : le nom de la page est ce qu'on garde. */
+.trailList > li:not(:last-child) {
+  flex: 0 1 auto;
+  overflow: hidden;
+}
+
+.trailList > li:not(:last-child) > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trailList > li:last-child {
+  flex: 0 0 auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -71,15 +168,22 @@
   color: var(--color-label);
 }
 
+.trailSeparator {
+  padding: 0 6px;
+  color: var(--color-inactive);
+}
+
 /* Un segment parent mène à son écran. Le fil est en mono 11 px : la cible tactile ne peut pas
-   venir de la hauteur du texte, elle vient du padding vertical, qui remplit les 46 px du bandeau
-   sans en changer la hauteur (`line-height` inchangé, marge négative compensée par le padding). */
+   venir de la hauteur du texte, elle vient du padding vertical, qui remplit la barre sans en
+   changer la hauteur (`line-height` inchangé, marge négative compensée par le padding). */
 .trailLink {
   color: inherit;
   text-decoration: none;
   display: inline-block;
-  padding: 15px 2px;
-  margin: -15px 0;
+  padding: 11px 8px;
+  margin: -11px -6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .trailLink:hover,
@@ -95,6 +199,7 @@
 }
 
 .counter {
+  flex: none;
   font-family: var(--font-mono);
   font-size: var(--fs-label-section);
   letter-spacing: 0.12em;
@@ -109,7 +214,6 @@
   gap: 14px;
 }
 
-/* Le canevas dessine des SVG nus : le bouton ne doit rien ajouter autour d'eux. */
 /* Le canevas ne dessine que le glyphe (18 px pour la loupe, 20 px pour le burger) et ne montre
  * aucune boîte autour. La cible, elle, doit faire 44 px (README §3 règle 3) : elle est étendue par
  * un pseudo-élément centré, invisible, qui ne déplace rien dans le bandeau de 46 px. */
@@ -166,6 +270,13 @@
   min-width: 0;
 }
 
+.desktopRight {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .desktopTitle {
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
@@ -189,8 +300,8 @@
 }
 
 /* Mention d'état du bandeau racine (S4 : « 3 séances restantes cette semaine »). Masquée en mobile,
- * où le canevas ne la met pas — la barre de 46 px n'y a la place que du mot-symbole et des deux
- * commandes. */
+ * où le canevas ne la met pas — la barre de 46 px n'y a la place que du mot-symbole, de la section
+ * et des deux commandes. */
 .rootActions {
   display: none;
 }

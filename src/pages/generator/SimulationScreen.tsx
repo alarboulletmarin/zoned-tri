@@ -86,7 +86,6 @@ export function SimulationScreen({
         variant="detail"
         trail={['Plan', 'Simulation']}
         onBack={onBack}
-        desktopTitle="Plan · simulation"
       />
 
       <div className={styles.column}>

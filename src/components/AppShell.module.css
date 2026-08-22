@@ -32,6 +32,28 @@
   color: var(--color-ink);
 }
 
+/* La loupe ferme l'en-tête du rail, poussée à droite par le mot-symbole qui s'étire. Sa cible fait
+   les 52 px de l'en-tête, comme celle du mot-symbole. */
+.railSearch {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-width: var(--action-height-min);
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  color: var(--color-ink);
+  padding: 0;
+  cursor: pointer;
+}
+
+.railSearch svg {
+  display: block;
+}
+
 /* Lien vers l'ouverture. Il s'étire sur toute la hauteur du bandeau du rail : la cible fait
    ainsi les 52 px de l'en-tête, bien au-delà des 44 px exigés. */
 .railWordmark {

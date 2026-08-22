@@ -62,7 +62,6 @@ export function PlanMonthScreen({
         variant="detail"
         trail={['Plan', 'Mois']}
         onBack={() => navigate(PLAN_PATH)}
-        desktopTitle="Plan · mois"
       />
       <PlanSegment current="mois" />
 

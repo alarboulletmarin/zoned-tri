@@ -87,7 +87,6 @@ export function GeneratorStepFrame({
         onBack={onBack}
         backLabel="Étape précédente"
         counter={counter}
-        desktopTitle="Plan · générer"
       />
 
       <div className={styles.column}>

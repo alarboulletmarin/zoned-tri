@@ -57,7 +57,11 @@ export function CalculatorScreen({ id: idProp, profile: profileProp }: Calculato
   if (!definition) {
     return (
       <div className={styles.screen}>
-        <AppHeader variant="detail" trail={['Outils', 'Calculateurs']} onBack={() => navigate(CALCULATORS_PATH)} />
+        <AppHeader
+          variant="detail"
+          trail={['Outils', 'Calculateurs', 'Introuvable']}
+          onBack={() => navigate(CALCULATORS_PATH)}
+        />
         <p className={styles.notFound}>Calculateur inconnu.</p>
       </div>
     )
@@ -73,7 +77,13 @@ export function CalculatorScreen({ id: idProp, profile: profileProp }: Calculato
 
   return (
     <div className={styles.screen}>
-      <AppHeader variant="detail" trail={['Outils', 'Calculateurs']} onBack={() => navigate(CALCULATORS_PATH)} />
+      {/* Le fil s'arrêtait sur « Calculateurs » : douze écrans partageaient donc le même nom de
+          page et le même titre d'onglet. Le dernier segment nomme le calculateur ouvert. */}
+      <AppHeader
+        variant="detail"
+        trail={['Outils', 'Calculateurs', definition.titleLines.join(' ')]}
+        onBack={() => navigate(CALCULATORS_PATH)}
+      />
 
       <div className={styles.column}>
         <div className={styles.head}>

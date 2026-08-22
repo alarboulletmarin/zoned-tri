@@ -29,7 +29,6 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
       <AppHeader
         variant="detail"
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Jour J']}
-        desktopTitle={`${race.name} · jour J`}
         onBack={() => navigate(racePath(race.id))}
       />
 

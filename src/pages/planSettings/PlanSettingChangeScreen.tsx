@@ -135,9 +135,8 @@ export function PlanSettingChangeScreen({
     <div className={styles.screen}>
       <AppHeader
         variant="detail"
-        trail={['Plan', 'Réglages', SETTING_TRAIL_LABEL[setting]]}
+        trail={['Plan', 'Réglages du plan', SETTING_TRAIL_LABEL[setting]]}
         onBack={onBack}
-        desktopTitle={`Plan · ${SETTING_TRAIL_LABEL[setting].toLowerCase()}`}
         counter="non enregistré"
       />
 

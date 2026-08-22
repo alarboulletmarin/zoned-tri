@@ -123,8 +123,8 @@ export function SemaineScreen({
    * « J-77 · 70.3 Vichy ». Les trois viennent de `selectOpeningState`, seule autorité du domaine
    * sur ces libellés — l'écran ne calcule ni pourcentage ni décompte.
    *
-   * Le rang de la semaine vit là et NON dans le bandeau, qui ne porte que « Plan · semaine 07 » et
-   * les commandes.
+   * Le rang de la semaine est aussi le dernier segment du fil (« Plan / Semaine 07 ») : c'est lui
+   * qui nomme la page, ici comme dans l'onglet du navigateur.
    */
   const railCard = useMemo(
     () => selectOpeningState({ plans: [plan], races, workouts: catalogue, today: reference }).activePlan,
@@ -146,12 +146,7 @@ export function SemaineScreen({
   if (!week) {
     return (
       <div className={styles.screen}>
-        <AppHeader
-          variant="detail"
-          trail={['Plan', 'Semaine']}
-          onBack={() => navigate('/plan')}
-          desktopTitle="Plan · semaine"
-        />
+        <AppHeader variant="detail" trail={['Plan', 'Semaine']} onBack={() => navigate('/plan')} />
         <div className={styles.footerBar}>Ce plan ne contient aucune semaine.</div>
       </div>
     )
@@ -167,9 +162,8 @@ export function SemaineScreen({
       {/* Artboard 03 l. 415-421 (mobile) et S6 l. 1803-1810 (desktop) : UN seul bandeau. */}
       <AppHeader
         variant="detail"
-        trail={['Plan', 'Semaine']}
+        trail={['Plan', `Semaine ${weekNumber}`]}
         onBack={() => navigate('/plan')}
-        desktopTitle={`Plan · semaine ${weekNumber}`}
         desktopActions={
           isDesktop ? (
             <>

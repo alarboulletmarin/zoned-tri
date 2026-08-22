@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useBreakpoint } from '../hooks/useBreakpoint'
 import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
-import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
+import { OPENING_PATH, ROOT_SECTIONS, sectionForPath } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
-import { BurgerIcon } from './ui/AppHeader/AppHeader'
+import { BurgerIcon, SearchIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
 import { BurgerMenu } from './BurgerMenu'
 import { SearchOverlay } from '../pages/workouts/SearchOverlay'
@@ -40,6 +40,7 @@ function AppShellLayout() {
   // — « aucun rail, rien n'est encore ouvert » (S9) — et sa colonne sombre porte elle-même le
   // mot-symbole. La coquille s'y efface entièrement. Voir `OPENING_PATH` dans src/navigation.ts.
   const showRail = breakpoint === 'desktop' && location.pathname !== OPENING_PATH
+  const activeSection = sectionForPath(location.pathname)
   const openMenu = useCallback(() => setMenuOpen(true), [])
   const openSearch = useCallback(() => setSearching(true), [])
 
@@ -58,18 +59,38 @@ function AppShellLayout() {
             <NavLink to={OPENING_PATH} className={styles.railWordmark}>
               Zoned Tri
             </NavLink>
+            {/* La recherche n'existait à AUCUNE largeur desktop : le bandeau S4/S5/S6 ne porte pas
+                de loupe et le rail n'en avait pas. Un produit qui embarque 32 séances et douze
+                calculateurs sans moyen de les chercher au-delà de 1024 px n'est pas explorable —
+                elle prend donc place ici, à côté du mot-symbole, comme en mobile. */}
+            <button
+              type="button"
+              className={styles.railSearch}
+              aria-label="Rechercher"
+              onClick={openSearch}
+            >
+              <SearchIcon />
+            </button>
           </div>
           <div className={styles.railSectionLabel}>Sections</div>
           <div className={styles.railNav}>
             {ROOT_SECTIONS.map((section, index) => (
-              <NavLink
+              /* `NavLink` n'allume que par préfixe d'URL : le rail s'éteignait donc entièrement
+                 sur `/generate-plan`, `/plans`, `/import-export` et `/exports`, alors que trois
+                 de ces quatre écrans appartiennent bien à une section. `sectionForPath` connaît
+                 déjà ces rattachements — c'est lui qui décide, pas le préfixe. */
+              /* `Link` et non `NavLink` : c'est `sectionForPath` qui décide de l'état actif, et
+                 `NavLink` poserait son propre `aria-current` d'après son seul préfixe d'URL —
+                 c'est-à-dire jamais sur `/generate-plan`. */
+              <Link
                 key={section.to}
                 to={section.to}
-                className={({ isActive }) => `${styles.railLink} ${isActive ? styles.railLinkActive : ''}`}
+                aria-current={activeSection?.to === section.to ? 'page' : undefined}
+                className={`${styles.railLink} ${activeSection?.to === section.to ? styles.railLinkActive : ''}`}
               >
                 <span className={styles.railIndex}>{String(index + 1).padStart(2, '0')}</span>
                 <span className={styles.railLabel}>{section.label}</span>
-              </NavLink>
+              </Link>
             ))}
           </div>
           {railBlock && (
@@ -107,11 +128,14 @@ function AppShellLayout() {
         </nav>
       )}
 
-      <div className={styles.main}>
+      {/* Repère principal : la coquille ne rendait qu'un `div`, si bien qu'aucun des dix-huit
+          écrans n'avait de `main` — un lecteur d'écran n'avait aucun moyen de sauter la
+          navigation pour atteindre le contenu. */}
+      <main className={styles.main}>
         <ShellChromeProvider openMenu={openMenu} openSearch={openSearch}>
           {isSearching ? <SearchOverlay onClose={() => setSearching(false)} /> : <Outlet />}
         </ShellChromeProvider>
-      </div>
+      </main>
 
       {/* `!showRail` : un menu ouvert en mobile puis élargi jusqu'au desktop se referme, le rail
           prenant le relais — le panneau d'encre ne doit jamais recouvrir la mise en page desktop. */}

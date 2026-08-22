@@ -1,10 +1,10 @@
 import { useMemo, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { usePlans, useRaces } from '../context/AppDataContext'
 import { buildMenuCounts } from '../domain/menuCounts'
 import { todayIso } from '../domain/planWeek'
-import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
+import { OPENING_PATH, ROOT_SECTIONS, sectionForPath } from '../navigation'
 import { IS_DEMO_BUILD } from '../demoBuild'
 import styles from './BurgerMenu.module.css'
 import { APP_VERSION } from '../domain/types'
@@ -36,6 +36,13 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
   const { races } = useRaces()
   const counts = useMemo(() => buildMenuCounts({ plans, races, today: todayIso() }), [plans, races])
 
+  // Le panneau est la SEULE navigation en mobile et en tablette, et il ne disait pas d'où on
+  // l'ouvrait : quatre sections identiques, aucune marque de position. Le rail desktop, lui, allume
+  // la sienne depuis toujours (aplat d'encre, libellé lime) — les deux navigations doivent dire la
+  // même chose.
+  const { pathname } = useLocation()
+  const activeSection = sectionForPath(pathname)
+
   return (
     <div ref={panelRef} className={styles.panel} role="dialog" aria-modal="true" aria-label="Menu">
       <div className={styles.header}>
@@ -56,7 +63,14 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
         <ul className={styles.sectionList}>
           {ROOT_SECTIONS.map((section) => (
             <li key={section.to}>
-              <Link to={section.to} className={styles.sectionLink} onClick={onClose}>
+              <Link
+                to={section.to}
+                className={`${styles.sectionLink} ${
+                  activeSection?.to === section.to ? styles.sectionLinkActive : ''
+                }`}
+                aria-current={activeSection?.to === section.to ? 'page' : undefined}
+                onClick={onClose}
+              >
                 <span className={styles.sectionLabel}>{section.label}</span>
                 <span className={styles.sectionCount}>{counts[section.to]}</span>
               </Link>
