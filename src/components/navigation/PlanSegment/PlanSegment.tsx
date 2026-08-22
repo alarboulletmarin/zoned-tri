@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { PLAN_MACRO_PATH, PLAN_MONTH_PATH, PLAN_PATH, WEEK_PATH } from '../../../navigation'
-import styles from './PlanSegment.module.css'
+import styles from '../segment.module.css'
 
 /** Les quatre niveaux de zoom du plan, dans l'ordre du canevas. */
 export type PlanZoomLevel = 'jour' | 'semaine' | 'mois' | 'saison'

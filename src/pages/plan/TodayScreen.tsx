@@ -32,6 +32,7 @@ import { exportSheetPath } from '../exports/exportsRoutes'
 import styles from './TodayScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { useMarkWorkoutDone } from '../../hooks/useMarkWorkoutDone'
 
 const WEEK_PATH = '/plan/semaine'
 
@@ -78,7 +79,7 @@ export interface TodayScreenProps {
  *   donnée réalisée, et rien n'est estimé à la place d'une mesure absente.
  */
 export function TodayScreen({ plan, catalogue, profile, races, today, now }: TodayScreenProps) {
-  const { workouts, saveWorkout } = useWorkouts()
+  const { workouts } = useWorkouts()
   const { savePlan } = usePlans()
   const { profile: storedProfile } = useProfile()
   const { races: storedRaces } = useRaces()
@@ -128,15 +129,14 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
     railCard && view.kind !== 'out_of_range' ? (railCard.countdownLabel ? [railCard.countdownLabel] : []) : null
   usePublishRailBlock(railCard?.weekLabel ?? '', railLines, railLines ? railCard?.progressPercent : undefined)
 
-  async function markDone(workout: Workout) {
-    await saveWorkout({ ...workout, status: 'completed', completedAt: new Date().toISOString() })
-  }
-
-  async function undoDone(workout: Workout) {
-    const restored: Workout = { ...workout, status: 'planned' }
-    delete restored.completedAt
-    await saveWorkout(restored)
-  }
+  // Cocher écrivait en base sans un mot et sans retour possible, et la case ne montrait jamais
+  // l'état qu'elle venait d'écrire. Le hook porte les deux moitiés du geste : l'effet annoncé et
+  // le bandeau de 6 s qui le défait.
+  const { toggle: toggleDone, overlay: undoOverlay } = useMarkWorkoutDone({
+    plan,
+    catalogue: resolved,
+    today: reference,
+  })
 
   async function resumePlan(weekNumber: number) {
     await savePlan({
@@ -210,11 +210,11 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
       )}
 
       {view.kind === 'sessions' ? (
-        <SessionsState view={view} context={split ? weekContext : null} onMarkDone={markDone} />
+        <SessionsState view={view} context={split ? weekContext : null} onMarkDone={toggleDone} />
       ) : (
         <StateFrame view={view} context={split ? weekContext : null}>
           {view.kind === 'rest_day' && <RestDayState view={view} listInAside={split} />}
-          {view.kind === 'all_done' && <AllDoneState view={view} onUndo={undoDone} listInAside={split} />}
+          {view.kind === 'all_done' && <AllDoneState view={view} onUndo={toggleDone} listInAside={split} />}
           {view.kind === 'week_paused' && (
             <WeekPausedState
               view={view}
@@ -225,6 +225,9 @@ export function TodayScreen({ plan, catalogue, profile, races, today, now }: Tod
         </StateFrame>
       )}
       </div>
+
+      {/* Le bandeau d'annulation de la séance qu'on vient de cocher — six secondes pour se dédire. */}
+      {undoOverlay}
     </div>
   )
 }
@@ -646,7 +649,7 @@ function SessionBlock({
           <input
             type="checkbox"
             className={styles.checkbox}
-            checked={false}
+            checked={workout.status === 'completed'}
             onChange={() => onMarkDone(workout)}
           />
           Marquer comme faite

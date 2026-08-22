@@ -9,6 +9,7 @@ import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceChecklistScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+import { RaceSegment } from '../../components/navigation/RaceSegment/RaceSegment'
 
 export interface RaceChecklistScreenProps {
   race: Race
@@ -52,6 +53,7 @@ export function RaceChecklistScreen({ race, onToggle }: RaceChecklistScreenProps
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Checklist']}
         onBack={() => navigate(racePath(race.id))}
       />
+      <RaceSegment raceId={race.id} current="checklist" />
 
       <div className={s.column}>
         <div className={`${s.hero} ${s.heroDense}`}>

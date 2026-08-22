@@ -9,6 +9,7 @@ import { PROOF_WORD, fluidDetail, nutritionPlan } from '../../domain/raceView'
 import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceNutritionScreen.module.css'
+import { RaceSegment } from '../../components/navigation/RaceSegment/RaceSegment'
 
 export interface RaceNutritionScreenProps {
   race: Race
@@ -51,6 +52,7 @@ export function RaceNutritionScreen({ race }: RaceNutritionScreenProps) {
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Nutrition']}
         onBack={() => navigate(racePath(race.id))}
       />
+      <RaceSegment raceId={race.id} current="nutrition" />
 
       <div className={s.column}>
         {!nutrition || !plan || plan.effortSec === 0 ? (

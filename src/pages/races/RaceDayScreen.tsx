@@ -11,6 +11,7 @@ import own from './RaceDayScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
 import { buildRaceIcs, raceIcsFileName } from '../../domain/exports/raceIcs'
 import { downloadIcs } from '../exports/download'
+import { RaceSegment } from '../../components/navigation/RaceSegment/RaceSegment'
 
 export interface RaceDayScreenProps {
   race: Race
@@ -35,6 +36,7 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Jour J']}
         onBack={() => navigate(racePath(race.id))}
       />
+      <RaceSegment raceId={race.id} current="jour-j" />
 
       <div className={s.column}>
         <div className={s.hero}>

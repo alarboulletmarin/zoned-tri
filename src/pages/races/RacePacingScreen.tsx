@@ -19,6 +19,7 @@ import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RacePacingScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { RaceSegment } from '../../components/navigation/RaceSegment/RaceSegment'
 
 export interface RacePacingScreenProps {
   race: Race
@@ -48,6 +49,7 @@ export function RacePacingScreen({ race }: RacePacingScreenProps) {
         trail={['Courses', { label: race.name, to: racePath(race.id) }, 'Pacing']}
         onBack={() => navigate(racePath(race.id))}
       />
+      <RaceSegment raceId={race.id} current="pacing" />
 
       <div className={s.column}>
         {!pacing ? (
