@@ -1,0 +1,411 @@
+/* Écran 04 · Plan / Vue macro — un seul artboard (canevas l. 491-548), mobile.
+ *
+ * Le canevas ne donne pas d'artboard large à cet écran : au-delà de la tablette la colonne se
+ * borne au lieu de s'étirer (méthode §7), et rien d'autre ne change — aucun bloc n'apparaît, aucun
+ * ne disparaît. Les tailles que l'échelle de tokens.css ne couvre pas (40 px du titre, 28 px des
+ * compteurs) sont écrites telles que le canevas les donne, et listées dans le rapport de reprise. */
+
+.screen {
+  /* Mobile : la hauteur suit le contenu, le défilement appartient à la coquille. */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* Conteneur nu : il ne porte que le bornage de largeur (voir @media). Sans peinture propre, il ne
+ * fausse pas la comparaison bloc à bloc de `tools/recette/cmp.mjs`. */
+.column {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Objectif (04 l. 499-503) ------------------------------------------------------------- */
+
+/* `padding:16px 20px 14px` */
+.goal {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+.goalLabel,
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 04 l. 501 : `font-size:40px; line-height:.88; letter-spacing:-.05em; margin-top:8px`. */
+.goalTitle {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title-xl);
+  line-height: 0.88;
+  letter-spacing: var(--ls-display-max);
+  text-transform: uppercase;
+}
+
+/* 04 l. 502 : mono 11 px, `margin-top:8px`. */
+.goalMeta {
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+}
+
+/* --- Frise de répartition (04 l. 504) ----------------------------------------------------- */
+
+/* `ProgressBar framed` porte la frise elle-même : 14 px de couleur entre deux filets de 2 px, soit
+ * 18 px occupés — le canevas l'écrit en `content-box`. L'écran ne pose que son placement. */
+.proportion {
+  flex: none;
+}
+
+/* --- Trois compteurs (04 l. 505-510) ------------------------------------------------------ */
+
+.counters {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* `padding:14px 20px` pour la première cellule, `14px 12px` et un filet à gauche pour les autres. */
+.counter {
+  padding: var(--space-14) var(--space-12);
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+  min-width: 0;
+}
+
+.counter:first-child {
+  padding-inline: var(--space-gutter-mobile);
+  border-left: none;
+}
+
+/* 04 l. 506 : mono 10 px, `letter-spacing:.1em` — plus serré que l'intitulé de section. */
+.counterLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 04 l. 506 : `font-weight:700; font-size:28px; letter-spacing:-.04em`, sans famille déclarée —
+ * donc en General Sans, comme les cellules chiffrées des artboards 05 et S4 déjà reprises
+ * (`SwimWorkoutDetail.module.css` l. 36). Écart au README §3 assumé par le canevas lui-même.
+ * `--fs-data-xl` (28 px) comble la marche qui manquait entre 26 et 40. */
+.counterValue {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 28px;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+/* --- Volume hebdomadaire (04 l. 511-521) -------------------------------------------------- */
+
+/* `padding:14px 20px 0` */
+.volume {
+  flex: none;
+  padding: var(--space-14) var(--space-gutter-mobile) 0;
+}
+
+/* 04 l. 513 : `display:flex; align-items:flex-end; gap:3px; height:86px; margin-top:10px`. */
+.chart {
+  margin-top: var(--space-label-gap-lg);
+  height: 86px;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.chartBar {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Un plan sans semaine ne laisse pas un blanc muet (méthode §2 règle 1). Ce n'est pas un
+ * `EmptyState` plein cadre : il tient la place exacte de l'histogramme qu'il remplace. */
+.chartEmpty {
+  margin-top: var(--space-label-gap-lg);
+  height: 86px;
+  box-sizing: border-box;
+  border: var(--border-style-empty);
+  padding: var(--space-12);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* --- Les quatre phases (04 l. 522-541) ---------------------------------------------------- */
+
+/* `margin:12px 20px 0; border-top:1px` */
+.phases {
+  flex: none;
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* `display:flex; gap:12px; align-items:baseline; padding:9px 0; border-bottom:1px` */
+.phaseRow {
+  display: flex;
+  gap: var(--space-12);
+  align-items: baseline;
+  padding: var(--space-9) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* Le canevas ne file jamais la dernière ligne de la liste. */
+.phaseRow:last-child {
+  border-bottom: none;
+}
+
+/* 04 l. 523 : `width:26px; height:10px`. La couleur vient du domaine (`PlanMacroPhaseRow`). */
+.phaseSwatch {
+  flex: none;
+  width: 26px;
+  height: var(--space-10);
+}
+
+.phaseBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 14 px / 600. La phase en cours est la seule que le canevas monte à 700 (l. 529). */
+.phaseTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+  overflow-wrap: anywhere;
+}
+
+.phaseRowActive .phaseTitle {
+  font-weight: var(--fw-bold);
+}
+
+/* mono 10 px, `margin-top:2px` */
+.phaseDetail {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  overflow-wrap: anywhere;
+}
+
+/* Appel de note 2, posé sur la description de l'affûtage (04 l. 538). */
+.noteRef {
+  font-size: var(--fs-label-micro);
+  color: var(--color-ink);
+}
+
+.phaseStatus {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* 04 l. 531 : le décompte de la phase en cours passe en encre pleine et en gras. */
+.phaseRowActive .phaseStatus {
+  color: var(--color-ink);
+  font-weight: var(--fw-bold);
+}
+
+/* --- Pied d'écran (04 l. 542-548) --------------------------------------------------------- */
+
+/* `margin-top:auto; padding:10px 20px 14px; border-top:1px; flex-direction:column; gap:8px` */
+.footer {
+  flex: none;
+  margin-top: auto;
+  padding: var(--space-10) var(--space-gutter-mobile) var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.exportRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* Le canevas remet cet intitulé en bas de casse : c'est une phrase, pas une étiquette. */
+.exportLabel {
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-label);
+  margin-right: auto;
+}
+
+/* `border:2px; padding:5px 8px` — 29 px à l'œil, cible portée à 44 px par un pseudo-élément
+ * centré, invisible et sans effet sur la mise en page (README §3 règle 3). */
+.chipButton {
+  position: relative;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: inherit;
+  padding: var(--space-5) var(--space-8);
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.chipButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* Exports pas encore branchés : le cadre reste, l'encre passe en inactif, le `title` dit pourquoi. */
+.chipButton:disabled {
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+/* Note 2 (04 l. 545) : « 2. » puis la phrase, mono 10 px, la qualification reprise en encre. */
+.footnote,
+.caveat {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.caveat {
+  align-items: flex-start;
+}
+
+.footnoteMark,
+.footnoteText,
+.caveatText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+}
+
+.footnoteMark {
+  flex: none;
+  color: var(--color-ink);
+}
+
+.footnoteText,
+.caveatText {
+  color: var(--color-label);
+}
+
+.footnoteLevel {
+  color: var(--color-ink);
+}
+
+/* 04 l. 547 : le rectangle hachuré s'aligne 3 px sous le haut de la première ligne. */
+.caveat > :first-child {
+  margin-top: var(--space-3);
+}
+
+/* --- Tablette : la colonne se borne, elle ne s'étire pas ----------------------------------- */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-bottom: var(--space-28);
+  }
+}
+
+/* --- Desktop : deux colonnes -----------------------------------------------------------------
+ *
+ * Le canevas ne donne pas d'artboard large à la Saison. Borner la colonne à 560 px y laissait
+ * 320 px de vide de chaque côté, ce qu'aucun autre écran large du canevas ne fait : S4 et S6
+ * posent tous deux la matière à gauche et le contexte à droite. La Saison suit.
+ *
+ * Ce qui va où : à gauche ce qu'on vient lire — l'objectif, la répartition, les compteurs et
+ * surtout l'histogramme des dix-huit semaines, qui se compare d'autant mieux qu'il est large ;
+ * à droite les quatre phases et le pied (export et notes de preuve), qui se lisent en liste.
+ * Aucun bloc n'apparaît ni ne disparaît : ce sont les mêmes six, autrement disposés. */
+@media (min-width: 1024px) {
+  .column {
+    /* Aucun plafond : la Saison remplit le cadre comme le Mois. Un `max-width` centré y laissait
+       260 px de vide de chaque côté à 1920 px — de l'espace occupé par rien. */
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-areas:
+      'goal       phases'
+      'proportion phases'
+      'counters   phases'
+      'volume     footer';
+    align-content: start;
+    column-gap: var(--space-28);
+  }
+
+  .goal {
+    grid-area: goal;
+  }
+
+  .proportion {
+    grid-area: proportion;
+  }
+
+  .counters {
+    grid-area: counters;
+  }
+
+  .volume {
+    grid-area: volume;
+  }
+
+  /* Les deux blocs de la colonne de droite partagent la même gouttière : leurs filets s'alignent. */
+  .phases {
+    grid-area: phases;
+    margin: 0;
+    padding: var(--space-12) var(--space-gutter-mobile) 0;
+    border-top: none;
+  }
+
+  /* Le pied cesse d'être collé en bas par `margin-top:auto` : il suit les phases dans sa colonne. */
+  .footer {
+    grid-area: footer;
+    margin-top: 0;
+  }
+}
+
+/* Très grand écran : l'objectif et les trois compteurs se rangent côte à côte plutôt que de
+ * s'étirer chacun sur 1 270 px — même correction que sur la colonne de séance d'Aujourd'hui.
+ * La frise et l'histogramme, eux, gagnent vraiment à courir sur toute la largeur : ils se lisent
+ * en comparant. */
+@media (min-width: 1600px) {
+  .column {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-areas:
+      'goal       counters   phases'
+      'proportion proportion phases'
+      'volume     volume     footer';
+    align-items: start;
+  }
+}

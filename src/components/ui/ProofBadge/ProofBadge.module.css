@@ -1,0 +1,92 @@
+/* Ancienne pilule — écrans pas encore repris. Le canevas ne la dessine nulle part. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  border-radius: var(--radius-none);
+  border: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.solid {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.moderate {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.weak {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-ink),
+    var(--color-ink) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* --- Rectangle de preuve (26 occurrences dans le canevas) ---------------------------------- */
+
+/* `content-box` : le canevas écrit `width:22px; height:9px` PUIS un contour. Le rectangle modéré
+ * occupe donc 26 × 13 px et le faible 24 × 11 px — c'est ainsi qu'ils se rendent dans l'artboard,
+ * et c'est ce que la recette mesure. */
+.pip {
+  display: block;
+  box-sizing: content-box;
+  width: 22px;
+  height: 9px;
+  flex: none;
+  border-radius: var(--radius-none);
+}
+
+.pipSolid {
+  background: var(--color-ink);
+}
+
+.pipModerate {
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* Hachures à 45° au filet de 1 px : un motif, pas un dégradé (méthode §3). */
+.pipWeak {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-ink) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+/* Rectangle de légende (artboard 04 l. 547) : 30 × 10 px, SANS contour — c'est le motif seul qui
+ * porte le sens, la phrase à côté dit le reste. `border:none` l'emporte donc sur le filet de
+ * `.pipWeak`, et la boîte revient en `border-box` puisqu'il n'y a plus de contour à ajouter. */
+.pipLegend {
+  box-sizing: border-box;
+  width: 30px;
+  height: 10px;
+  border: none;
+}
+
+/* --- Rectangle + mot ----------------------------------------------------------------------- */
+
+.gauge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex: none;
+}
+
+.gaugeLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  text-transform: uppercase;
+  white-space: nowrap;
+}

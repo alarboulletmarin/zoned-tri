@@ -1,0 +1,227 @@
+/* Barre de navigation entre les semaines — artboard 03 l. 415-435. */
+
+.navigator {
+  flex: none;
+}
+
+/* `padding:13px 16px 10px; display:flex; align-items:center; gap:10px` */
+.titleRow {
+  padding: 13px var(--space-16) var(--space-10);
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+/* `width:38px; height:38px; border:2px solid` — porté à 44 px pour la cible tactile. */
+.arrow {
+  width: var(--action-height-min);
+  height: var(--action-height-min);
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: none;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* Aux deux bouts du plan la flèche reste dessinée, éteinte : elle ne promet rien. */
+.arrow:disabled {
+  border-color: var(--color-hairline);
+  color: var(--color-inactive);
+  cursor: default;
+}
+
+.heading {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.range {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-weight:700; font-size:32px; line-height:.95; letter-spacing:-.05em` */
+.title {
+  margin: 3px 0 0;
+  font-weight: var(--fw-bold);
+  font-size: 32px;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.planned {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-label);
+  margin-top: 3px;
+}
+
+/* `padding:0 16px 10px; display:flex; gap:8px; justify-content:center` */
+.stateRow {
+  padding: 0 var(--space-16) var(--space-10);
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: center;
+}
+
+.state {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `border:2px solid #CFCCC0; color:#9A978C; padding:5px 8px` — l'état éteint du canevas. */
+.backToToday {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: none;
+  color: var(--color-ink);
+  padding: 5px var(--space-8);
+  min-height: var(--action-height-min);
+  cursor: pointer;
+}
+
+.backToToday:disabled {
+  border-color: var(--color-hairline);
+  color: var(--color-inactive);
+  cursor: default;
+}
+
+/* --- Rail des semaines -------------------------------------------------------------------- */
+
+/* `border-top:2px; border-bottom:2px` — les cellules défilent entre les deux filets. */
+.rail {
+  display: flex;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sept cellules visibles à 390 px, comme le canevas — les autres se rejoignent en glissant. */
+.railCell {
+  flex: 1 0 calc(100% / 7);
+  min-width: 0;
+  min-height: 54px;
+  box-sizing: border-box;
+  padding: var(--space-6) 4px 5px;
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.railCell + .railCell {
+  border-left: 1px solid var(--color-hairline);
+}
+
+.railCell:hover:not(.railCellSelected) {
+  background: var(--color-neutral-fill);
+}
+
+/* Semaine affichée : aplat d'encre, barre accent — le même code couleur que le segment. */
+.railCellSelected {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}
+
+.railNumber {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.railCellSelected .railNumber {
+  font-weight: var(--fw-bold);
+}
+
+.railTrack {
+  width: 100%;
+  height: 22px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.railBar {
+  width: 100%;
+  background: var(--color-discipline-r);
+}
+
+.railCellSelected .railBar {
+  background: var(--color-signal-lime);
+}
+
+/* `padding:8px 20px 0` */
+.railFooter {
+  padding: var(--space-8) var(--space-gutter-mobile) 0;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-inactive);
+}
+
+/* `color:#0B0B0A` : le seul mot en encre de cette ligne, parce qu'il mène quelque part. */
+.monthLink {
+  color: var(--color-ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-8) 0;
+  margin: calc(var(--space-8) * -1) 0;
+}
+
+.monthLink:hover,
+.monthLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Desktop : les dix-huit semaines tiennent d'un coup, il n'y a plus rien à faire glisser — seul
+   le passage au mois reste, aligné à droite. */
+@media (min-width: 1024px) {
+  .railCell {
+    flex: 1 1 0;
+    min-height: 68px;
+  }
+
+  .railTrack {
+    height: 34px;
+  }
+
+  .railFooter {
+    justify-content: flex-end;
+  }
+
+  .railFooter > span:first-child {
+    display: none;
+  }
+}

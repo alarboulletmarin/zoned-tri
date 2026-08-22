@@ -1,0 +1,39 @@
+/* G1 · Objectif — canevas lignes 15-34. */
+
+/* Le filet d'ouverture est celui de la section (canevas G1 : `border-top` sur le bloc, pas sur la
+   liste) : la première ligne n'a donc pas besoin du sien. */
+/* La dernière ligne ferme la liste avec le filet du canevas, sauf si elle est sélectionnée
+   (aplat encre : le filet disparaîtrait sous le noir). */
+.formats > *:last-child {
+  border-bottom: none;
+}
+
+.field {
+  margin-top: var(--space-label-gap-sm);
+}
+
+.noRace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: var(--space-label-gap-lg);
+  padding: 12px 14px;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--color-ink);
+}
+
+.noRace[data-active='true'] {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}

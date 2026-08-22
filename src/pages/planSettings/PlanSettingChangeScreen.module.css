@@ -1,0 +1,445 @@
+/* Écran 38 · Avant / après — canevas `data-screen-label="38"`.
+ * Le cadre en pointillé d'encre est l'engagement de l'écran : rien n'est écrit.
+ * Base = mobile (390 px), gouttière de 18 px. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: var(--border-style-simulation);
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Tête (canevas : `padding:13px 18px 10px`) --- */
+
+.head {
+  flex: none;
+  padding: var(--space-13) var(--space-gutter-dense) var(--space-10);
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.change {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  margin-top: var(--space-8);
+}
+
+/* La valeur d'avant reste lisible, barrée et éteinte : elle n'a pas disparu, elle est remplacée. */
+.before {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--color-inactive);
+  text-decoration: line-through;
+}
+
+.arrow {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-label);
+}
+
+/* Quantité : mono, même à 36 px (canevas « 9 H 00 »). */
+.after,
+.afterSame {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title-md);
+  /* Le canevas écrit cette valeur en General Sans ; la règle « toute quantité en Space Mono »
+     l'emporte, et l'interligne se resserre pour retrouver la hauteur de ligne de l'artboard. */
+  line-height: 1.36;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.after {
+  color: var(--color-ink);
+}
+
+/* Rien n'a encore bougé : la valeur d'après n'est pas mise en avant. */
+.afterSame {
+  color: var(--color-label);
+}
+
+/* --- Le contrôle du volume EST la frise du canevas ---
+ * 14 px entre deux filets de 2 px : la part d'encre marque la position de la valeur sur l'échelle
+ * 4 h – 12 h (l'artboard montre 62 % pour 9 h, soit (9−4)/(12−4)), le reste passe en lime. */
+
+.band {
+  position: relative;
+  flex: none;
+  box-sizing: content-box;
+  height: 14px;
+  background: var(--color-signal-lime);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.bandFill {
+  height: 100%;
+  background: var(--color-ink);
+}
+
+/* Le contrôle natif couvre la frise et déborde en hauteur pour offrir 44 px de cible sans
+   épaissir le trait dessiné. Sa poignée reste invisible : c'est la limite d'encre qui la marque. */
+.bandRange {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: var(--action-height-min);
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: var(--radius-none);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.bandRange::-webkit-slider-runnable-track,
+.bandRange::-moz-range-track {
+  height: var(--action-height-min);
+  background: none;
+  border: none;
+}
+
+.bandRange::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--space-4);
+  height: var(--space-14);
+  background: var(--color-signal-lime);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.bandRange::-moz-range-thumb {
+  width: var(--space-4);
+  height: var(--space-14);
+  background: var(--color-signal-lime);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+/* --- Les autres contrôles, à la place de la frise --- */
+
+.days {
+  flex: none;
+  display: flex;
+  gap: var(--space-6);
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+}
+
+/* Jeton de 36 px du canevas G3, cible étendue à 44 px par pseudo-élément. */
+.day {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-inactive);
+}
+
+.day::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}
+
+.day[data-active='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+}
+
+.gear {
+  flex: none;
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.gear > button:last-child {
+  border-bottom: none;
+}
+
+.weeks {
+  flex: none;
+  display: flex;
+  gap: var(--space-3);
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+}
+
+.week {
+  flex: 1;
+  min-width: 0;
+  height: var(--action-height-min);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+  cursor: pointer;
+}
+
+.weekFill,
+.weekFillBlocked {
+  display: block;
+  width: 100%;
+  height: 32px;
+}
+
+.weekFill {
+  background: var(--color-hairline);
+}
+
+.weekFillBlocked {
+  background: var(--color-signal-red);
+}
+
+/* --- Jusqu'où appliquer (canevas : `margin:9px 18px 0`) --- */
+
+.block {
+  flex: none;
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+}
+
+.scopes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  margin-top: var(--space-8);
+}
+
+ /* Le canevas serre ces trois options à 29 et 31 px. On garde le jeton dessiné et on étend la
+    CIBLE à 44 px par un pseudo-élément centré : la gouttière de 7 px entre deux options suffit
+    tout juste à ce que les cibles ne se chevauchent pas. */
+.scope,
+.scopeChosen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.scope {
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-8) var(--space-12);
+  background: none;
+  color: var(--color-text);
+}
+
+.scopeChosen {
+  border: none;
+  padding: var(--space-9) var(--space-12);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}
+
+.scope::after,
+.scopeChosen::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}
+
+/* Une portée que l'écriture ne sait pas tenir reste dessinée, éteinte, et dit pourquoi. */
+.scope:disabled {
+  border-color: var(--color-hairline);
+  color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+.scopeCount {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* --- Tableau avant / après (canevas : `margin:9px 18px 0; border:2px`) --- */
+
+.table {
+  flex: none;
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.tableHead,
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+}
+
+.tableHead {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-7) var(--space-9);
+}
+
+.row {
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.table > :last-child {
+  border-bottom: none;
+}
+
+.rowLabel,
+.rowBefore,
+.rowAfter,
+.rowAfterChanged {
+  padding: var(--space-7) var(--space-9);
+}
+
+.rowBefore {
+  color: var(--color-label);
+  text-align: right;
+}
+
+.rowAfter {
+  text-align: right;
+}
+
+/* Le canevas met en gras la seule valeur qui bouge : l'œil va droit au changement. */
+.rowAfterChanged {
+  font-weight: var(--fw-bold);
+  text-align: right;
+}
+
+/* --- Ce que ça demande (canevas : `margin:9px 18px 0; border:2px #E0B400; padding:9px`) --- */
+
+.demand {
+  flex: none;
+  margin: var(--space-9) var(--space-gutter-dense) 0;
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  border-radius: var(--radius-none);
+  padding: var(--space-9);
+}
+
+.demandHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+.demandLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* La coupure en deux lignes vit dans le texte (`\n`), jamais dans un `<br>`. */
+.demandText {
+  margin: var(--space-6) 0 0;
+  white-space: pre-line;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* --- Pied (canevas : `margin-top:auto; padding:0 18px 12px`) --- */
+
+.footer {
+  flex: none;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-gutter-dense) var(--space-12);
+}
+
+.footerNote {
+  margin: 0 0 var(--space-9);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-9) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* Canevas : `padding:14px`, libellé centré, mono 11 px — 44 px occupés. */
+.apply {
+  justify-content: center;
+  min-height: var(--action-height-min);
+  padding: var(--space-14);
+  font-size: var(--fs-button);
+  text-align: center;
+}
+
+.keep {
+  width: 100%;
+  margin-top: var(--space-9);
+  font-size: 13px;
+}
+
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 0 var(--space-28);
+  }
+}

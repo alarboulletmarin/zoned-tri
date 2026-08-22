@@ -1,0 +1,86 @@
+/* G4 · Contraintes — canevas lignes 147-178. */
+
+/* La dernière bascule ferme la liste : son filet bas ferait doublon avec celui de la section suivante. */
+.toggles > button:last-child {
+  border-bottom: none;
+}
+
+/* --- Semaines bloquées --- */
+
+.weeks {
+  display: flex;
+  gap: 3px;
+  margin-top: var(--space-block-md);
+}
+
+/*
+ * Le canevas dessine des segments de 32 px de haut. La cible tactile doit faire 44 px : le bouton
+ * fait donc 44 px et le segment coloré reste un enfant de 32 px, centré. La largeur, elle, dépend
+ * du nombre de semaines (11 segments dans 350 px ≈ 29 px) : c'est le prix d'une rangée qui montre
+ * le plan entier d'un coup d'œil, et la hauteur compense.
+ */
+.week {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+  cursor: pointer;
+}
+
+.weekFill,
+.weekFillBlocked {
+  display: block;
+  width: 100%;
+  height: 32px;
+}
+
+.weekFill {
+  background: var(--color-hairline);
+}
+
+.weekFillBlocked {
+  background: var(--color-signal-red);
+}
+
+/* --- Raison --- */
+
+.reason {
+  margin-top: var(--space-block-md);
+}
+
+.reasonLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+  color: var(--color-label);
+  margin-bottom: var(--space-label-gap-sm);
+}
+
+.reasonInput {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--color-ink);
+}
+
+.reasonInput::placeholder {
+  color: var(--color-inactive);
+}
+
+.reasonInput:focus {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: 2px;
+}

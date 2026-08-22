@@ -1,0 +1,126 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { usePlans } from '../../context/AppDataContext'
+import { todayIso } from '../../domain/planWeek'
+import { exportBackup } from '../../storage/backup'
+import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
+import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
+import { ENGINE_SOURCES, EXPORT_ROWS, type SourceMark } from './engineSources'
+import { TOOLS_PATH } from './toolsRoutes'
+import styles from './ImportExportScreen.module.css'
+import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+
+const MARK_CLASS: Record<SourceMark, string> = {
+  solid: styles.markSolid,
+  outline: styles.markOutline,
+  hatch: styles.markHatch,
+}
+
+/** Séances datées portées par le plan actif — le « 77 séances datées » de l'artboard 14. */
+function datedSessionCount(weeks: { days: { workoutIds: string[] }[] }[]): number {
+  return weeks.reduce(
+    (total, week) => total + week.days.reduce((sum, day) => sum + day.workoutIds.length, 0),
+    0,
+  )
+}
+
+function download(filename: string, content: string) {
+  const blob = new Blob([content], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = filename
+  anchor.click()
+  URL.revokeObjectURL(url)
+}
+
+/**
+ * Écran 14 · Import / export · sources — ce qui remplace la synchro, et d'où vient le moteur.
+ *
+ * LIMITATIONS assumées :
+ * — trois des quatre sorties (`.FIT`, `.ZWO`, `.ICS`) sont rendues inertes avec leur raison : rien
+ *   ne les écrit encore. Seule la sauvegarde `.JSON` est branchée sur `storage/backup.ts` ;
+ * — l'artboard ne dessine AUCUNE commande d'import. `importBackup` existe et reste non câblé
+ *   plutôt que d'inventer un bloc que le canevas n'écrit pas (voir le rapport de reprise).
+ */
+export function ImportExportScreen() {
+  const navigate = useNavigate()
+  const { plans } = usePlans()
+  const [error, setError] = useState<string | null>(null)
+
+  const activePlan = plans.find((plan) => plan.status === 'active')
+  const dated = activePlan ? datedSessionCount(activePlan.weeks) : 0
+
+  async function exportJson() {
+    try {
+      const backup = await exportBackup()
+      download(`zoned-tri-${todayIso()}.json`, JSON.stringify(backup, null, 2))
+      setError(null)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Export impossible.')
+    }
+  }
+
+  return (
+    <div className={styles.screen}>
+      <AppHeader variant="detail" trail={['Outils', 'Import-export']} onBack={() => navigate(TOOLS_PATH)} />
+
+      <div className={styles.column}>
+        <div className={styles.head}>
+          <div className={styles.label}>Ce qui remplace la synchro</div>
+          <StackedTitle className={styles.title} lines={['Import /', 'export']} />
+        </div>
+        <div className={styles.frieze} aria-hidden="true" />
+
+        <div className={styles.table}>
+          <div className={styles.tableHead}>
+            <span>Sortie</span>
+            <span>Format</span>
+          </div>
+          {EXPORT_ROWS.map((row) => (
+            <div key={row.format} className={styles.row}>
+              <div>
+                <div className={styles.rowTitle}>{row.title}</div>
+                <div className={styles.rowMeta}>
+                  {row.meta ?? `${dated} séance${dated > 1 ? 's' : ''} datée${dated > 1 ? 's' : ''}`}
+                </div>
+              </div>
+              <SecondaryAction
+                shape="link"
+                className={styles.rowAction}
+                disabled={!row.available}
+                title={row.unavailableReason}
+                onClick={row.available ? () => void exportJson() : undefined}
+                aria-label={`Exporter ${row.title} en ${row.format}`}
+              >
+                {row.format}
+              </SecondaryAction>
+            </div>
+          ))}
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+
+        <div className={styles.sources}>
+          <div className={styles.label}>Sources du moteur</div>
+          <div className={styles.sourceList}>
+            {ENGINE_SOURCES.map((source) => (
+              <div key={source.title} className={styles.source}>
+                <span className={`${styles.mark} ${MARK_CLASS[source.mark]}`} aria-hidden="true" />
+                <div>
+                  <div className={styles.sourceTitle}>{source.title}</div>
+                  <div className={styles.sourceMeta}>{source.meta}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.pledge}>
+          Quand la preuve est faible, l’app le dit et te laisse le dernier mot. C’est le seul
+          engagement qui la sépare d’un coach en boîte noire.
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,105 @@
+/*
+ * Une ligne de séance, trois artboards. Voir l'en-tête de WorkoutListRow.tsx : ce fichier ne fait
+ * que porter les mesures relevées, variante par variante.
+ */
+
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--color-ink);
+}
+
+/* 07 l. 999 : `gap:10px; padding:12px 0`. La liste porte sa propre gouttière, la ligne n'en a pas. */
+.library {
+  gap: var(--space-list-row-gap);
+  padding: var(--space-12) 0;
+}
+
+/* 25 l. 2902 : `gap:10px; padding:11px 0`. */
+.search {
+  gap: var(--space-list-row-gap);
+  padding: var(--space-block-sm) 0;
+}
+
+/* S5 l. 1700 : `gap:12px; padding:11px 14px` — la ligne porte ici sa gouttière, pour que l'aplat
+ * d'encre de la ligne active aille d'un bord à l'autre de la colonne. */
+.master {
+  gap: var(--space-12);
+  padding: var(--space-block-sm) var(--space-14);
+}
+
+/* Le canevas ferme ses listes courtes sans filet sous la dernière ligne (07 l. 1023, 25 l. 2915).
+ * La colonne de S5 défile au contraire sous le pli : sa dernière ligne garde son filet. */
+.library:last-child,
+.search:last-child {
+  border-bottom: none;
+}
+
+/* S5 l. 1698 : `background:#0B0B0A; color:#EFEDE6; border-bottom:1px solid #0B0B0A`. Un aplat, pas
+ * un rail de bordure : le canevas ne dessine aucun liseré à gauche de la ligne active. */
+.rowSelected {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  border-bottom-color: var(--color-ink);
+}
+
+.texts {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: var(--fs-list-title-lg);
+  font-weight: var(--fw-semibold);
+  color: inherit;
+}
+
+/* 25 l. 2903 : le titre de la recherche est d'un point plus petit que celui de la bibliothèque. */
+.search .title {
+  font-size: var(--fs-list-title);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  margin-top: var(--space-2);
+}
+
+/* 25 l. 2903 : le détail y est collé au titre, sans reprise de 2 px. */
+.search .meta {
+  margin-top: 0;
+}
+
+.rowSelected .meta {
+  color: var(--color-inactive);
+}
+
+/* Le jeton de zone de la bibliothèque garde une gouttière fixe : « Z1 » et « — » n'ont pas la même
+ * chasse, et les titres de la liste doivent rester alignés. */
+.badgeSlot {
+  flex: none;
+  min-width: 26px;
+  display: flex;
+  justify-content: center;
+}
+
+.noZoneBadge {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-bold);
+  padding: var(--space-2) var(--space-6);
+  background: var(--color-neutral-fill);
+  color: var(--color-label);
+}

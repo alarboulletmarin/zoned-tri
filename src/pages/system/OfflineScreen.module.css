@@ -1,0 +1,225 @@
+/* Écran 17 · Hors-ligne. Toutes les valeurs viennent de l'artboard. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Bandeau d'encre ----------------------------------------------------------------------------- */
+
+/* `background:#0B0B0A; color:#EFEDE6; padding:12px 16px; gap:10px; font-size:11px; line-height:1.5` */
+.banner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-12) var(--space-16);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.5;
+}
+
+/* `width:10px; height:10px; background:#E0B400` — le jaune du système veut dire « en attente ». */
+.bannerDot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: var(--color-signal-yellow);
+}
+
+/* --- Titre ---------------------------------------------------------------------------------------- */
+
+/* `padding:14px 20px 12px` */
+.head {
+  flex: none;
+  padding: var(--space-14) var(--space-gutter-mobile) var(--space-12);
+}
+
+/* `font-weight:700; font-size:34px; line-height:.88; letter-spacing:-.05em` */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-display-min);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* `font-size:13px; line-height:1.45; color:#3B3A33; margin:10px 0 0` */
+.lead {
+  margin: var(--space-label-gap-lg) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-prose);
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* --- Tableau Fonction / État ------------------------------------------------------------------------ */
+
+/* `margin:0 20px; border:2px solid #0B0B0A` */
+.table {
+  margin: 0 var(--space-gutter-mobile);
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-8) var(--space-10);
+}
+
+/* `display:flex; justify-content:space-between; align-items:center; padding:8px 10px;
+ * border-bottom:1px solid #CFCCC0` */
+.tableRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-8) var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+/* `font-size:14px` — en encre pour ce qui marche, en `#5B594F` pour ce qui attend. */
+.rowLabel {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  color: var(--color-ink);
+}
+
+.rowLabelWaiting {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  color: var(--color-label);
+}
+
+/* `font-size:10px; background:#2FA84A; color:#0B0B0A; padding:3px 7px` — l'aplat de la zone 2,
+ * seule couleur que le système accorde à un état favorable. */
+.stateOk {
+  flex: none;
+  padding: var(--space-3) var(--space-7);
+  background: var(--color-zone-2);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+/* `font-size:10px; border:2px solid #E0B400; padding:2px 6px` — contour, jamais aplat : l'attente
+ * n'est pas un état acquis. */
+.stateWaiting {
+  flex: none;
+  box-sizing: content-box;
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  padding: var(--space-2) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-ink);
+}
+
+/* --- Dernier catalogue ------------------------------------------------------------------------------- */
+
+/* `margin:12px 20px 0; border-top:1px solid #CFCCC0; padding-top:10px` */
+.lastBlock {
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-10);
+}
+
+.lastRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-10);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:13px` en Space Mono : c'est une date, donc une quantité. */
+.lastValue {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-prose);
+  color: var(--color-ink);
+}
+
+/* `font-size:13px; line-height:1.45; color:#3B3A33; margin:8px 0 0` */
+.lastNote {
+  margin: var(--space-label-gap-sm) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-prose);
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+}
+
+/* --- Pied d'écran -------------------------------------------------------------------------------------- */
+
+/* `margin-top:auto; padding:0 20px 18px` */
+.footer {
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-18);
+}
+
+/* `border-top:1px solid #CFCCC0; padding:9px 0 11px; font-size:10px; line-height:1.55` */
+.footerNote {
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-9) 0 var(--space-11);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* `border:2px solid #0B0B0A; padding:12px; text-align:center; font-size:11px; letter-spacing:.1em` —
+ * soit 44 px de haut, la cible minimale exactement. */
+.continueAction {
+  min-height: var(--action-height-min);
+  padding: var(--space-12);
+  font-size: var(--fs-button);
+}
+
+/* --- Grand écran : la colonne se borne ------------------------------------------------------------------ */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+}

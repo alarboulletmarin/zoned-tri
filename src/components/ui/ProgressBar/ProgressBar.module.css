@@ -1,0 +1,40 @@
+.bar {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius-none);
+  overflow: hidden;
+}
+
+/* La frise du bandeau d'ouverture porte le filet structurel EN PLUS de sa hauteur : le canevas
+ * écrit `height:14px; border-bottom:2px` sur une boîte en `content-box`, soit 16 px occupés.
+ * `height` est donc la bande de couleur, le filet vient dessous — mesuré au getComputedStyle sur
+ * l'artboard 01b (bloc de 16 px), pas déduit. */
+.underlined {
+  box-sizing: content-box;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* Même règle pour la frise d'Aujourd'hui, filetée des deux côtés (02, 02a, 02b, 02c, 15, S4) :
+ * `height:14px` + 2 px au-dessus + 2 px en dessous = 18 px occupés. */
+.framed {
+  box-sizing: content-box;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* Troisième filet du canevas, et le seul qui fasse le tour : les barres de couverture de langue
+ * (artboard S3) sont écrites `height:12px; border:1px solid #0B0B0A`, soit 14 px occupés en
+ * `content-box`. Une barre de couverture n'est pas un avancement : elle mesure une part d'un
+ * ensemble borné, et son contour dit où l'ensemble s'arrête. */
+.outlined {
+  box-sizing: content-box;
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+.done {
+  background: var(--color-ink);
+}
+
+.todo {
+  background: var(--color-neutral-fill);
+}

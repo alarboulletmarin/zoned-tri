@@ -1,0 +1,42 @@
+@import './styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-offscreen-bg);
+  /* Le canevas pose `color:#0B0B0A` sur sa racine et chaque artboard en hérite : l'ENCRE est la
+   * couleur de texte par défaut. `--color-text` (#3B3A33) y est toujours une exception explicite
+   * (paragraphes secondaires, métadonnées, libellés de rail) — voir tokens.css. */
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+}

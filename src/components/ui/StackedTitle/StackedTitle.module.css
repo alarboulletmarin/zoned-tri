@@ -1,0 +1,5 @@
+/* Le saut de ligne vit dans le texte, pas dans un `<br>` : c'est ce qui rend le titre lisible aux
+ * technologies d'assistance tout en gardant la silhouette dessinée par le canevas. */
+.title {
+  white-space: pre-line;
+}

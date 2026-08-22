@@ -1,0 +1,69 @@
+/* Le pied porte le `margin-top:auto` des trois artboards : il tombe en bas du cadre, quel que soit
+ * le contenu au-dessus (05 l. 612, 28 l. 3104, 29 l. 3164). */
+.footer {
+  margin-top: auto;
+  padding: 0 var(--detail-gutter, var(--space-gutter-mobile)) var(--space-14);
+}
+
+/* 05 l. 613 : `border-top:1px solid #CFCCC0; padding:6px 0 7px; gap:8px`. */
+.sourceRow {
+  display: flex;
+  gap: var(--space-8);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-6) 0 var(--space-7);
+}
+
+.sourceNumber {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.sourceText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* 28 l. 3104 / 29 l. 3164 : `padding:10px 20px 14px; gap:8px; align-items:stretch;
+ * border-top:1px solid #CFCCC0`. La gouttière latérale est portée par `.footer`. */
+.row {
+  padding-top: var(--space-10);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  gap: var(--space-8);
+  align-items: stretch;
+}
+
+/* 05 : le filet est déjà celui de la note de source, l'action se colle dessous (`gap:12px`). */
+.rowUnderSource {
+  display: flex;
+  gap: var(--space-12);
+  align-items: stretch;
+}
+
+.markDone {
+  flex: 1;
+}
+
+/* `--detail-cta-export-grow` est posé par l'hôte : la fiche pleine page garde les puces
+ * d'export compactes (artboards mobiles), le panneau côte à côte de S5 en fait un vrai jeton
+ * secondaire à parité de largeur avec l'action principale. */
+.exportChips {
+  flex: var(--detail-cta-export-grow, 0 1 auto);
+  display: flex;
+  gap: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.exportChip {
+  flex: var(--detail-cta-export-grow, 0 1 auto);
+  border: var(--border-width-structure) solid var(--color-ink);
+  min-height: var(--action-height-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-9);
+  color: var(--color-inactive);
+}

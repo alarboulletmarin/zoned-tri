@@ -1,0 +1,231 @@
+/*
+ * Artboard 26 · Rien à ce croisement. Le panneau remplace tout le corps de la bibliothèque : il
+ * porte donc lui-même sa colonne, ses gouttières et son pied.
+ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* 26 l. 2946 : `padding:14px 20px 0; gap:6px`. */
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  padding: var(--space-14) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* 26 l. 2947 : aplat d'encre, `padding:7px 10px`. Le jeton est ici une SORTIE : il se clique pour
+ * retirer son filtre, et sa cible est portée à 44 px sans grossir le jeton. */
+.chip,
+.countChip {
+  padding: var(--space-7) var(--space-10);
+}
+
+.chip {
+  position: relative;
+  border: none;
+  border-radius: var(--radius-none);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* 26 l. 2951 : le compte passe en lime — c'est lui qu'on doit lire en premier. */
+.countChip {
+  background: var(--color-signal-lime);
+  color: var(--color-ink);
+}
+
+/* 26 l. 2953 : `margin-top:14px`, 14 px de gris entre deux filets de 2 px. */
+.emptyBar {
+  flex: none;
+  margin-top: var(--space-14);
+}
+
+/* 26 l. 2954 : `margin:14px 20px 0`. */
+.box {
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+}
+
+/* 26 l. 2957 : `gap:10px`, mono 10 px capitales. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.primaryAction,
+.secondaryAction {
+  position: relative;
+  border-radius: var(--radius-none);
+  padding: var(--space-11) var(--space-13);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+/* 26 l. 2958 : `background:#0B0B0A; color:#D6F24B; box-shadow:5px 5px 0 #FF6A1F`. C'est la SEULE
+ * ombre de 5 px orange du canevas : `--shadow-primary` en fait 6, `--shadow-featured` est lime.
+ * D'où le jeton `--shadow-primary-sm`. */
+.primaryAction {
+  border: none;
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  box-shadow: var(--shadow-primary-sm);
+}
+
+/* 26 l. 2959 : `border:2px solid #0B0B0A; color:#3B3A33`. */
+.secondaryAction {
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: transparent;
+  color: var(--color-text);
+}
+
+/* Les deux sorties mesurent 34 px de haut : leur cible monte à 44 px sans les grossir. */
+.primaryAction::after,
+.secondaryAction::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* 26 l. 2961 et 2968 : `margin:14px 20px 0; border-top:1px solid #CFCCC0; padding-top:11px`. */
+.block {
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-block-sm);
+}
+
+.blockLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 26 l. 2963 : `gap:7px; margin-top:10px`, mono 12 px. */
+.cascade {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  margin: var(--space-10) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+}
+
+.cascade > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+}
+
+.arrow {
+  color: var(--color-inactive);
+}
+
+/* 26 l. 2964 : le dernier chiffre est un aplat rouge — c'est le zéro qui a fermé la porte. */
+.cascadeZero {
+  font-weight: var(--fw-bold);
+  background: var(--color-signal-red);
+  color: var(--color-paper);
+  padding: var(--space-2) var(--space-7);
+}
+
+/* 26 l. 2966 : `margin-top:8px; line-height:1.6`. */
+.cascadeLegend {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+}
+
+/* 26 l. 2970 : `border-top:1px solid #CFCCC0; margin-top:8px`. */
+.nearList {
+  margin-top: var(--space-8);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* 26 l. 2971 : `gap:10px; padding:10px 0`, filet sauf sous la dernière. */
+.nearRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-list-row-gap);
+  padding: var(--space-10) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.nearRow:last-child {
+  border-bottom: none;
+}
+
+.nearTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-list-title);
+}
+
+.nearDuration {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.noZone {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-bold);
+  padding: var(--space-2) var(--space-6);
+  background: var(--color-neutral-fill);
+  color: var(--color-label);
+}
+
+/* 26 l. 2975 : `margin-top:auto; padding:9px 20px 12px; border-top:1px solid; line-height:1.55`. */
+.footerNote {
+  margin: auto 0 0;
+  padding: var(--space-9) var(--space-gutter-mobile) var(--space-12);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}

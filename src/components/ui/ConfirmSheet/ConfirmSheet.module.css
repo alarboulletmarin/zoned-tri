@@ -1,0 +1,58 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* Voile à 0.12 : le canevas assombrit à peine — l'écran du dessous reste lisible, c'est lui qui
+   * porte le contexte de la décision. */
+  background: rgb(11 11 10 / 12%);
+}
+
+.sheet {
+  width: 100%;
+  max-width: var(--screen-width);
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  padding: var(--space-14) var(--space-18) var(--space-14);
+}
+
+.header {
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  padding-bottom: var(--space-9);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.effect {
+  margin-top: var(--space-11);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  margin-top: var(--space-14);
+}
+
+/* L'action de confirmation porte l'ombre orange même en encre : c'est le seul bouton de la feuille
+ * qui écrit quelque chose (artboard 32). */
+.actions > button:first-child {
+  box-shadow: var(--shadow-primary);
+}
+
+.exits {
+  display: flex;
+  gap: var(--space-10);
+  justify-content: center;
+  flex-wrap: wrap;
+}

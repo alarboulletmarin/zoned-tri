@@ -1,0 +1,66 @@
+.action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* Cible tactile de 44 px centrée sur le jeton, sans changer sa taille visible (README §3 règle 3). */
+.chip::after,
+.link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.chip {
+  flex: none;
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-5) var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.block {
+  width: 100%;
+  min-height: var(--action-height-ink);
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: 0 var(--space-14);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+}
+
+.link {
+  border: 0;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Sur encre (S9) : `border:2px solid #EFEDE6`, texte de la même valeur. */
+.onInk {
+  border-color: var(--color-on-ink-text);
+  color: var(--color-on-ink-text);
+}
+
+.action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

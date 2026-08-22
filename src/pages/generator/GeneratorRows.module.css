@@ -1,0 +1,244 @@
+/* --- Ligne à sélection unique (canevas G1) --- */
+
+.selectable,
+.selectableSelected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  font-family: inherit;
+  min-height: 44px;
+}
+
+.selectable {
+  padding: 13px 0;
+  background: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  color: var(--color-text);
+}
+
+.selectableSelected {
+  padding: 13px 10px;
+  margin: 0 -10px;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.selectableLabel {
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+}
+
+.selectableSelected .selectableLabel {
+  font-weight: var(--fw-bold);
+}
+
+.selectableMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.selectableSelected .selectableMeta {
+  color: #bdbbb2;
+}
+
+.check {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-signal-lime);
+  min-width: 12px;
+}
+
+/* --- Bascule d'accès / matériel (canevas G4) --- */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 0;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--color-ink);
+}
+
+.toggleLabel,
+.toggleLabelOff {
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+
+.toggleLabelOff {
+  color: var(--color-inactive);
+}
+
+.toggleMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.mark,
+.markOff {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.mark {
+  color: var(--color-ink);
+}
+
+.markOff {
+  color: var(--color-inactive);
+}
+
+/* --- Ligne étiquette / valeur (canevas G2, G6) --- */
+
+.stat,
+.statButton {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  text-align: left;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-radius: var(--radius-none);
+  font-family: inherit;
+  color: var(--color-ink);
+}
+
+.statButton {
+  position: relative;
+  cursor: pointer;
+  min-height: var(--action-height-min);
+}
+
+/* --- Lignes du récapitulatif G6 -----------------------------------------------------------
+ * Le canevas les serre à `padding:10px` DANS le cadre de 2 px, soit 37 px de haut : la ligne y
+ * est une donnée à lire, pas une cible à viser. On garde le jeton dessiné et on étend la cible
+ * à 44 px par un pseudo-élément centré, comme `SecondaryAction` le fait pour ses puces. */
+.statDense {
+  padding: var(--space-10);
+  min-height: 0;
+}
+
+.statDense::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+}
+
+.statLabelMono {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-label);
+  text-align: right;
+}
+
+.statValueStrong {
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  text-align: right;
+}
+
+/* --- Champ encadré à ombre portée (canevas G1, G2) ---
+ * Le canevas écrit `padding:13px 14px` (G1) et `14px 16px` (G2), soit 52 et 58 px mesurés. Le
+ * rembourrage vertical est ici porté par la HAUTEUR de la boîte et non par un `padding` : la saisie
+ * s'étire alors sur toute la hauteur du cadre, et la cible tactile fait la taille de ce qu'on voit
+ * — sans quoi le doigt ne toucherait que les 22 px de la ligne de texte. */
+
+.framed,
+.framedLg {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  box-shadow: 4px 4px 0 var(--color-signal-lime);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  font-family: var(--font-mono);
+  color: var(--color-ink);
+}
+
+.framed {
+  min-height: var(--field-height-md);
+  padding: 0 var(--space-14);
+  font-size: 15px;
+}
+
+.framedLg {
+  min-height: var(--field-height-lg);
+  padding: 0 var(--space-16);
+  font-size: 18px;
+}
+
+.framed input,
+.framedLg input {
+  width: 100%;
+  align-self: stretch;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.framed input:focus,
+.framedLg input:focus {
+  outline: none;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+}

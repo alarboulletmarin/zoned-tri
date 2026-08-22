@@ -1,0 +1,132 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--color-paper);
+}
+
+.statsRow {
+  display: flex;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statCell {
+  flex: 1;
+  /* 05 l. 577-578 : la premiere cellule garde la gouttiere de 20 px, la seconde se resserre a 16. */
+  padding: var(--space-14) var(--space-16);
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statCell:first-child {
+  padding-left: var(--space-gutter-mobile);
+  padding-right: var(--space-gutter-mobile);
+}
+
+.statCell:first-child {
+  border-left: none;
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  /* 28 px littéral (05 l. 577), collé à son intitulé : le canevas ne pose aucune marge. */
+  font-size: var(--fs-data-xl);
+  letter-spacing: -0.04em;
+}
+
+.blockList {
+  margin: var(--space-9) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.blockRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-10) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* 05 l. 598 : la dernière ligne du déroulé ne porte pas de filet — la liste se ferme sur le vide. */
+.blockRow:last-child {
+  border-bottom: none;
+}
+
+.blockTitle {
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-medium);
+}
+
+.blockTitleEmphasis {
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-bold);
+}
+
+.blockMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  margin-top: var(--space-2);
+}
+
+.blockDuration {
+  font-family: var(--font-mono);
+  font-size: var(--fs-prose);
+}
+
+.blockDurationEmphasis {
+  font-family: var(--font-mono);
+  font-size: var(--fs-prose);
+  font-weight: var(--fw-bold);
+}
+
+/* --- Colonne large, panneau de S5 (l. 1741-1768) ----------------------------------------------- */
+
+/* Une seule gouttiere pour toute la colonne : les enfants remettent leur retrait a zero par
+ * `--detail-gutter`, comme le canevas qui pose `padding:20px 22px` sur le panneau entier. */
+.wide {
+  --detail-gutter: 0;
+  padding: var(--space-20) var(--space-22) var(--space-18);
+}
+
+/* Tableau Bloc / Cible / Repos — filet de 1 px, pas la bordure d'encre de 2 px de 28 et 29. */
+.setsTable {
+  margin-top: var(--space-16);
+  border: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.setsGrid {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.setsRow {
+  display: contents;
+}
+
+.setsHeadCell {
+  padding: var(--space-7) var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  color: var(--color-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: var(--fs-label-micro);
+}
+
+.setsCell {
+  padding: var(--space-7) var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.setsCellLast {
+  padding: var(--space-7) var(--space-10);
+}

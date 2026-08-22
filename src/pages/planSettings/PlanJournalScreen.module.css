@@ -1,0 +1,208 @@
+/* Écran 39 · Journal du plan — canevas `data-screen-label="39"`. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Tête (canevas : `padding:13px 20px 10px`, titre et compteur sur la même ligne de base) --- */
+
+.head {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-12);
+  padding: var(--space-13) var(--space-gutter-mobile) var(--space-10);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title-screen);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* Une quantité : mono, toujours. */
+.count {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.band {
+  flex: none;
+}
+
+/* --- Légende (canevas : `padding:10px 20px 0`, mono 9 px) --- */
+
+.legend {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.legendWindow {
+  margin-left: auto;
+}
+
+.legendPip {
+  display: block;
+  width: var(--space-9);
+  height: var(--space-9);
+  flex: none;
+}
+
+.pipUser {
+  background: var(--color-ink);
+}
+
+.pipEngine {
+  background: var(--color-on-ink-muted);
+}
+
+/* --- Liste (canevas : `margin:11px 20px 0; border-top:1px`) --- */
+
+.list {
+  flex: none;
+  margin: var(--space-11) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.empty {
+  margin: var(--space-11) var(--space-gutter-mobile) 0;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-10);
+  padding: var(--space-10) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.list > :last-child {
+  border-bottom: none;
+}
+
+/* La pastille d'auteur s'aligne sur la première ligne du titre, pas sur le bloc. */
+.rowPip {
+  display: block;
+  width: var(--space-9);
+  height: var(--space-9);
+  margin-top: var(--space-5);
+  flex: none;
+}
+
+.rowBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle,
+.rowTitleUndone {
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink);
+}
+
+/* Annulé ne veut pas dire effacé : l'entrée reste lisible, barrée et éteinte. */
+.rowTitleUndone {
+  color: var(--color-label);
+  text-decoration: line-through;
+}
+
+.rowMeta {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Canevas : `border:2px; padding:4px 6px`, mono 9 px, centré verticalement. La cible de 44 px vient
+   du pseudo-élément de `SecondaryAction`. */
+.rowAction {
+  align-self: center;
+  padding: var(--space-4) var(--space-6);
+}
+
+/* --- Ce que le moteur ne fera jamais seul (canevas : `margin:11px 20px 0; border:2px; padding:10px`) --- */
+
+.never {
+  flex: none;
+  margin: var(--space-11) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  padding: var(--space-10);
+}
+
+.neverLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* La coupure en deux lignes vient du texte (`\n`), jamais d'un `<br>` : même silhouette, phrase
+   rendue d'un seul tenant aux technologies d'assistance (méthode §5 bis). */
+.neverText {
+  margin: var(--space-6) 0 0;
+  white-space: pre-line;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.65;
+  color: var(--color-text);
+}
+
+/* --- Pied (canevas : `margin-top:auto; padding:9px 20px 13px; border-top:1px`) --- */
+
+.footer {
+  flex: none;
+  margin: auto 0 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-9) var(--space-gutter-mobile) var(--space-13);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 0 var(--space-28);
+  }
+}

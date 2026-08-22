@@ -1,0 +1,260 @@
+/* Écran S3 · Langue. Toutes les valeurs viennent de l'artboard. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* `padding:16px 20px 14px` */
+.head {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* `font-weight:700; font-size:42px; line-height:.88; letter-spacing:-.055em` */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 42px;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+/* `font-size:10px; color:#5B594F; margin-top:10px` */
+.subtitle {
+  margin-top: var(--space-label-gap-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `height:14px; background:#0B0B0A` */
+.frieze {
+  flex: none;
+  height: 14px;
+  background: var(--color-ink);
+}
+
+/* --- Les deux langues --------------------------------------------------------------------------- */
+
+/* `margin:16px 20px 0; border-top:1px solid #CFCCC0` */
+.languages {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* L'intitulé de la liste existe pour les technologies d'assistance ; le canevas ne le dessine pas,
+ * l'écran venant juste de s'annoncer « Langue » en 42 px. */
+.hiddenLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * `display:flex; align-items:center; gap:12px; padding:14px 0; border-top:1px solid #CFCCC0`.
+ * La première ligne n'a pas de filet : c'est celui de la liste qui la coiffe.
+ */
+.langRow {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-14) 0;
+  border: 0;
+  border-radius: var(--radius-none);
+  background: none;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.langRow + .langRow {
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/*
+ * `padding:14px 10px; background:#0B0B0A; color:#EFEDE6; margin:0 -10px` — l'aplat déborde la
+ * gouttière de 10 px de chaque côté pour que la ligne retenue morde sur la marge, comme le canevas
+ * le dessine — d'où la largeur augmentée d'autant.
+ */
+.langRowActive {
+  width: calc(100% + 2 * var(--space-10));
+  padding: var(--space-14) var(--space-10);
+  margin: 0 calc(-1 * var(--space-10));
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  border-top: none;
+}
+
+.langBody {
+  flex: 1;
+  min-width: 0;
+}
+
+/* `font-size:16px; font-weight:700` (retenue) / `600` et `#3B3A33` (l'autre) */
+.langName {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-data-md);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
+.langRowActive .langName {
+  font-weight: var(--fw-bold);
+  color: inherit;
+}
+
+/* `font-size:10px; color:#5B594F; margin-top:3px` — `#BDBBB2` sur l'aplat d'encre. */
+.langNote {
+  display: block;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `--color-on-ink-soft` n'existe pas encore dans les jetons (voir le rapport) : d'ici là, le gris
+ * sur encre déjà défini fait office, et la valeur exacte arrivera sans toucher à cette feuille. */
+.langRowActive .langNote {
+  color: var(--color-on-ink-soft, var(--color-on-ink-muted));
+}
+
+/* `font-size:11px; color:#5B594F` — `#D6F24B` pour la coche sur l'aplat d'encre. */
+.langMark {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+}
+
+.langRowActive .langMark {
+  color: var(--color-signal-lime);
+}
+
+.langRow:disabled {
+  cursor: not-allowed;
+}
+
+/* --- Couverture et note de fin -------------------------------------------------------------------- */
+
+/* `margin:18px 20px 0; border-top:1px solid #CFCCC0; padding-top:14px` */
+.section {
+  margin: var(--space-18) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-14);
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `display:flex; flex-direction:column; gap:14px; margin-top:14px` */
+.coverage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-14);
+  margin-top: var(--space-14);
+}
+
+/* `display:flex; justify-content:space-between; font-size:10px; color:#5B594F` */
+.coverageHead {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `margin-top:6px` — la hauteur et le filet de 1 px viennent de `ProgressBar outlined`. */
+.coverageBar {
+  margin-top: var(--space-6);
+}
+
+/* `font-size:14px; line-height:1.5; margin:9px 0 0` */
+.prose {
+  margin: var(--space-9) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  line-height: 1.5;
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* `display:flex; gap:10px; align-items:center; margin-top:12px` */
+.legend {
+  display: flex;
+  gap: var(--space-10);
+  align-items: center;
+  margin-top: var(--space-12);
+}
+
+/* `width:34px; height:10px; border:1px solid #0B0B0A` en `content-box`, hachuré. */
+.legendSwatch {
+  box-sizing: content-box;
+  flex: none;
+  width: 34px;
+  height: 10px;
+  border: var(--border-width-hairline) solid var(--color-ink);
+  background-image: repeating-linear-gradient(45deg, var(--color-ink) 0 1px, transparent 1px 5px);
+}
+
+.legendLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Pied d'écran ------------------------------------------------------------------------------- */
+
+/* `margin-top:auto; padding:12px 20px 18px; border-top:1px; font-size:10px; line-height:1.5` */
+.footer {
+  margin-top: auto;
+  padding: var(--space-12) var(--space-gutter-mobile) var(--space-18);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* --- Grand écran : la colonne se borne ------------------------------------------------------------ */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: var(--space-4) 0;
+  }
+}

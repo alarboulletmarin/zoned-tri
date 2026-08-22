@@ -1,0 +1,275 @@
+/*
+ * Écran 06 · Simulation — canevas `data-screen-label="06"`.
+ * Le cadre pointillé n'est pas une décoration : c'est le signe, constant dans tout le produit, que
+ * rien de ce qui est affiché n'a été écrit.
+ * Base = mobile (390 px), gouttière de 18 px (et non 20 : le canevas resserre cet écran).
+ */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: var(--border-style-simulation);
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Tête (canevas : `padding:14px 18px 12px`) --- */
+
+.head {
+  flex: none;
+  padding: var(--space-14) var(--space-gutter-dense) var(--space-12);
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.title {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-display-min); /* 34 px */
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.lede {
+  margin: var(--space-10) 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* --- Bande de disciplines pleine largeur --- */
+
+ /* `content-box` : le canevas écrit `height:14px` PUIS deux filets de 2 px — la frise occupe donc
+    18 px, exactement comme celle d'Aujourd'hui. */
+.disciplineBand {
+  flex: none;
+  display: flex;
+  box-sizing: content-box;
+  height: 14px;
+  background: var(--color-hairline);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.disciplineSlice {
+  display: block;
+  height: 100%;
+}
+
+/* --- Compteurs --- */
+
+.counters {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.counter {
+  padding: var(--space-13) var(--space-12);
+  min-width: 0;
+}
+
+.counter:first-child {
+  padding-left: var(--space-gutter-dense);
+}
+
+.counter + .counter {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.counterLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+.counterValue {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-data-lg); /* 26 px */
+  /* Le canevas écrit ce compteur en General Sans ; la règle « toute quantité en Space Mono »
+     l'emporte, et l'interligne se resserre pour retrouver la hauteur de ligne de l'artboard. */
+  line-height: 1.32;
+  letter-spacing: -0.04em;
+  color: var(--color-ink);
+}
+
+/* --- Sections ---
+ * Le canevas ouvre la première à 16 px du bloc précédent (`margin:16px 18px 0; padding-top:13px`)
+ * et resserre les suivantes à 10 px (`padding-top:11px` puis `10px`). */
+
+.section {
+  flex: none;
+  margin: var(--space-16) var(--space-gutter-dense) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-13);
+}
+
+.sectionTight {
+  margin-top: var(--space-10);
+  padding-top: var(--space-11);
+}
+
+.sectionLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.sectionText {
+  margin: var(--space-8) 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-ink);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.sectionWarning {
+  margin: var(--space-8) 0 0;
+  border-left: var(--border-width-structure) solid var(--color-signal-yellow);
+  padding-left: var(--space-label-gap-lg);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-ink);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* --- Répartition d'intensité --- */
+
+.intensityBar {
+  display: flex;
+  height: 16px;
+  margin-top: var(--space-label-gap-lg);
+  border: var(--border-width-hairline) solid var(--color-ink);
+  box-sizing: content-box;
+  background: var(--color-hairline);
+}
+
+.intensitySlice {
+  display: block;
+  height: 100%;
+}
+
+.intensityLegend {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.intensityClaim {
+  margin: var(--space-8) 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.noteRef {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+}
+
+/* --- Ce qui va coincer : un vide nommé, faute de volume actuel enregistré --- */
+
+.unknown {
+  margin-top: var(--space-6);
+}
+
+/* --- Pied (canevas : `margin-top:auto; padding:0 18px 8px`) --- */
+
+.footer {
+  flex: none;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-gutter-dense) var(--space-8);
+}
+
+.footnote {
+  display: flex;
+  gap: var(--space-8);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-10) 0 var(--space-14);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+}
+
+.footnoteMark {
+  flex: none;
+  color: var(--color-ink);
+}
+
+.footnoteText {
+  color: var(--color-label);
+}
+
+/* Le canevas reprend la qualification en encre pleine à la fin de la note. */
+.footnoteLevel {
+  color: var(--color-ink);
+}
+
+/* Canevas : `padding:16px`, libellé centré, mono 12 px — soit 49 px occupés, deux de moins que
+   l'action des étapes G1→G6. */
+.accept {
+  justify-content: center;
+  min-height: 0;
+  padding: var(--space-16);
+  text-align: center;
+}
+
+.forceLink {
+  width: 100%;
+  margin-top: var(--space-12);
+  font-size: 14px;
+}
+
+/* Desktop : colonne bornée et centrée, comme le parcours G1→G6. */
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 0 var(--space-28);
+  }
+
+  .title {
+    font-size: 44px;
+  }
+}

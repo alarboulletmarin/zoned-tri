@@ -1,0 +1,596 @@
+/* Écran d'ouverture · artboards 01 / 01b / 01c (mobile) et S9 / S9b / S9c (desktop).
+ *
+ * Ce fichier ne peint plus que ce qui appartient à *cet écran* : le bandeau sombre, le panneau
+ * « Sur cet appareil », les listes. Les cartes, les vides, l'encart jaune, les barres et les actions
+ * viennent des composants du README §4 — leurs valeurs y sont écrites une fois pour toutes.
+ *
+ * Trois largeurs, trois blocs :
+ * - base = mobile 390 (artboard 01) ;
+ * - `@media (min-width:768px)` = tablette 834. Le canevas n'a pas d'artboard tablette : la
+ *   règle du README §3 s'applique — l'affiche reste empilée au-dessus de l'état, la gouttière
+ *   passe à 26 px, et la prose garde sa mesure au lieu de s'étirer (§3 règle 6) ;
+ * - `@media (min-width:1024px)` = desktop 1280 (artboard S9), qui reprend `DESKTOP_QUERY` de
+ *   src/hooks/useBreakpoint.ts — le CSS et le JS ne peuvent donc pas se contredire.
+ */
+
+/* --- Mobile 390 · artboard 01 --------------------------------------------------------------- */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* `padding:13px 20px 12px` — le bandeau sombre est collé au filet de l'en-tête, sans respiration :
+ * c'est l'affiche qui commence, pas une section de contenu. */
+.heroBanner {
+  flex: none;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  padding: var(--space-13) var(--space-gutter-mobile) var(--space-12);
+}
+
+.heroTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 38px;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+.heroLead {
+  margin: var(--space-12) 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+.heroKicker {
+  margin-top: var(--space-11);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-inactive);
+}
+
+.stripe {
+  flex: none;
+}
+
+.panelHeader {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-16) var(--space-gutter-mobile) 0;
+}
+
+.panelLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.panelSummary {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-inactive);
+}
+
+.mobileActions {
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-18);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-13);
+}
+
+.libraryLink {
+  align-self: flex-start;
+}
+
+/* Conteneur de l'état. En mobile : rien, les blocs se suivent. Dès la tablette : deux colonnes. */
+.state {
+  display: contents;
+}
+
+.asideFooter {
+  display: none;
+}
+
+/* --- Blocs partagés par les trois largeurs -------------------------------------------------- */
+
+.panelBlock {
+  flex: none;
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+}
+
+/* Le deuxième bloc du panneau ne se distingue du premier qu'à partir du desktop (18 px au lieu de
+ * 20, artboard S9) : sa règle vit dans le bloc `@media` de fin de fichier. En mobile il garde les
+ * 10 px communs de l'artboard 01b — sauf la ligne des plans archivés, que l'artboard 01 pose à
+ * 12 px. */
+@media (max-width: 1023px) {
+  .archivedBlock {
+    padding-top: var(--space-12);
+  }
+}
+
+.featuredCard {
+  padding: var(--space-14);
+}
+
+.plainCard {
+  padding: var(--space-12);
+}
+
+.cardTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+.cardKicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.countdown {
+  flex: none;
+  padding: var(--space-3) var(--space-7);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.runBadge {
+  flex: none;
+  padding: var(--space-3) var(--space-7);
+  background: var(--color-zone-2);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.cardHeadline {
+  margin-top: var(--space-9);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 26px;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.progress {
+  margin-top: var(--space-10);
+}
+
+.cardDetail {
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.cardAction {
+  margin-top: var(--space-12);
+}
+
+.blockHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+.blockLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.blockMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-inactive);
+}
+
+.blockNote {
+  margin-top: var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-inactive);
+}
+
+.rows {
+  margin-top: var(--space-8);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-11);
+  padding: var(--space-8) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowIndex {
+  flex: none;
+  width: 16px;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-inactive);
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: block;
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+
+.rowDetail {
+  display: block;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.archivedSummaryRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding-top: var(--space-11);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.archivedSummaryText {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-list-title);
+  color: var(--color-text);
+}
+
+.referenceLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-list-title);
+  color: var(--color-text);
+}
+
+.delta,
+.deltaImproved {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.deltaImproved {
+  color: var(--color-zone-2);
+}
+
+.callout {
+  flex: none;
+  margin: var(--space-7) var(--space-gutter-mobile) 0;
+}
+
+/* --- Tablette 834 · règles du README §3, pas d'artboard ------------------------------------- */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Gouttière 22-30 px (README §3). Le bandeau sombre et la frise restent à fond perdu :
+   * c'est une affiche, elle touche les bords. */
+  .heroBanner {
+    padding: var(--space-20) var(--space-26) var(--space-18);
+  }
+
+  /* Entre les 38 px du mobile et les 104 px de S9 : le titre grandit avec la largeur, mais reste
+   * sur trois lignes de ≈ 8 caractères — la mesure ne bouge pas, seule la taille change. */
+  .heroTitle {
+    font-size: var(--fs-display-tablet);
+    line-height: 0.82;
+  }
+
+  .heroLead {
+    margin-top: var(--space-16);
+    font-size: var(--fs-subtitle);
+    line-height: 1.5;
+    /* §3 règle 6 : la largeur ne sert pas à allonger les lignes. */
+    max-width: 46ch;
+  }
+
+  .heroKicker {
+    margin-top: var(--space-14);
+  }
+
+  /* README §3 : « Contenu — 1fr / 292px » dès la tablette. L'état se met en deux colonnes ;
+   * l'affiche, elle, reste empilée au-dessus, à fond perdu. */
+  .state {
+    display: grid;
+    grid-template-columns: 1fr 292px;
+    align-items: start;
+    gap: var(--space-26);
+    padding: 0 var(--space-26);
+  }
+
+  .panelHeader,
+  .panelBlock {
+    padding-inline: 0;
+  }
+
+  .callout {
+    margin-inline: 0;
+    /* La colonne latérale commence au même filet que le panneau de gauche. */
+    margin-top: var(--space-16);
+  }
+
+  /* Le pied du panneau de S9 : il n'a pas de place en mobile, il en a une ici. Sans lui, la colonne
+   * latérale se terminerait sur du blanc — et un blanc ne se laisse pas muet (§3 règle 4). */
+  .asideFooter {
+    display: block;
+    margin: var(--space-12) 0 0;
+    padding-top: var(--space-10);
+    border-top: var(--border-width-hairline) solid var(--color-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label-section);
+    line-height: 1.5;
+    color: var(--color-label);
+  }
+
+  /* README §3, tablette : l'action principale est « en bas de la colonne », pas en bas de l'écran.
+   * Elle suit donc le contenu au lieu d'être poussée par un `margin-top:auto` qui creuserait un
+   * blanc de 200 px au milieu de la page. */
+  .mobileActions {
+    margin-top: 0;
+    padding: var(--space-26) var(--space-26) var(--space-22);
+  }
+
+  /* L'action principale ne s'étire pas sur 834 px : elle garde la largeur d'un pouce, ancrée à
+   * gauche de la colonne (README §3, « ancrée en bas de l'écran »). */
+  .mobileActions > button:first-child {
+    width: auto;
+    min-width: 320px;
+  }
+}
+
+/* --- Desktop 1280 · artboard S9 ------------------------------------------------------------- */
+
+.desktopScreen {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+  background: var(--color-paper);
+}
+
+/* 56 % de la largeur : l'affiche à gauche, ce qui existe déjà à droite. Aucun rail sur cet écran —
+ * rien n'est encore ouvert, il n'y a nulle part où naviguer. */
+.heroColumn {
+  /* `width:56%` + `box-sizing:content-box` : c'est exactement ce que fait l'artboard S9, et le
+   * détail compte. Sur ses 1276 px de contenu, 56 % font 714,5 px AUXQUELS s'ajoutent les 60 px de
+   * gouttière — la colonne sombre occupe donc 774,5 px, soit 60,7 % de l'écran, pas 56 %. Passer la
+   * colonne en `border-box` la ramènerait à 717 px et referait toute la mise en page de la colonne
+   * de droite. On reproduit la maquette telle qu'elle se rend. */
+  box-sizing: content-box;
+  width: 56%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-26) var(--space-30) var(--space-22);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  overflow-y: auto;
+}
+
+.heroColumnTop {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 19px;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.heroKickerDesktop {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-inactive);
+}
+
+.heroTitleDesktop {
+  margin: var(--space-26) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-display-desktop);
+  line-height: var(--lh-display-min);
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+.heroLeadDesktop {
+  margin: var(--space-22) 0 0;
+  font-size: var(--fs-subtitle);
+  line-height: 1.5;
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+
+.stats {
+  display: flex;
+  gap: var(--space-22);
+  margin-top: var(--space-26);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.8;
+  color: var(--color-inactive);
+}
+
+/* 60 px, pas 56 : sur le canevas l'action secondaire est en `content-box`, ses 56 px de contenu
+ * portent 2 px de contour de chaque côté, et `align-items:stretch` aligne la principale dessus. */
+.heroActions {
+  margin-top: auto;
+  min-height: 60px;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-14);
+}
+
+/* Les deux actions se dimensionnent sur leur libellé (`display:flex` du canevas, pas de largeur
+ * imposée) : elles ne remplissent pas la colonne. */
+.primaryActionDesktop,
+.secondaryActionDesktop {
+  width: auto;
+  white-space: nowrap;
+}
+
+.heroNote {
+  margin-top: var(--space-16);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-inactive);
+}
+
+.panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* L'unique en-tête de 46 px de cet écran (README §3 règle 1) : il vit dans la colonne de droite,
+ * là où il y a quelque chose à titrer. */
+.panelHeaderDesktop {
+  flex: none;
+  height: var(--screen-header-height-mobile);
+  box-sizing: border-box;
+  padding: 0 var(--space-22);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.panelLabelDesktop {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+}
+
+.panelSummaryDesktop {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.panelFooter {
+  flex: none;
+  margin: auto var(--space-22) var(--space-16);
+  padding-top: var(--space-10);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+@media (min-width: 1024px) {
+  .panelBlock {
+    padding: var(--space-20) var(--space-22) 0;
+  }
+
+  .secondBlock {
+    padding-top: var(--space-18);
+  }
+
+  .featuredCard {
+    padding: var(--space-15);
+    /* S9 : seul écran du canevas où l'ombre lime passe à 6 px. */
+    box-shadow: var(--shadow-featured-lg);
+  }
+
+  .plainCard {
+    padding: var(--space-15);
+  }
+
+  .emptyCard {
+    padding: var(--space-16);
+  }
+
+  .countdown,
+  .runBadge {
+    padding: var(--space-4) var(--space-7);
+  }
+
+  .cardHeadline {
+    margin-top: var(--space-10);
+    font-size: 30px;
+  }
+
+  .progress {
+    margin-top: var(--space-11);
+  }
+
+  .cardDetail {
+    margin-top: var(--space-8);
+  }
+
+  .cardAction {
+    margin-top: var(--space-14);
+  }
+
+  .rows {
+    margin-top: var(--space-9);
+  }
+
+  .row {
+    padding: var(--space-9) 0;
+    gap: var(--space-12);
+  }
+
+  .callout {
+    margin: var(--space-16) var(--space-22) 0;
+    padding: var(--space-11);
+  }
+}

@@ -1,0 +1,9 @@
+/* Le sélecteur de fichier natif n'est jamais montré : c'est l'action de l'écran qui l'ouvre.
+ * Ni `display:none` ni `visibility:hidden` — les deux empêchent `click()` sur certains moteurs. */
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

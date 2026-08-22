@@ -1,0 +1,342 @@
+/* Artboard S7 · Courses · desktop — calendrier à gauche, fiche complète à droite.
+ *
+ * Le rail de 240 px appartient à la coquille (AppShell) ; cette feuille ne décrit que la zone à sa
+ * droite. Écran monté au-delà de 1024 px uniquement : le canevas ne donne pas de mise en page
+ * tablette à la section Courses. */
+
+.screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* Canevas S7 : `grid-template-columns:1fr 480px` — et non le `1.3fr 400px` du README §3, qui décrit
+ * le patron « séance + contexte » de S4. Le canevas rendu l'emporte (méthode §1). */
+.grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 480px;
+}
+
+/* `RacesRoute` ne monte cet écran qu'au-delà de 1024 px. Le repli existe quand même : un composant
+ * qui déborde hors de son cas d'usage est un piège pour la prochaine reprise. */
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail {
+    border-left: 0;
+    border-top: var(--border-width-hairline) solid var(--color-hairline);
+  }
+}
+
+/* --- Bandeau : commandes propres à l'écran --------------------------------------------------- */
+
+.breakdown {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.headerChip {
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  padding: var(--space-6) var(--space-10);
+}
+
+/* --- Calendrier de la saison ------------------------------------------------------------------- */
+
+.calendar {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.columnLabel {
+  padding: var(--space-11) var(--space-14) var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.columnLabelTop {
+  padding: var(--space-11) var(--space-14) var(--space-9);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.calendarRow {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+  padding: var(--space-12) var(--space-14);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* L'objectif principal est le seul aplat d'encre de la colonne : c'est lui qui façonne le plan. */
+.calendarRowGoal {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  border-bottom-color: var(--color-ink);
+}
+
+/* Une course courue recule : elle n'attend plus rien de l'athlète. */
+.calendarRowPast {
+  opacity: 0.65;
+}
+
+.calendarRow:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: -2px;
+}
+
+.calendarBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.calendarHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  min-width: 0;
+}
+
+.calendarName {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendarNote,
+.calendarNoteOnInk {
+  display: block;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+}
+
+.calendarNote {
+  color: var(--color-label);
+}
+
+/* Sur encre, le gris de label deviendrait illisible : le canevas passe au gris « sur encre ». */
+.calendarNoteOnInk {
+  color: var(--color-on-ink-muted);
+}
+
+.calendarDate,
+.calendarDateOnInk {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  white-space: nowrap;
+}
+
+.calendarDate {
+  color: var(--color-label);
+}
+
+.calendarDateOnInk {
+  color: var(--color-on-ink-muted);
+}
+
+.tagGoal,
+.tagPrep {
+  flex: none;
+  padding: 1px var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.tagGoal {
+  border: var(--border-width-hairline) solid var(--color-signal-lime);
+  color: var(--color-signal-lime);
+}
+
+.tagPrep {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  color: var(--color-ink);
+}
+
+.calendarEmpty {
+  margin: 0 var(--space-14) var(--space-12);
+}
+
+.calendarFooter {
+  margin-top: auto;
+  padding: var(--space-11) var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* --- Fiche de l'objectif ------------------------------------------------------------------------- */
+
+.detail {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-18) var(--space-22);
+  overflow-y: auto;
+}
+
+.detailTop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.detailBadge {
+  flex: none;
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  padding: var(--space-3) var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.detailDate {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.detailTitle {
+  margin: var(--space-12) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 36px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* --- Les trois distances, en une boîte bordée ------------------------------------------------------ */
+
+.stats {
+  display: flex;
+  margin-top: var(--space-14);
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.stat {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-9) var(--space-10);
+}
+
+.stat + .stat {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.statValue {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+}
+
+.statNote {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+/* --- Blocs de la fiche ------------------------------------------------------------------------------ */
+
+.detailBlock {
+  margin-top: var(--space-14);
+}
+
+.detailBlockRuled {
+  margin-top: var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-12);
+}
+
+.implications {
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+.detailEmpty {
+  margin-top: var(--space-7);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-9);
+}
+
+/* Canevas : `border:2px; padding:7px 10px`, mono 10 px capitales — plus large que le `chip` par
+ * défaut, qui vise les fins de ligne de liste. */
+.chip {
+  padding: var(--space-7) var(--space-10);
+  font-size: var(--fs-label-section);
+}
+
+/* Canevas : `min-height:46px` sur l'action, et 46 px + contour de 2 px sur la puce `.ICS`.
+ * L'ombre orange déborde dans la gouttière basse de la colonne, comme dans le canevas. */
+.detailFooter {
+  margin-top: auto;
+  padding-top: var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  gap: var(--space-10);
+  align-items: stretch;
+}
+
+.footerPrimary {
+  flex: 1;
+  min-height: 46px;
+}
+
+.footerChip {
+  min-height: calc(46px + 2 * var(--border-width-structure));
+  padding: 0 var(--space-11);
+  font-size: var(--fs-label-section);
+}

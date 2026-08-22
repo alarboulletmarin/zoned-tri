@@ -1,0 +1,158 @@
+/* Coque des 6 étapes du générateur — canevas G1→G6.
+ * Base = mobile (390 px). Comme le canevas, chaque bloc porte sa propre gouttière : il n'y a pas
+ * de colonne enveloppante qui rembourrerait tout d'un coup. Le desktop borne la mesure en fin de
+ * fichier, sans changer le DOM. */
+
+.screen {
+  /* La hauteur suit le contenu ; le défilement appartient à `.main` de la coquille. */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* Colonne de contenu : pleine largeur en mobile, bornée et centrée en desktop. Le bandeau reste
+   hors d'elle — il court sur toute la largeur du cadre. */
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Barre à segments (canevas : `padding:14px 20px 0`) --- */
+
+.steps {
+  flex: none;
+  padding: var(--space-14) var(--space-gutter-mobile) 0;
+}
+
+/* --- Titre d'affiche (canevas : `padding:20px 20px 0`) --- */
+
+.head {
+  flex: none;
+  padding: var(--space-20) var(--space-gutter-mobile) 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* Trois chasses, trois artboards. Seul le 38 px existe en jeton (`--fs-title-lg`) ; le 40 et le 36
+   sont écrits ici comme le canevas les écrit. */
+.titleLg {
+  font-size: var(--fs-title-xl); /* G1, G2, G6 */
+}
+
+.titleMd {
+  font-size: var(--fs-title-lg); /* 38 px — G3 */
+}
+
+.titleSm {
+  font-size: var(--fs-title-md); /* G4, G5 */
+}
+
+.intro {
+  margin: var(--space-12) 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* Ligne mono sous le titre (canevas G6 : `margin-top:10px`, mono 10 px). */
+.headNote {
+  margin: var(--space-10) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Sections --- */
+
+.section {
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  margin-left: var(--space-gutter-mobile);
+  margin-right: var(--space-gutter-mobile);
+}
+
+.sectionFlush {
+  border-top: none;
+}
+
+/* Le canevas n'ouvre la section sous son filet que lorsqu'elle porte un intitulé. */
+.sectionLabelled {
+  padding-top: var(--space-14);
+}
+
+.gapSm {
+  margin-top: var(--space-16);
+}
+
+.gapMd {
+  margin-top: var(--space-18);
+}
+
+.gapLg {
+  margin-top: var(--space-20);
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* --- Pied collé (canevas : `margin-top:auto; padding:0 20px 20px`) --- */
+
+.footer {
+  flex: none;
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-gutter-mobile);
+}
+
+/* Aucune réserve sous le bouton : le canevas laisse son ombre de 6 px courir jusqu'au bord du
+   cadre et la rogne (G1 : bouton à 707 px + 51 px = 758, gouttière de 20, cadre à 778). */
+
+.footerNote {
+  margin: 0 0 var(--space-12);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-9) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Desktop : le parcours reste une colonne — six questions successives n'ont pas de seconde
+   colonne dans le canevas. On borne la mesure au lieu d'étirer les lignes sur 1280 px. */
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 0 var(--space-28);
+  }
+}

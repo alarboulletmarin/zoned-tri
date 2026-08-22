@@ -1,0 +1,41 @@
+/*
+ * Carré de retour des bandeaux non racines (canevas 03/05/G1) :
+ * `width:38px; height:38px; box-sizing:border-box; border:2px solid currentColor`
+ * contenant la flèche SVG 20px. `currentColor` est littéral dans le canevas : le carré prend
+ * la couleur du texte du bandeau, ce qui le rend utilisable sur papier comme sur encre.
+ */
+.square {
+  /* Le carré du canevas mesure 38 px : six de moins que la cible minimale du README §3. Il garde
+   * sa taille dessinée et reçoit une zone cliquable de 44 px par pseudo-élément centré — invisible,
+   * sans effet sur la mise en page du bandeau de 46 px. */
+  position: relative;
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid currentColor;
+  border-radius: var(--radius-none);
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.square::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.square svg {
+  flex: none;
+  display: block;
+}

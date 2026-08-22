@@ -1,0 +1,635 @@
+/* Écran Semaine — TROIS artboards, DEUX DOM (bascule en `useBreakpoint()`, cf. SemaineScreen.tsx) :
+ * artboards 03 et 16 en mobile (titre, histogramme OU décompte, liste de jours), artboard S6 en
+ * desktop (sept colonnes). Le @media de fin de fichier ne fait que borner la hauteur ; il reproduit
+ * `DESKTOP_QUERY` de src/hooks/useBreakpoint.ts.
+ *
+ * Les tailles de texte que l'échelle de tokens.css ne couvre pas (38 px du titre, 12 px du volume)
+ * sont écrites telles que le canevas les donne, et listées dans le rapport de reprise. */
+
+.screen {
+  /* Mobile : la hauteur suit le contenu, le défilement appartient à la coquille.
+   * Desktop : la hauteur est bornée par la fenêtre (voir @media en fin de fichier). */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* --- Commandes de la semaine (bandeau desktop S6 l. 1803-1810) -----------------------------
+ * Le bandeau lui-même vit dans `AppHeader` ; ces commandes lui sont passées en `desktopActions`.
+ * Les artboards 03 et 16 n'en montrent aucune : en mobile le volume rejoint le titre et les
+ * exports descendent dans le pied de page. */
+
+/* S6 l. 1807 : `color:#3B3A33; letter-spacing:.06em; text-transform:none; font-size:11px` — la
+ * seule mention du bandeau que le canevas n'écrive pas en capitales. Mono, comme toute quantité. */
+.headerStats {
+  font-size: var(--fs-data-min);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.headerButton {
+  position: relative;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-ink);
+  padding: var(--space-6) var(--space-10);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  white-space: nowrap;
+}
+
+/* Les jetons du canevas font 31 px de haut (`padding:5px 8px` ou `6px 10px` sur du mono 10 px) :
+ * ils gardent cette apparence et reçoivent une cible de 44 px par pseudo-élément centré, invisible
+ * et sans effet sur la mise en page (README §3 règle 3). */
+.headerButton::after,
+.exportButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* Actions pas encore branchées : le cadre reste, l'encre passe en inactif plutôt qu'au gris du
+ * navigateur — et le `title` dit pourquoi (méthode §4). */
+.headerButton:disabled {
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+/* --- Frise de répartition ----------------------------------------------------------------- */
+
+/* `ProgressBar` porte la frise elle-même (`framed` en mobile, `underlined` en desktop) ; l'écran
+ * ne pose que son placement dans la colonne. */
+.proportion {
+  flex: none;
+}
+
+/* =========================================================================================
+ * Artboards 03 et 16 · mobile (canevas l. 414-486 et l. 2459-2551)
+ * ========================================================================================= */
+
+/* 03 l. 422 : `padding:16px 20px 14px` ; 16 l. 2468 : `16px 20px 12px`. */
+.titleRow {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-10);
+}
+
+.titleRowDense {
+  padding-bottom: var(--space-12);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 38px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* 03 l. 424 : mono 12 px ; 16 l. 2470 : mono 11 px. */
+.total {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.totalDense {
+  font-size: var(--fs-data-min);
+}
+
+/* 03 l. 427-429 : volume par discipline, mono 11 px, sous la frise qui le découpe. */
+.shares {
+  flex: none;
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  color: var(--color-label);
+}
+
+/* 16 l. 2472-2474 : le décompte des jours prend la place de la ligne de volumes, en mono 10 px. */
+.counts {
+  flex: none;
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* 03 l. 430 : `padding:16px 20px 0`, sept barres de 84 px (rendues par `WeekStrip`). */
+.histogram {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) 0;
+}
+
+/* --- Liste des jours ---------------------------------------------------------------------- */
+
+/* 03 l. 444 : `margin:16px 20px 0` ; 16 l. 2475 : `margin:14px 20px 0`. */
+.dayList {
+  flex: none;
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.dayListDense {
+  margin-top: var(--space-14);
+}
+
+/* Ligne d'un jour : 03 `padding:11px 0`, 16 `padding:10px 0`. Un `<button>` est remis à plat —
+ * seul le filet bas du canevas subsiste. */
+.row,
+.subRow {
+  /* Un `<button>` se dimensionne au contenu même en `display:flex` : sans cette largeur, le filet
+   * bas de la ligne s'arrêterait au milieu de la liste. */
+  width: 100%;
+  display: flex;
+  gap: var(--space-list-row-gap);
+  align-items: center;
+  padding: var(--space-11) 0;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowDense,
+.subRow {
+  padding: var(--space-10) 0;
+}
+
+/* Le canevas ne file jamais la dernière ligne de la liste, ni la dernière séance d'un jour doublé. */
+.dayList > .row:last-child,
+.groupBody > .subRow:last-child {
+  border-bottom: none;
+}
+
+/* 03 l. 451 : aujourd'hui, et rien d'autre, passe en aplat lime — le débord de 8 px de chaque côté
+ * fait mordre l'aplat sur la gouttière, exactement comme le canevas. */
+.rowToday,
+.groupToday {
+  background: var(--color-signal-lime);
+  margin: 0 calc(-1 * var(--space-8));
+  /* `width:100%` se mesure sur le conteneur : il faut rendre à la ligne les 2 × 8 px que les marges
+   * négatives lui prennent, sinon l'aplat ne mord la gouttière qu'à gauche. */
+  width: calc(100% + 2 * var(--space-8));
+  padding-left: var(--space-8);
+  padding-right: var(--space-8);
+}
+
+/* 16 l. 2517 : le jour courant doublé n'a PAS de filet bas — le canevas laisse l'aplat lime seul
+ * séparer les deux jours. */
+.groupToday {
+  border-bottom: none;
+}
+
+.dayName {
+  flex: none;
+  width: 26px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  text-transform: uppercase;
+}
+
+.rowToday .dayName,
+.groupToday .dayName {
+  color: var(--color-ink);
+  font-weight: var(--fw-bold);
+}
+
+/* 16 l. 2485 : repère `1/2` · `2/2` d'un jour doublé, mono 9 px effacé (encre sur l'aplat lime). */
+.position {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-inactive);
+}
+
+.groupToday .position {
+  color: var(--color-ink);
+}
+
+.rowBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-medium);
+  overflow-wrap: anywhere;
+}
+
+.rowToday .rowTitle,
+.groupToday .rowTitle {
+  font-weight: var(--fw-bold);
+}
+
+.rowMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  overflow-wrap: anywhere;
+}
+
+.rowToday .rowMeta,
+.groupToday .rowMeta {
+  color: var(--color-ink);
+}
+
+.doneMark {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+}
+
+.todayMark {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-bold);
+}
+
+/* 16 l. 2515 : un jour sans séance n'est pas un blanc, il est nommé — mono 10 px effacé. */
+.restMark {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-inactive);
+}
+
+.rowToday .restMark {
+  color: var(--color-ink);
+}
+
+/* Identifiant du plan absent du catalogue : montré, jamais silencieusement effacé. */
+.rowMissing {
+  cursor: default;
+}
+
+.rowMissing .rowTitle {
+  color: var(--color-signal-red);
+}
+
+/* --- Jour doublé : le nom écrit une fois, un filet de 2 px qui relie ses séances (16 l. 2482) --- */
+
+.group {
+  display: flex;
+  gap: var(--space-list-row-gap);
+  align-items: stretch;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.dayList > .group:last-child {
+  border-bottom: none;
+}
+
+/* 16 l. 2483 : le nom du jour s'aligne sur la première séance, pas sur le milieu de la pile. */
+.groupName {
+  padding-top: var(--space-12);
+}
+
+.groupBody {
+  flex: 1;
+  min-width: 0;
+  border-left: var(--border-width-structure) solid var(--color-ink);
+  padding-left: var(--space-12);
+}
+
+/* 16 l. 2521 : sur l'aplat lime, le filet qui sépare les deux séances passe du gris à l'encre. */
+.groupToday .subRow {
+  border-bottom-color: var(--color-ink);
+}
+
+/* --- Pied de page mobile ------------------------------------------------------------------- */
+
+/* 03 l. 483 : `padding:12px 20px` ; 16 l. 2546 : `padding:10px 20px 16px`. Filet de 2 px, mono
+ * 10 px en capitales, encre douce — la seule mention en bas de casse est la répartition. */
+.footerBar {
+  flex: none;
+  margin-top: auto;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-12) var(--space-gutter-mobile);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.footerBarDense {
+  padding: var(--space-10) var(--space-gutter-mobile) var(--space-16);
+}
+
+/* Le canevas remet cette mention en bas de casse : c'est une phrase, pas une étiquette. */
+.intensitySplit,
+.demoMark {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* La répartition ne se casse jamais en deux lignes : c'est elle qui donne au pied ses 55 px. */
+.intensitySplit {
+  flex: none;
+  white-space: nowrap;
+}
+
+.demoMark {
+  min-width: 0;
+  color: var(--color-inactive);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exports {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-8);
+}
+
+.exportButton {
+  position: relative;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: inherit;
+  padding: var(--space-5) var(--space-8);
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.footerBarDense .exportButton {
+  padding: var(--space-6) var(--space-8);
+}
+
+.exportButton:disabled {
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+/* =========================================================================================
+ * Artboard S6 · desktop (canevas l. 1778-1956) — ce DOM n'est monté qu'au-delà de 1024 px.
+ * ========================================================================================= */
+
+/* Le cadre suit son contenu et ne s'étire pas jusqu'au bas de la fenêtre : une semaine légère
+ * laissait sinon 200 px de colonnes vides, filets compris, sous la dernière carte. Les sept
+ * colonnes restent de hauteur égale — c'est la grille qui les aligne sur la plus haute — donc les
+ * filets courent bien du haut en bas et les pieds de colonne restent alignés. */
+.grid {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.column:last-child {
+  border-right: none;
+}
+
+.columnHeader {
+  flex: none;
+  padding: var(--space-9) var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+/* Aujourd'hui : aplat d'encre plein, le seul de la grille (S6 l. 1830). */
+.columnHeaderToday {
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+}
+
+.columnDay {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.columnDate {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.columnHeaderToday .columnDate {
+  color: inherit;
+}
+
+/* `flex: 1` garde le pied de chaque colonne collé en bas, donc aligné d'une colonne à l'autre —
+ * c'est la grille, et non la fenêtre, qui donne maintenant la hauteur. */
+.columnBody {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.columnFooter {
+  flex: none;
+  padding: var(--space-7) var(--space-10);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Carte de séance (S6 l. 1819-1826) ---------------------------------------------------- */
+
+.card {
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  padding: var(--space-9) var(--space-10);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.cardDuration {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.cardTitle {
+  margin-top: var(--space-7);
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+}
+
+.cardDetail {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* Poignée de glissement : dessinée par le canevas, rendue ici, mais inerte (cf. SemaineScreen.tsx). */
+.cardHandle {
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  color: var(--color-inactive);
+  cursor: default;
+}
+
+/* Jour libre : pointillé filet (le pointillé encre `--border-style-simulation` dit la simulation,
+ * pas le vide — deux sens distincts, deux traits distincts). */
+.freeDay {
+  border: var(--border-style-empty);
+  padding: var(--space-12) var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Identifiant du plan absent du catalogue : montré, jamais silencieusement effacé. */
+.cardMissing {
+  border: var(--border-width-structure) solid var(--color-signal-red);
+  padding: var(--space-9) var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+  overflow-wrap: anywhere;
+}
+
+/* --- Légende du pied de grille (S6 l. 1948-1954) ------------------------------------------- */
+
+.legend {
+  flex: none;
+  padding: var(--space-10) var(--space-gutter-mobile) var(--space-12);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-14);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  white-space: nowrap;
+}
+
+.legendDot {
+  width: var(--space-10);
+  height: var(--space-10);
+  flex: none;
+}
+
+.legendDashed {
+  width: var(--space-11);
+  height: var(--space-11);
+  box-sizing: border-box;
+  border: var(--border-style-empty);
+  flex: none;
+}
+
+.legendHint {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* --- Desktop : la coquille borne la hauteur, l'écran ne déborde pas ---------------------- */
+
+@media (min-width: 1024px) {
+  .screen {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+/* Le titre de la semaine est la porte de la vue macro (ligne grise de l'artboard 04). Il garde
+ * exactement l'aspect que le canevas lui donne — aucun soulignement au repos. Sa boîte ne mesure
+ * que 34 px (38 px d'œil sur une interligne de 0,9) : la cible est portée à 44 px par un
+ * pseudo-élément, qui ne déplace rien. */
+.titleLink {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: var(--action-height-min);
+}
+
+.titleLink:hover .title,
+.titleLink:focus-visible .title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

@@ -1,0 +1,19 @@
+.dots {
+  display: flex;
+  gap: 4px;
+}
+
+.filled,
+.empty {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--radius-none);
+}
+
+.filled {
+  background: var(--color-ink);
+}
+
+.empty {
+  background: var(--color-hairline);
+}

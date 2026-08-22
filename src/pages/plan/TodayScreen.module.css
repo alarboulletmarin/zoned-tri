@@ -1,0 +1,1241 @@
+/* Écran 02 · Plan · Aujourd'hui (états 02 / 02a / 02b / 02c / 15).
+ * Base = mobile, un seul flux vertical. Le desktop ne change pas le DOM : il borne la colonne
+ * (bloc @media en fin de fichier, qui reproduit `DESKTOP_QUERY` de src/hooks/useBreakpoint.ts). */
+
+.screen {
+  /* La hauteur suit le contenu : le défilement appartient à `.main` de la coquille. */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+/* --- En-tête du jour ------------------------------------------------------------------- */
+
+.dayHeader {
+  flex: none;
+  padding: 16px var(--space-gutter-mobile) 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.dayHeaderDense {
+  padding: var(--space-14) var(--space-gutter-mobile) var(--space-12);
+}
+
+.dayHeaderDense .dayTitle {
+  margin-top: var(--space-6);
+  font-size: 32px;
+  letter-spacing: -0.05em;
+}
+
+.weekLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.dayTitle {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 34px;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+/* Quantité : mono, jamais General Sans. */
+.headerVolume {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+/* Journée à plusieurs séances (artboard 15) : le compte prend la place du volume, en aplat encre. */
+.headerCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+/* --- Barre de répartition disciplinaire -------------------------------------------------- */
+
+.proportion {
+  flex: none;
+}
+
+/* --- Corps ------------------------------------------------------------------------------- */
+
+.body {
+  padding: var(--space-16) var(--space-gutter-mobile) 0;
+}
+
+/* Corps qui ne contient que des blocs portant déjà leur propre marge haute (listes, encarts) :
+ * sans cette remise à zéro, la gouttière du corps s'ajouterait à la leur. */
+.bodyFlush {
+  padding-top: 0;
+}
+
+/* --- Rangée de jetons ------------------------------------------------------------------- */
+
+.badgeRow {
+  display: flex;
+  gap: var(--space-label-gap-sm);
+  align-items: center;
+}
+
+.badgeContext {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.badgeDuration,
+.badgeSince {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+/* --- Séance du jour ------------------------------------------------------------------------ */
+
+.sessionTitle {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 42px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.sessionMeta {
+  margin-top: var(--space-block-md);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.noteRef {
+  font-size: var(--fs-label-micro);
+}
+
+.dayTotals {
+  padding: 10px var(--space-gutter-mobile) 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Mini-profil de blocs -------------------------------------------------------------------- */
+
+.timeline,
+.timelineDense {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.timeline {
+  height: 30px;
+  margin-top: 20px;
+}
+
+.timelineDense {
+  height: 18px;
+  margin-top: 10px;
+}
+
+.timelineBar {
+  flex: none;
+}
+
+/* Repos entre répétitions : un filet, toujours visible même à 2 % de la hauteur. */
+.timelineRest {
+  flex: none;
+  min-height: 2px;
+  align-self: flex-end;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-block-sm);
+  margin-top: var(--space-label-gap-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legendSwatch {
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+
+.legendRest {
+  width: 11px;
+  height: 2px;
+  background: var(--color-hairline);
+  flex: none;
+}
+
+/* --- Marquer comme faite ---------------------------------------------------------------------- */
+
+.doneRow {
+  display: flex;
+  gap: var(--space-block-md);
+  align-items: center;
+  margin-top: 22px;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: 18px;
+}
+
+/* « Marquer comme faite » est l'action principale de l'écran : sa cible doit faire 44 px de haut,
+ * alors que le canevas ne dessine qu'une case de 24 px et son libellé sur une seule ligne. Le
+ * pseudo-élément étend la zone cliquable sans rien déplacer. */
+.checkboxLabel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-block-md);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Case 24 px bordée du canevas : aucun coche natif, le trait 2 px porte tout. */
+.checkbox {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  flex: none;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  cursor: pointer;
+}
+
+.checkboxLabel::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: var(--action-height-min);
+}
+
+.checkbox:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 2px;
+}
+
+/* --- Cartes empilées (artboard 15) ------------------------------------------------------------ */
+
+/* `margin:14px 20px 0` pour la première, `10px 20px 0` pour les suivantes. */
+.cardSlot {
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+}
+
+.cardSlotFirst {
+  padding-top: var(--space-14);
+}
+
+.card {
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.cardStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-label-gap-sm);
+  padding: 9px 10px;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+}
+
+.cardInner {
+  padding: 10px 10px 11px;
+}
+
+.cardTitle {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 26px;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.cardMeta {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.cardInner .doneRow {
+  margin-top: 10px;
+  padding-top: 10px;
+  gap: 10px;
+}
+
+.cardInner .checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+.cardInner .checkboxLabel {
+  font-size: var(--fs-label-section);
+  gap: 10px;
+}
+
+/* --- Puces d'export, non branchées -------------------------------------------------------------- */
+
+.chipButton {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-ink);
+  padding: 5px 7px;
+  white-space: nowrap;
+}
+
+/* Même traitement que le `.PDF` de la bibliothèque : le cadre reste, l'encre passe en inactif. */
+.chipButton:disabled {
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+.doneRow .chipButton {
+  margin-left: auto;
+}
+
+.exportRow {
+  margin-top: auto;
+  padding: var(--space-8) var(--space-gutter-mobile) var(--space-12);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.exportLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  /* Le canevas neutralise explicitement les capitales sur ce libellé : `text-transform:none`. */
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-label);
+}
+
+.exportRow .chipButton:first-of-type {
+  margin-left: auto;
+}
+
+/* --- Listes de séances -------------------------------------------------------------------------- */
+
+.listBlock,
+.waitingBlock,
+.whyBlock {
+  margin-top: 20px;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.sectionLabel {
+  padding-top: var(--space-block-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* Artboard 02 : la première ligne de la liste respire de 8 px sous le libellé de section. */
+.sectionLabel + .listRow {
+  margin-top: var(--space-8);
+}
+
+.weekLink {
+  position: relative;
+  display: inline-block;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Les deux jetons les plus petits de l'écran — la puce `.FIT` (31 px) et le lien vers la semaine
+ * (15 px) — gardent l'apparence du canevas et reçoivent une cible de 44 px par pseudo-élément
+ * centré, invisible et sans effet sur la mise en page (README §3 règle 3). */
+.chipButton::after,
+.weekLink::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.listRow {
+  display: flex;
+  gap: var(--space-block-md);
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.listBlock .listRow:last-child {
+  border-bottom: none;
+}
+
+.listTitle,
+.listTitleStruck {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.listTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.listTitleStruck {
+  text-decoration: line-through;
+}
+
+.listSubline {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.listDay {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+/* Séance hors du temps que l'athlète s'est donné : barrée et effacée, jamais « ratée ». */
+.listRowWaiting {
+  opacity: 0.5;
+  border-bottom: none;
+  padding: 10px 0;
+}
+
+.waitingCount {
+  padding-top: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Prose et encarts ------------------------------------------------------------------------------ */
+
+.prose {
+  margin: var(--space-block-md) 0 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+.reason {
+  margin-top: var(--space-label-gap-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+.dashedBox {
+  margin-top: 16px;
+  border: var(--border-style-simulation);
+  background: var(--color-neutral-fill);
+  padding: var(--space-block-md);
+}
+
+.solidBox {
+  margin-top: 13px;
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-block-sm);
+}
+
+.yellowBox {
+  margin-top: var(--space-block-lg);
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  padding: var(--space-block-sm);
+}
+
+.boxLabel,
+.boxLabelInk {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.boxLabel {
+  color: var(--color-text);
+}
+
+.boxLabelInk {
+  color: var(--color-ink);
+}
+
+.boxLines {
+  margin-top: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.boxNote {
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  margin-top: var(--space-block-sm);
+  padding-top: 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+.hairlineNote {
+  margin-top: var(--space-block-lg);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-block-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+.fullButton {
+  margin-top: var(--space-12);
+  /* Artboard 02a : `min-height:46px` en `content-box` — le contour de 2 px s'ajoute par-dessus. */
+  min-height: calc(46px + 2 * var(--border-width-structure));
+  justify-content: center;
+}
+
+/* --- Séance faite ------------------------------------------------------------------------------------ */
+
+.doneBlock + .doneBlock {
+  margin-top: 20px;
+}
+
+.doneChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.doneTitle,
+.doneTitleInk {
+  margin: var(--space-block-md) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 38px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* Une séance faite recule d'un ton : elle ne demande plus rien. */
+.doneTitle {
+  color: var(--color-text);
+}
+
+.doneTitleInk {
+  color: var(--color-ink);
+}
+
+.doneMeta {
+  margin-top: 9px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-label);
+}
+
+.statRow {
+  display: flex;
+  gap: 16px;
+  margin-top: var(--space-label-gap-lg);
+}
+
+.stat {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Toujours un tiret : le modèle ne porte aucune donnée réalisée. */
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: var(--fw-bold);
+  color: var(--color-inactive);
+}
+
+.statLabel {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-9);
+  margin-top: var(--space-14);
+}
+
+/* Artboard 02b : `border:2px; min-height:44px; padding:0 11px`, mono 10 px — la plus petite
+ * action bordée du canevas qui reste une vraie cible. */
+.inlineAction {
+  width: auto;
+  /* Artboard 02b : `min-height:44px` en `content-box`, contour de 2 px en plus. */
+  min-height: calc(var(--action-height-min) + 2 * var(--border-width-structure));
+  padding: 0 var(--space-11);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+}
+
+/* --- Semaine en pause ---------------------------------------------------------------------------------- */
+
+.pauseChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ctaColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-top: var(--space-13);
+}
+
+.pausedPrimary,
+.pausedSecondary {
+  min-height: 46px;
+  justify-content: center;
+  font-size: var(--fs-button);
+}
+
+/* Seule la secondaire porte un contour : elle seule gagne les 4 px (artboard 02c). */
+.pausedSecondary {
+  min-height: calc(46px + 2 * var(--border-width-structure));
+}
+
+.pausedPrimary {
+  box-shadow: var(--shadow-primary);
+}
+
+/* --- Notes de preuve et pieds de page --------------------------------------------------------------------- */
+
+.footerNote {
+  margin: auto var(--space-gutter-mobile) var(--space-12) var(--space-gutter-mobile);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Identifiant du plan absent du catalogue : montré, jamais silencieusement effacé. */
+.missing {
+  border: var(--border-width-structure) solid var(--color-signal-red);
+  padding: 9px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+  overflow-wrap: anywhere;
+}
+
+/* --- Desktop : même flux, colonne bornée ------------------------------------------------------------------- */
+
+/* Colonne de contenu : pleine largeur en mobile, bornée et centrée en desktop. Le bandeau, lui,
+ * reste hors de cette colonne — il court sur toute la largeur du cadre (canevas S4). */
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 24px 56px;
+  }
+}
+
+/* --- S4 · deux colonnes dès la tablette ---------------------------------------------------- */
+
+/* Ces classes ne sont posées que par la mise en page large (`split` dans TodayScreen.tsx) : le
+ * flux mobile ne les rencontre jamais. Les valeurs sont celles que `renderVals()` du canevas donne
+ * pour la tablette ; le bloc desktop plus bas ne change que ce que S4 change (`gridCols`,
+ * `mainPad`, `sidePad`, `h1Size`). */
+
+/* Le cadre se borne à la fenêtre : ce sont les deux colonnes qui défilent, pas la page. */
+/* Le cadre suit son contenu et ne s'étire pas jusqu'au bas de la fenêtre : une séance courte
+ * laissait sinon deux colonnes à moitié vides, avec leurs filets, au milieu de rien. */
+.screenSplit {
+  flex: 0 0 auto;
+}
+
+.columnSplit {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-block: 0;
+}
+
+/* `headPad: 18px 24px 16px` et `dateSize: 38px`. */
+.columnSplit .dayHeader {
+  padding: var(--space-18) var(--space-24) var(--space-16);
+}
+
+.columnSplit .dayTitle {
+  font-size: 38px;
+}
+
+.split {
+  flex: none;
+  display: grid;
+  /* `gridCols` tablette. */
+  grid-template-columns: 1fr 292px;
+  /* Les deux colonnes montent à la hauteur de la plus haute — le filet qui les sépare court sur
+     toute cette hauteur, comme dans le canevas — mais aucune ne s'étire au-delà du contenu. */
+  align-items: stretch;
+}
+
+.mainCol,
+.sideCol {
+  min-width: 0;
+  /* Le profil de la séance dépasse de ses gouttières de 2 px, exactement comme dans le canevas,
+   * qui le laisse déborder puis le rogne au cadre. */
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* `mainPad` / `sidePad` tablette : la même valeur des deux côtés. */
+  padding: var(--space-20) var(--space-22) var(--space-18);
+}
+
+/* `sideBorderL` : dès la tablette le filet passe à gauche de la colonne, jamais au-dessus. */
+.sideCol {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* Les états sans artboard large (02a/02b/02c, journée à deux séances) rendent leurs blocs dans
+ * `.body`, qui porte déjà la gouttière mobile. Dans la colonne de S4, c'est `.mainCol` qui la
+ * donne : sans cette remise à zéro, les deux s'additionneraient. */
+.mainCol > .body,
+.mainCol > .footnote,
+.mainCol > .exportRow,
+.mainCol > .cardSlot {
+  padding-inline: 0;
+  margin-inline: 0;
+}
+
+/* La ligne de cumuls d'une journée doublée ouvre la colonne : sa gouttière haute vient déjà de
+ * `.mainCol`. */
+.dayTotalsFlush {
+  padding-top: 0;
+}
+
+/* Ce qui se lit ligne à ligne — phrases, encarts, boutons pleine largeur — se borne au lieu de
+ * courir sur les 1 150 px de la colonne : « le desktop n'allonge pas les lignes » (méthode §2).
+ * Un bouton de 1 150 px n'est pas une cible plus facile, c'est une ligne illisible. */
+.mainCol .dashedBox,
+.mainCol .yellowBox,
+.mainCol .hairlineNote,
+.mainCol .fullButton,
+.mainCol .ctaColumn,
+.mainCol .waitingBlock {
+  max-width: 620px;
+}
+
+/* `h1Size` tablette. La ligne reste courte : le desktop n'allonge pas les lignes (méthode §2). */
+.mainCol .sessionTitle {
+  font-size: 38px;
+  max-width: 22ch;
+}
+
+.mainCol .sessionMeta {
+  font-size: 13px;
+}
+
+/* `profileH: 38px`, gouttière haute de 18 px (l. 1592). */
+.mainCol .timeline {
+  height: 38px;
+  margin-top: var(--space-18);
+}
+
+/* La rangée de fin suit le déroulé au lieu d'être poussée en bas du cadre.
+ *
+ * Le canevas la colle en bas (l. 1610) parce que S4 est un artboard de hauteur fixe, taillé sur
+ * sa séance. Dans l'application le cadre fait la hauteur de la fenêtre, et le même `margin-top:
+ * auto` ouvrait un blanc de 150 px entre le dernier bloc et la case à cocher. Le cadre suit donc
+ * son contenu (cf. `.screenSplit`), et la rangée reste sous le déroulé, sans trou. */
+.mainCol .doneRow {
+  margin-top: var(--space-18);
+}
+
+/* --- Très grand écran : la colonne de séance se dédouble ------------------------------------
+ *
+ * Au-delà de ~1600 px, la colonne principale dépasse 1000 px et le flux vertical de S4 ne fait
+ * plus qu'étirer ses blocs : la grille de trois chiffres s'étale sur toute la largeur, et le
+ * tableau du déroulé traîne un demi-écran de blanc dans sa première colonne. L'espace est occupé
+ * sans être utilisé.
+ *
+ * On le range donc au lieu de l'étirer : à gauche l'identité de la séance — badges, titre, méta,
+ * profil, légende — et ses trois chiffres ; à droite le déroulé, qui est le bloc qui a le plus à
+ * gagner en hauteur. La rangée d'action reste en bas, sur toute la largeur. Aucun bloc n'apparaît
+ * ni ne disparaît : ce sont les mêmes huit, autrement disposés. */
+@media (min-width: 1600px) {
+  /* `.mainColSession` et non `.mainCol` : cette grille nomme les blocs de la carte de séance.
+     Appliquée à toute colonne principale, elle plaçait au hasard les blocs des autres états —
+     02a, 02b, 02c — dans ses cellules restantes, et les posait côte à côte. */
+  .mainColSession {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: repeat(6, auto) 1fr;
+    grid-template-areas:
+      'badges   sets'
+      'title    sets'
+      'meta     sets'
+      'timeline sets'
+      'legend   sets'
+      'stats    sets'
+      'done     done';
+    column-gap: var(--space-28);
+    align-content: start;
+  }
+
+  .mainColSession .badgeRow {
+    grid-area: badges;
+  }
+
+  .mainColSession .sessionTitle {
+    grid-area: title;
+  }
+
+  .mainColSession .sessionMeta {
+    grid-area: meta;
+  }
+
+  .mainColSession .timeline {
+    grid-area: timeline;
+  }
+
+  .mainColSession .legend {
+    grid-area: legend;
+  }
+
+  .mainColSession .statGrid {
+    grid-area: stats;
+  }
+
+  /* Le déroulé occupe toute la hauteur de la colonne de droite : il n'y a plus de trou sous lui. */
+  .mainColSession .setsTable {
+    grid-area: sets;
+    margin-top: 0;
+    align-self: stretch;
+  }
+
+  .mainColSession .doneRow {
+    grid-area: done;
+    margin-top: 0;
+    align-self: end;
+  }
+}
+
+.mainCol .doneRow .chipButton {
+  padding: var(--space-6) var(--space-8);
+}
+
+/* Déroulé chiffré (l. 1599-1607) : cadre au filet, colonnes `1fr auto auto`, cellules 7 × 10 px. */
+.setsTable {
+  margin-top: var(--space-22);
+  border: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.setsTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  text-align: left;
+}
+
+.setsTable th,
+.setsTable td {
+  padding: var(--space-7) var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-weight: var(--fw-regular);
+  vertical-align: top;
+}
+
+.setsTable th {
+  font-size: var(--fs-label-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `1fr auto auto` : la première colonne prend le reste, les deux chiffrées ne se coupent pas. */
+.setsTable th:first-child,
+.setsTable td:first-child {
+  width: 100%;
+}
+
+.setsTable th:not(:first-child),
+.setsTable td:not(:first-child) {
+  white-space: nowrap;
+}
+
+.setsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Nouvel artboard 02 : le bloc porte son intitulé puis, en dessous, ce que le modèle en sait. */
+.setsBlock {
+  display: block;
+  font-size: 12px;
+}
+
+.setsDetail {
+  display: block;
+  font-size: 9.5px;
+  color: var(--color-label);
+  margin-top: 3px;
+}
+
+/* Le corps de séance passe en inverse — c'est la ligne qu'on vient lire. */
+.setsRowMain td {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+}
+
+.setsRowMain .setsBlock {
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+}
+
+.setsRowMain .setsDetail {
+  color: var(--color-on-ink-muted);
+}
+
+/* L'allure du corps est la seule valeur en accent de la carte. */
+.setsRowMain td:nth-child(2) {
+  color: var(--color-signal-lime);
+}
+
+/* --- Trois cellules chiffrées (nouvel artboard 02) -------------------------------------------
+ * `display:grid; grid-template-columns:repeat(3,1fr); border:2px solid` — filets de 1 px entre. */
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: var(--border-width-structure) solid var(--color-ink);
+  margin-top: var(--space-11);
+}
+
+.stat {
+  padding: var(--space-6) 9px;
+  min-width: 0;
+}
+
+.stat + .stat {
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.statNoteRef {
+  font-size: 7px;
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  margin-top: 2px;
+}
+
+/* « Séance entière → » : le chemin vers la fiche complète, à droite de la case à cocher. */
+.wholeSession {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--action-height-min);
+}
+
+/* --- Colonne de contexte (l. 1616-1655) ------------------------------------------------------ */
+
+.weekChart {
+  margin-top: var(--space-14);
+}
+
+.chartNote {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+/* `restTop: 26px`, et aucun filet au-dessus : c'est la colonne qui porte le trait, pas la liste. */
+.sideList {
+  margin-top: var(--space-26);
+  border-top: none;
+}
+
+.sideList .sectionLabel {
+  padding-top: 0;
+}
+
+.sideList .listRow {
+  padding: var(--space-11) 0;
+}
+
+.sideFooter {
+  margin: auto 0 0;
+  padding-top: var(--space-16);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+}
+
+/* Note de bas d'écran : sous les DEUX colonnes, filetée, jamais poussée par `margin-top:auto`
+ * puisque c'est la grille qui occupe la hauteur (l. 1658). */
+.columnSplit .footnote {
+  flex: none;
+  margin: 0;
+  padding: var(--space-11) var(--space-20) var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* `todayLabel` du bandeau (l. 1572). */
+.todayLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  /* Rétabli après le bloc « colonne bornée » ci-dessus, qui ne vaut que pour les états sans
+   * artboard large (02a, 02b, 02c, 15). */
+  .screenSplit {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .columnSplit {
+    max-width: none;
+    margin-inline: 0;
+    padding-block: 0;
+  }
+
+  .split {
+    grid-template-columns: 1.3fr 400px;
+  }
+
+  .mainCol {
+    padding: var(--space-26) var(--space-28) var(--space-22);
+  }
+
+  .sideCol {
+    padding: var(--space-24) var(--space-26) var(--space-22);
+  }
+
+  .mainCol .sessionTitle {
+    font-size: 46px;
+  }
+}
+
+/* --- Jauge de preuve et note de bas de page (artboards 02 et 15) ------------------------------- */
+
+.whyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+.whyText {
+  margin: var(--space-6) 0 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* 22 × 9 px bordés de 2 px, remplis à proportion — la jauge des artboards 15 et 32. */
+.proofGauge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex: none;
+}
+
+.proofTrack {
+  width: 22px;
+  height: 9px;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  flex: none;
+}
+
+.proofFill {
+  display: block;
+  height: 100%;
+  background: var(--color-ink);
+}
+
+.proofLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Artboard 02 : appel de note en pied d'écran, pas un encart — « 1. » puis la phrase. */
+.footnote {
+  margin: auto var(--space-gutter-mobile) var(--space-16) var(--space-gutter-mobile);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-10);
+  display: flex;
+  gap: var(--space-8);
+}
+
+.footnoteMark,
+.footnoteText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+}
+
+.footnoteMark {
+  flex: none;
+}
+
+.footnoteText {
+  color: var(--color-label);
+}
+
+/* La qualification de la preuve revient en encre : c'est le mot qui porte l'information. */
+.footnoteLevel {
+  color: var(--color-ink);
+}
+
+/* L'intitulé de la colonne de contexte mène à la semaine. Il garde exactement l'aspect que S4 lui
+ * donne — pas de soulignement au repos — et reçoit une cible de 44 px. */
+.weekLabelLink {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.weekLabelLink::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.weekLabelLink:hover .weekLabel,
+.weekLabelLink:focus-visible .weekLabel {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

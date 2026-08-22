@@ -1,0 +1,209 @@
+/*
+ * Bandeau unique d'écran. Trois formes, toutes littérales dans le canevas :
+ *
+ * - `.rootBar`  → artboards 01, 02, 07 : `padding:12px 16px` (soit 46 px de haut avec l'icône de
+ *   20 px), filet bas de 2 px d'encre, libellé à gauche, recherche 18 px + burger 20 px à droite.
+ * - `.detailBar` → artboards 03, 05, G1 : `height:46px; padding:0 14px 0 12px`, carré de retour
+ *   38×38, fil d'Ariane mono 11 px, burger 20 px. Le retrait gauche est plus court (12 px) parce
+ *   que le carré porte déjà sa bordure.
+ * - `.desktopBar` → artboards S4, S5, S6 : `padding:0 20px; min-height:52px`, titre 17 px gras
+ *   capitales, commandes de l'écran à droite. Son filet bas s'aligne sur celui de l'en-tête du rail.
+ */
+
+.rootBar,
+.detailBar {
+  flex: none;
+  box-sizing: border-box;
+  height: var(--screen-header-height-mobile);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  overflow: hidden;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.rootBar {
+  padding: 0 16px;
+}
+
+.detailBar {
+  padding: 0 14px 0 12px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 15px;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detailLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.trail {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trailMuted {
+  color: var(--color-label);
+}
+
+/* Un segment parent mène à son écran. Le fil est en mono 11 px : la cible tactile ne peut pas
+   venir de la hauteur du texte, elle vient du padding vertical, qui remplit les 46 px du bandeau
+   sans en changer la hauteur (`line-height` inchangé, marge négative compensée par le padding). */
+.trailLink {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  padding: 15px 2px;
+  margin: -15px 0;
+}
+
+.trailLink:hover,
+.trailLink:focus-visible {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.trailCurrent {
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+.actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Le canevas dessine des SVG nus : le bouton ne doit rien ajouter autour d'eux. */
+/* Le canevas ne dessine que le glyphe (18 px pour la loupe, 20 px pour le burger) et ne montre
+ * aucune boîte autour. La cible, elle, doit faire 44 px (README §3 règle 3) : elle est étendue par
+ * un pseudo-élément centré, invisible, qui ne déplace rien dans le bandeau de 46 px. */
+.iconButton {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.iconButton::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.iconButton svg {
+  flex: none;
+  display: block;
+}
+
+/* --- Bandeau desktop (S4 / S5 / S6) ---------------------------------------------------------- */
+
+.desktopBar {
+  flex: none;
+  box-sizing: border-box;
+  min-height: var(--shell-header-height);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.desktopLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.desktopTitle {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 17px;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desktopActions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* Mention d'état du bandeau racine (S4 : « 3 séances restantes cette semaine »). Masquée en mobile,
+ * où le canevas ne la met pas — la barre de 46 px n'y a la place que du mot-symbole et des deux
+ * commandes. */
+.rootActions {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .rootActions {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-button);
+    letter-spacing: 0.06em;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

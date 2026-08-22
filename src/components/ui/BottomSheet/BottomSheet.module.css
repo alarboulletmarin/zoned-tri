@@ -1,0 +1,132 @@
+/* Artboard 40 : voile d'encre à 0,12 — la page reste lisible sous la feuille. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(11 11 10 / 0.12);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* 40 l. 3781 : `background:#FCFBF6; border-top:2px solid #0B0B0A` — un seul filet, en haut. */
+.sheet {
+  width: 100%;
+  max-width: var(--screen-width);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--color-paper);
+  border: none;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+/* 40 l. 3782 : `padding:9px 0 0`, poignée centrée de 44 × 4 px. */
+.handleRow {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-9) 0 0;
+}
+
+.handle {
+  position: relative;
+  width: var(--action-height-min);
+  height: var(--space-4);
+  border: none;
+  border-radius: var(--radius-none);
+  background: var(--color-hairline);
+  padding: 0;
+  cursor: pointer;
+}
+
+/* La poignée fait 4 px de haut : sa cible monte à 44 px sans la grossir. */
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: var(--action-height-min);
+}
+
+/* 40 l. 3783 : `padding:11px 20px 0`, titre et mention sur la même ligne de base. */
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-block-sm) var(--space-gutter-mobile) 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-screen-title);
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.titleAside {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- `cover` · artboard 20 · Feuille d'export ------------------------------------------------
+ * La feuille ne monte pas du bas : elle prend l'écran. Elle garde la largeur bornée de `.sheet`
+ * (390 px, la largeur d'artboard du canevas) et perd son filet haut — il n'y a plus de bord d'où
+ * sortir. `100dvh` et non `100vh` : sur mobile, la barre d'adresse ne doit pas rogner le pied. */
+.cover {
+  height: 100dvh;
+  max-height: 100dvh;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 20 l. 2701 : `padding:0 14px 0 12px; height:46px; border-bottom:2px solid #0B0B0A`. */
+.coverBar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  height: var(--screen-header-height-mobile);
+  padding: 0 var(--space-14) 0 var(--space-12);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.coverTrail {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Le canevas dessine une croix de 13 px ; la cible tient les 44 px du README §3 en occupant
+ * toute la hauteur de la barre, sans grossir le glyphe. */
+.coverClose {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--action-height-min);
+  height: var(--screen-header-height-mobile);
+  margin-right: calc(-1 * var(--space-10));
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-glyph-close);
+  line-height: 1;
+  cursor: pointer;
+}

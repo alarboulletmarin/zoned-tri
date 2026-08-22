@@ -1,0 +1,142 @@
+/* Artboard 20 · Feuille d'export (l. 2700-2726). La barre de 46 px et le cadre appartiennent à
+ * `BottomSheet variant="cover"` ; ce fichier ne porte que le contenu de la feuille. */
+
+/* 20 l. 2706 : `padding:18px 20px 14px`. */
+.head {
+  flex: none;
+  padding: var(--space-18) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* 20 l. 2707 : `font-weight:700; font-size:42px; line-height:.88; letter-spacing:-.055em`. */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-poster-mobile);
+  line-height: 0.88;
+  letter-spacing: var(--ls-display-max);
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* 20 l. 2708 : `margin:10px 0 0; font-size:14px; line-height:1.5; color:#3B3A33`. */
+.promise {
+  margin: var(--space-10) 0 0;
+  font-size: var(--fs-list-title);
+  line-height: 1.5;
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+}
+
+/* 20 l. 2709 : `height:14px; background:#0B0B0A`, bord à bord. */
+.frieze {
+  flex: none;
+  height: var(--space-14);
+  background: var(--color-ink);
+}
+
+/* 20 l. 2710 : `margin:14px 20px 0; display:flex; flex-direction:column; gap:8px`. */
+.cards {
+  /* `0 1 auto` et non `1 1 auto` : sur l'artboard, la pile de cartes prend sa hauteur naturelle
+   * et c'est le pied qui est poussé en bas par `margin-top:auto`. Une pile qui s'étirerait
+   * décollerait le pied de 82 px — mesuré. */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+}
+
+/* 20 l. 2711 : `border:2px solid #0B0B0A; padding:10px`. Une carte est une CIBLE : elle écrit
+ * un fichier. Sa hauteur naturelle dépasse largement les 44 px du README §3. */
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-10);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Seule la première carte est ombrée sur l'artboard : `box-shadow:5px 5px 0 #D6F24B`.
+ * L'ombre déborde dans la gouttière de 20 px, comme sur le canevas : la carte garde la largeur
+ * de ses voisines, sinon son texte se couperait ailleurs. */
+.cardFeatured {
+  box-shadow: var(--shadow-featured);
+}
+
+/* Une sortie qui n'existe pas encore reste DESSINÉE : elle s'éteint, elle ne disparaît pas, et
+ * son ombre lime reste celle que l'artboard lui donne. Le traitement est celui déjà employé par
+ * les puces d'export du produit (`TodayScreen`, `SemaineScreen`) : encre inactive sur le texte
+ * et le contour. Le motif est porté par `title`, jamais par un « bientôt disponible ». */
+.card:disabled {
+  cursor: not-allowed;
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+/* 20 l. 2712 : `font-size:12px; font-weight:700` en mono — c'est le nom du format. */
+.cardFormat {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+  font-weight: var(--fw-bold);
+}
+
+/* `font-size:10px; color:#5B594F` — la quantité, donc en mono. */
+.cardAside {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* 20 l. 2713 : `font-size:14px; font-weight:600; margin-top:6px`. */
+.cardTitle {
+  margin-top: var(--space-6);
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+}
+
+/* 20 l. 2714 : `font-size:10px; color:#5B594F; margin-top:4px; line-height:1.6`. */
+.cardDetail {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+}
+
+/* 20 l. 2723 : `margin-top:auto; padding:11px 20px 16px; border-top:1px solid #CFCCC0;
+ * gap:7px; font-size:10px; line-height:1.5; color:#5B594F`. */
+.footnotes {
+  flex: none;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  padding: var(--space-block-sm) var(--space-gutter-mobile) var(--space-16);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+.footnoteFormat {
+  color: var(--color-ink);
+  font-weight: var(--fw-bold);
+}
