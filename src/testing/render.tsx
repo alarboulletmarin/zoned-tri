@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { render as rtlRender, type RenderOptions, type RenderResult } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
@@ -13,5 +13,6 @@ import { MemoryRouter } from 'react-router-dom'
 export function render(ui: ReactElement, options?: RenderOptions): RenderResult {
   const view = rtlRender(<MemoryRouter>{ui}</MemoryRouter>, options)
   // `rerender` remplace la racine : sans réemballage, le second rendu perdrait le routeur.
-  return { ...view, rerender: (next: ReactElement) => view.rerender(<MemoryRouter>{next}</MemoryRouter>) }
+  // Sa signature est celle de la bibliothèque — `ReactNode`, et non `ReactElement`.
+  return { ...view, rerender: (next: ReactNode) => view.rerender(<MemoryRouter>{next}</MemoryRouter>) }
 }
