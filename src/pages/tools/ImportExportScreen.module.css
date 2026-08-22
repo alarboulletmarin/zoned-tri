@@ -127,6 +127,17 @@
   color: var(--color-label);
 }
 
+/* Le même cadre que l'erreur, mais en encre : ce n'est pas une panne, c'est une explication. */
+.notice {
+  margin: var(--space-10) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-9) var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
 /* --- Sources du moteur ------------------------------------------------------------------------ */
 
 /* `margin:12px 20px 0; border-top:1px solid; padding-top:11px` */

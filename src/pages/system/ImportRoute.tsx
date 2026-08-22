@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { IMPORT_EXPORT_PATH } from '../tools/toolsRoutes'
 import { ImportRefusedScreen } from './ImportRefusedScreen'
 import { isImportRefusal, type ImportRefusal } from './importRefusal'
+import type { ImportRedirectState } from './importRedirect'
 import { useBackupImport } from './useBackupImport'
 
 /**
@@ -29,7 +30,12 @@ export function ImportRoute() {
 
   const { input, sheet, open } = useBackupImport()
 
-  if (!refusal) return <Navigate to={IMPORT_EXPORT_PATH} replace />
+  // Sans refus à montrer — l'adresse rechargée, collée, ou reprise depuis l'historique — cette
+  // route n'a rien : le canevas ne dessine pas d'écran « choisir un fichier ». On revient donc à
+  // l'import-export, mais en le DISANT : le renvoi muet donnait l'impression que le clic sur
+  // « Importer » avait échoué, alors qu'il n'y avait simplement plus de refus en mémoire.
+  if (!refusal)
+    return <Navigate to={IMPORT_EXPORT_PATH} replace state={{ importRefusalExpired: true } satisfies ImportRedirectState} />
 
   return (
     <>

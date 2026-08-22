@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { usePlans } from '../../context/AppDataContext'
 import { todayIso } from '../../domain/planWeek'
 import { exportBackup } from '../../storage/backup'
@@ -12,6 +12,7 @@ import styles from './ImportExportScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
 import { exportSheetPath } from '../exports/exportsRoutes'
+import { isImportRedirectState } from '../system/importRedirect'
 
 const MARK_CLASS: Record<SourceMark, string> = {
   solid: styles.markSolid,
@@ -48,6 +49,7 @@ function download(filename: string, content: string) {
  */
 export function ImportExportScreen() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { plans } = usePlans()
   const [error, setError] = useState<string | null>(null)
   const { input, sheet, open } = useBackupImport()
@@ -131,6 +133,15 @@ export function ImportExportScreen() {
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
+
+        {/* Arrivée depuis `/import-export/import` sans refus à montrer : on dit pourquoi la page a
+            changé sous les pieds, plutôt que de laisser croire à un clic perdu. */}
+        {isImportRedirectState(location.state) && (
+          <div className={styles.notice} role="status">
+            L’écran du fichier refusé n’existe que le temps du refus : recharger la page l’efface.
+            Choisis à nouveau ton fichier ci-dessous.
+          </div>
+        )}
 
         {/* L'écran s'appelle « Import / export » et n'exportait que : la moitié de son nom n'avait
             aucune commande. Le fichier est d'abord validé, puis la feuille montre ce que

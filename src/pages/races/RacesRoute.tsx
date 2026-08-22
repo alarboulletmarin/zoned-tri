@@ -13,6 +13,7 @@ import { RaceSheetScreen } from './RaceSheetScreen'
 import { RacesDesktopScreen } from './RacesDesktopScreen'
 import { RacesListScreen, type PlanPosition } from './RacesListScreen'
 import s from './RaceScreens.module.css'
+import { PageLoading } from '../../components/PageLoading'
 
 /** Plan actif qui vise cette course — c'est lui qui donne « semaine 07 / 18 » et l'affûtage. */
 function planForRace(plans: TrainingPlan[], raceId: string | undefined): TrainingPlan | undefined {
@@ -46,7 +47,9 @@ export function RacesRoute() {
   const { plans } = usePlans()
   const today = todayIso()
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
 
   if (races.length === 0) {
     return (
@@ -116,35 +119,45 @@ function useRaceOfRoute(): { race: Race | undefined; loading: boolean } {
 
 export function RaceSheetRoute() {
   const { race, loading } = useRaceOfRoute()
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
   if (!race) return <RaceNotFound />
   return <RaceSheetScreen race={race} today={todayIso()} variant="detail" />
 }
 
 export function RacePacingRoute() {
   const { race, loading } = useRaceOfRoute()
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
   if (!race) return <RaceNotFound />
   return <RacePacingScreen race={race} />
 }
 
 export function RaceNutritionRoute() {
   const { race, loading } = useRaceOfRoute()
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
   if (!race) return <RaceNotFound />
   return <RaceNutritionScreen race={race} />
 }
 
 export function RaceDayRoute() {
   const { race, loading } = useRaceOfRoute()
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
   if (!race) return <RaceNotFound />
   return <RaceDayScreen race={race} />
 }
 
 export function RaceChecklistRoute() {
   const { race, loading } = useRaceOfRoute()
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Courses" />
   if (!race) return <RaceNotFound />
   return <RaceChecklistScreen race={race} />
 }

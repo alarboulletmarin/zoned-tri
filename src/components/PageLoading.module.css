@@ -1,0 +1,15 @@
+/* Même squelette que n'importe quel écran : le bandeau en tête, le contenu dessous. */
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.body {
+  padding: var(--space-20) var(--space-gutter-mobile);
+}
+
+.frame {
+  max-width: var(--measure-prose);
+}

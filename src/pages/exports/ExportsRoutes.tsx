@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { usePlans, useProfile, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { demoPlan, demoRace, demoWorkouts } from '../../domain/demoData'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
 import { alignWeekToWeekOf, buildWeekDays, findCurrentWeek, todayIso } from '../../domain/planWeek'
 import type { IcsDay } from '../../domain/exports/icsFile'
 import type { TrainingPlan, Workout } from '../../domain/types'
-import { OPENING_PATH, PLAN_PATH } from '../../navigation'
+import { PLAN_PATH, WORKOUTS_PATH } from '../../navigation'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useGoBack } from '../../hooks/useGoBack'
@@ -15,6 +15,8 @@ import { exportTrail } from '../../domain/exports/exportSheet'
 import { ExportSheet } from './ExportSheet'
 import { PrintDocument } from './PrintDocument'
 import { SessionCardScreen } from './SessionCardScreen'
+import { PageLoading } from '../../components/PageLoading'
+import { MissingScreen } from '../../components/MissingScreen'
 
 /**
  * Catalogue de résolution commun aux trois routes. Un plan généré référence ses propres séances
@@ -65,7 +67,9 @@ export function ExportSheetRoute() {
   // Elle ne rend pas d'`AppHeader` — c'est une feuille, pas un écran — donc elle titre elle-même.
   useDocumentTitle(exportTrail(week?.weekNumber ?? 1))
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Exporter']} />
 
   // `?seance=id` — la fiche de séance vise SA séance. À défaut, celle du jour : c'est ce que
   // l'écran Aujourd'hui exporte, et c'est la seule que la feuille peut nommer sans rien inventer.
@@ -102,7 +106,9 @@ export function PrintDocumentRoute() {
   const catalogue = useCatalogue()
   const today = todayIso()
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Exporter', 'Document A4']} />
 
   const activePlan = plans.find((plan) => plan.status === 'active')
   const plan = activePlan ?? demoPlanFor(today)
@@ -136,12 +142,33 @@ export function SessionCardRoute() {
   const { loading } = useWorkouts()
   const catalogue = useCatalogue()
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Séances', 'Carte .PNG']} />
 
   const workout = catalogue.find((candidate) => candidate.id === id)
-  // Une carte sans séance n'a rien à montrer : plutôt qu'un vide inutile, on renvoie à
-  // l'ouverture, qui sait dire ce qu'il y a sur l'appareil.
-  if (!workout) return <Navigate to={OPENING_PATH} replace />
+  // Une adresse de carte qui ne désigne aucune séance — un lien partagé après un import, un plan
+  // archivé, une faute de frappe — renvoyait à l'ouverture sans un mot : on ne pouvait pas savoir
+  // si l'application avait planté ou si la séance n'existait plus. L'écran s'ouvre donc, vide.
+  if (!workout)
+    return (
+      <MissingScreen
+        trail={['Séances', 'Carte .PNG']}
+        headline={['Séance', 'introuvable']}
+        sentence={
+          <>
+            Cette carte vise la séance <code>{id}</code>, qui n’est pas sur cet appareil. Les
+            identifiants d’un plan généré ne survivent pas à sa suppression : une carte partagée
+            après coup ne retrouve donc plus sa séance.
+          </>
+        }
+        exits={[
+          { label: 'Parcourir la bibliothèque', to: WORKOUTS_PATH, primary: true },
+          { label: 'Revenir au plan', to: PLAN_PATH },
+        ]}
+        backTo={WORKOUTS_PATH}
+      />
+    )
 
   return (
     <>

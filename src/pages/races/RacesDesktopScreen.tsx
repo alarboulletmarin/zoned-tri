@@ -18,6 +18,7 @@ import {
 } from '../../domain/raceView'
 import type { Race } from '../../domain/types'
 import { splitName } from './splitName'
+import { GENERATOR_PATH } from '../../navigation'
 import { racePath } from './routes'
 import { EXPORTS_PRINT_PATH } from '../exports/exportsRoutes'
 import s from './RaceScreens.module.css'
@@ -85,7 +86,7 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
             <SecondaryAction
               shape="chip"
               className={own.headerChip}
-              onClick={() => navigate('/generate-plan')}
+              onClick={() => navigate(GENERATOR_PATH)}
             >
               Ajouter une course
             </SecondaryAction>

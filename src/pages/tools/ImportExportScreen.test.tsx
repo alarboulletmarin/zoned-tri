@@ -88,3 +88,27 @@ describe('ImportExportScreen · artboard 14', () => {
     expect(screen.getByText(/coach en boîte noire/)).toBeInTheDocument()
   })
 })
+
+/**
+ * `/import-export/import` n'existe que le temps d'un refus : l'écran vit dans l'état de navigation,
+ * qu'un rechargement efface. Le renvoi vers cet écran-ci était muet — indistinguable, pour qui
+ * venait de cliquer, d'un bouton qui n'a pas marché.
+ */
+describe('ImportExportScreen · retour d’un refus expiré', () => {
+  it('dit pourquoi la page a changé, plutôt que de renvoyer sans un mot', () => {
+    render(
+      <MemoryRouter
+        initialEntries={[{ pathname: '/import-export', state: { importRefusalExpired: true } }]}
+      >
+        <ImportExportScreen />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('status')).toHaveTextContent(/n’existe que le temps du refus/)
+  })
+
+  it('ne dit rien quand on arrive normalement', () => {
+    renderScreen()
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+})

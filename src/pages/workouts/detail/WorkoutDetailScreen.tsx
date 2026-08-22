@@ -11,6 +11,7 @@ import { useBreakpoint } from '../../../hooks/useBreakpoint'
 import { WorkoutDetailContent } from './WorkoutDetailContent'
 import styles from './WorkoutDetailScreen.module.css'
 import { NotFoundScreen } from '../../system/NotFoundScreen'
+import { PageLoading } from '../../../components/PageLoading'
 
 interface DetailLocationState {
   /** Écran d'origine, pour le segment du milieu (« Aujourd'hui » ou « Semaine »). */
@@ -93,7 +94,9 @@ export function WorkoutDetailScreen() {
   if (!workout) {
     // Tant que la base n'est pas lue, l'absence n'est pas prouvée : on ne dit pas « introuvable »
     // à la place d'un identifiant qui pourrait appartenir à un plan généré.
-    if (loading) return null
+    // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+    // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+    if (loading) return <PageLoading variant="detail" trail={['Séances']} />
     // L'écran 18 est écrit exactement pour ce cas — « lien partagé vers une séance supprimée ·
     // toujours une sortie » : il nomme l'adresse, propose les séances qui s'en rapprochent et
     // donne deux issues. Rendre à sa place une phrase nue était le seul endroit du produit où un

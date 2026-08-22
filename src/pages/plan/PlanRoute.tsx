@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { Navigate, useNavigate, useSearchParams, useParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import { usePlans, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { addDays } from '../../domain/planGenerator/dates'
 import { alignWeekToWeekOf, todayIso, weekdayIndex } from '../../domain/planWeek'
 import { currentWeekOf } from '../../domain/todayState'
 import { demoPlan, demoRace, demoWorkouts } from '../../domain/demoData'
-import { OPENING_PATH, PLAN_PATH } from '../../navigation'
+import { PLAN_MACRO_PATH, PLAN_PATH } from '../../navigation'
 import type { PlanWeek, TrainingPlan } from '../../domain/types'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
 import { PLAN_SETTINGS_PATH } from '../planSettings/planSettingsRoutes'
@@ -13,6 +13,8 @@ import { PlanMacroScreen } from './PlanMacroScreen'
 import { PlanMonthScreen } from './PlanMonthScreen'
 import { SemaineScreen } from './SemaineScreen'
 import { TodayScreen } from './TodayScreen'
+import { PageLoading } from '../../components/PageLoading'
+import { PlanMissingScreen } from './PlanMissingScreen'
 
 /**
  * `/plan` montre « Aujourd'hui » (mockup 02), pas la semaine : le canevas donne à cet artboard
@@ -20,21 +22,41 @@ import { TodayScreen } from './TodayScreen'
  * semaine (mockup 03) s'intitule « Plan / Semaine » et s'atteint « depuis Aujourd'hui → voir la
  * semaine ». La section Plan répond donc d'abord à « qu'est-ce que je fais aujourd'hui ».
  *
- * Sans plan actif il n'y a rien à afficher : on renvoie à l'écran d'ouverture, qui est
- * précisément la réponse à « aucun plan sur cet appareil » (mockups 01b/01c) et propose la
- * génération. Aucun écran intermédiaire « générer un plan » n'est inventé ici.
+ * Sans plan actif il n'y a pas de journée à afficher — mais l'écran s'ouvre quand même, vide, et
+ * dit lequel des deux manques il a rencontré (aucun plan / plan terminé). Il renvoyait auparavant
+ * à l'ouverture sans un mot, ce qui ressemblait à un clic perdu.
  */
 export function PlanRoute() {
   const { plans, loading } = usePlans()
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="root" label="Plan" />
 
   const activePlan = plans.find((plan) => plan.status === 'active')
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan']}
+        headline={['Aucun plan', 'sur cet', 'appareil']}
+        sentence="« Aujourd’hui » lit le plan actif : sans lui, il n’y a pas de journée à afficher. Six questions suffisent à en écrire un."
+        archivedCount={archivedCount}
+      />
+    )
 
-  // Aujourd'hui tombe hors des dates du plan (plan terminé, course déjà courue) : l'ouverture
-  // est déjà l'écran qui sait le dire, la section Plan n'a rien à ajouter.
-  if (!currentWeekOf(activePlan, todayIso())) return <Navigate to={OPENING_PATH} replace />
+  // Aujourd'hui tombe hors des dates du plan (plan terminé, course déjà courue) : le manque est
+  // différent du précédent, et la phrase aussi — un plan fini n'est pas un plan absent.
+  if (!currentWeekOf(activePlan, todayIso()))
+    return (
+      <PlanMissingScreen
+        trail={['Plan']}
+        headline={['Le plan', 'est fini']}
+        sentence="Aujourd’hui tombe hors des dates de ce plan : il n’y a plus de journée à en tirer. Tes références sont conservées — le plan suivant part de là, pas de zéro."
+        archivedCount={archivedCount}
+        extraExit={{ label: 'Revoir la saison', to: PLAN_MACRO_PATH }}
+      />
+    )
 
   return <TodayScreen plan={activePlan} />
 }
@@ -66,7 +88,9 @@ export function PlanWeekRoute() {
     return <SemaineScreen plan={preview.plan} races={[demoRace]} today={preview.today} isDemo />
   }
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Semaine']} />
 
   // `?semaine=N` — le Mois (04m) et, plus tard, les flèches de l'artboard 03 ouvrent une semaine
   // précise. Une valeur non numérique est ignorée : `SemaineScreen` retombe sur la semaine en cours.
@@ -99,17 +123,28 @@ export function PlanWeekRoute() {
  * Le canevas l'atteint désormais par le segment SAISON, depuis n'importe quel niveau de zoom, et
  * non plus « depuis Semaine → appui sur « Semaine 07 » ». Le carré de retour suit donc le fil
  * d'Ariane — « Plan / Saison » — et remonte à Aujourd'hui. Sans plan actif il n'y a pas de plan à
- * regarder dans son entier : l'ouverture est l'écran qui sait le dire (même règle que `PlanRoute`).
+ * regarder dans son entier : l'écran s'ouvre vide et le dit (même règle que `PlanRoute`).
  */
 export function PlanMacroRoute() {
   const navigate = useNavigate()
   const { plans, loading } = usePlans()
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
   const { races } = useRaces()
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Saison']} />
 
   const activePlan = plans.find((plan) => plan.status === 'active')
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan', 'Saison']}
+        headline={['Aucune', 'saison à', 'dérouler']}
+        sentence="La Saison montre un plan dans son entier : ses phases, ses dix-huit semaines et ce qu’elles visent. Sans plan actif, il n’y a rien à en dérouler."
+        archivedCount={archivedCount}
+      />
+    )
 
   const race = activePlan.raceId ? races.find((item) => item.id === activePlan.raceId) : undefined
 
@@ -132,15 +167,26 @@ export function PlanMacroRoute() {
 export function PlanMonthRoute() {
   const [search, setSearch] = useSearchParams()
   const { plans, loading } = usePlans()
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
   const { workouts } = useWorkouts()
   const { races } = useRaces()
 
   const catalogue = useMemo(() => [...workouts, ...SEED_WORKOUTS, ...demoWorkouts], [workouts])
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Mois']} />
 
   const activePlan = plans.find((plan) => plan.status === 'active')
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan', 'Mois']}
+        headline={['Aucun mois', 'à afficher']}
+        sentence="Le Mois pose les semaines d’un plan sur un calendrier. Sans plan actif, la grille n’aurait que des cases vides."
+        archivedCount={archivedCount}
+      />
+    )
 
   const anchor = search.get('mois') ?? undefined
 

@@ -27,7 +27,10 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    await user.click(await screen.findByRole('button', { name: 'Menu' }))
+    // L'application montre désormais son bandeau AVANT d'avoir lu la base : on attend que
+    // l'ouverture soit vraiment rendue, sinon le burger s'ouvre sur une coquille encore vide.
+    await screen.findByRole('button', { name: /Commencer/ })
+    await user.click(screen.getByRole('button', { name: 'Menu' }))
     await user.click(screen.getByRole('link', { name: /Outils/ }))
 
     // La section Outils s'ouvre sur l'artboard 12, dont le titre est « Mes références » —

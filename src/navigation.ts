@@ -43,6 +43,12 @@ export function weekPath(weekNumber?: number): string {
   return weekNumber === undefined ? WEEK_PATH : `${WEEK_PATH}?semaine=${weekNumber}`
 }
 
+/**
+ * Le générateur (G1→G6). Son adresse était écrite à la main dans huit fichiers, dont deux tests :
+ * c'est la seule commande que TOUS les écrans vides du produit proposent, elle mérite un nom.
+ */
+export const GENERATOR_PATH = '/generate-plan'
+
 /** Mois (artboard 04m) : « le niveau qui manquait entre la semaine et la saison ». */
 export const PLAN_MONTH_PATH = '/plan/mois'
 
@@ -80,7 +86,7 @@ export interface MenuAction {
 }
 
 export const MENU_ACTIONS: MenuAction[] = [
-  { to: '/generate-plan', label: 'Générer un plan' },
+  { to: GENERATOR_PATH, label: 'Générer un plan' },
   { to: PLANS_PATH, label: 'Mes plans' },
   { to: '/import-export', label: 'Import / export' },
 ]
@@ -97,7 +103,7 @@ export const SETTINGS_ACTION: MenuAction = { to: '/settings', label: 'Réglages'
  * rail doit y allumer Outils plutôt que de s'éteindre entièrement.
  */
 const SECTION_ALIASES: Record<string, string> = {
-  '/generate-plan': '/plan',
+  [GENERATOR_PATH]: '/plan',
   '/import-export': '/tools',
   '/import-export/import': '/tools',
 }

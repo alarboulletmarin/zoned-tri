@@ -16,6 +16,7 @@ import {
 } from '../../domain/raceView'
 import type { Race } from '../../domain/types'
 import { racePath } from './routes'
+import { GENERATOR_PATH } from '../../navigation'
 import s from './RaceScreens.module.css'
 import own from './RacesListScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -196,7 +197,7 @@ export function RacesListScreen({ races, today, planPosition }: RacesListScreenP
           {/* La commande était grise sous « Bientôt disponible ». Le générateur, lui, crée bien une
               course : il en demande le nom et la date, et `saveRace` l'écrit avec le plan. C'est le
               seul chemin qui existe aujourd'hui — autant y mener plutôt que d'éteindre le bouton. */}
-          <PrimaryAction tone="ink" className={s.primary} onClick={() => navigate('/generate-plan')}>
+          <PrimaryAction tone="ink" className={s.primary} onClick={() => navigate(GENERATOR_PATH)}>
             Ajouter une course
           </PrimaryAction>
           <InertNote id="note-ajouter-course">

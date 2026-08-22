@@ -6,8 +6,9 @@ import { usePlans, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { weeksElapsed } from '../../domain/planMacro'
 import { todayIso } from '../../domain/planWeek'
 import type { Race, TrainingPlan } from '../../domain/types'
-import { PLAN_PATH } from '../../navigation'
+import { GENERATOR_PATH, PLAN_PATH } from '../../navigation'
 import { PlansScreen } from './PlansScreen'
+import { PageLoading } from '../../components/PageLoading'
 
 function planTitle(plan: TrainingPlan, races: Race[]): string {
   return (plan.raceId ? races.find((race) => race.id === plan.raceId)?.name : undefined) ?? plan.format
@@ -69,7 +70,9 @@ export function PlansRoute() {
     setUndo(null)
   }, [undo, savePlan])
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Mes plans']} />
 
   return (
     <>
@@ -79,7 +82,7 @@ export function PlansRoute() {
         workouts={workouts}
         today={today}
         onResume={() => navigate('/plan')}
-        onGenerate={() => navigate('/generate-plan')}
+        onGenerate={() => navigate(GENERATOR_PATH)}
         onReopen={setPendingId}
         onBack={() => navigate(PLAN_PATH)}
       />

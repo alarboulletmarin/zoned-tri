@@ -1,0 +1,66 @@
+/* Même squelette qu'un écran ordinaire : bandeau, puis colonne bornée. Le vide n'est pas un écran
+   à part — c'est l'écran demandé, sans son contenu. */
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.column {
+  padding: var(--space-22) var(--space-gutter-mobile) var(--space-26);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-18);
+  max-width: 560px;
+}
+
+.title {
+  font-size: var(--fs-title-section);
+  line-height: var(--lh-display-min);
+  letter-spacing: var(--ls-display-min);
+  text-transform: uppercase;
+}
+
+.frame {
+  max-width: var(--measure-prose);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: 340px;
+}
+
+/* Les sorties sont des LIENS, pas des boutons : elles mènent à une adresse, elles s'ouvrent dans un
+   onglet, elles se copient. Elles empruntent la forme de `PrimaryAction tone="ink"` et de
+   `SecondaryAction shape="block"` — même hauteur, même mono, même contour. */
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--action-height-ink);
+  padding: 0 var(--space-14);
+  border-radius: var(--radius-none);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.primary {
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}
+
+.secondary {
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+}

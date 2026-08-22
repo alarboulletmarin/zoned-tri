@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useJournal, usePlans, useProfile, useRaces, useWorkouts } from '../../context/AppDataContext'
-import { OPENING_PATH } from '../../navigation'
 import { SEED_WORKOUTS } from '../../domain/seedWorkouts'
 import { todayIso } from '../../domain/planWeek'
 import { settingJournalEntry, type AppliedPlan } from '../../domain/planSettings'
@@ -13,6 +12,9 @@ import { PlanSettingChangeScreen } from './PlanSettingChangeScreen'
 export { PLAN_JOURNAL_PATH, PLAN_SETTINGS_PATH } from './planSettingsRoutes'
 import { PLAN_JOURNAL_PATH, PLAN_SETTINGS_PATH } from './planSettingsRoutes'
 import { PlanJournalScreen } from './PlanJournalScreen'
+import { PageLoading } from '../../components/PageLoading'
+import { PlanMissingScreen } from '../plan/PlanMissingScreen'
+import { GENERATOR_PATH } from '../../navigation'
 
 
 /** Les quatre réglages que l'écran 38 sait rejouer. Format et date repassent par le générateur. */
@@ -65,6 +67,7 @@ export function PlanSettingsRoute() {
   }, [location.pathname, location.state, navigate])
 
   const activePlan = plans.find((plan) => plan.status === 'active')
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
   const race = activePlan?.raceId ? races.find((item) => item.id === activePlan.raceId) : undefined
 
   const applyUndo = useCallback(async () => {
@@ -74,9 +77,19 @@ export function PlanSettingsRoute() {
     setUndo(null)
   }, [undo, savePlan, undoJournalEntry])
 
-  if (loading) return null
-  // Sans plan actif il n'y a aucun réglage à rouvrir : l'ouverture est l'écran qui sait le dire.
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Réglages du plan']} />
+  // Sans plan actif, l'écran demandé s'ouvre quand même — vide, et il dit pourquoi.
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan', 'Réglages du plan']}
+        headline={['Aucun', 'réglage à', 'rouvrir']}
+        sentence="Les réglages rejouent les questions d’un plan existant : volume, jours, matériel, semaines allégées. Sans plan actif, il n’y a rien à rejouer."
+        archivedCount={archivedCount}
+      />
+    )
 
   return (
     <>
@@ -86,7 +99,7 @@ export function PlanSettingsRoute() {
         onBack={() => navigate('/plan')}
         onOpenSetting={(key) => navigate(`${PLAN_SETTINGS_PATH}/${key}`)}
         onOpenJournal={() => navigate(PLAN_JOURNAL_PATH)}
-        onRegenerate={() => navigate('/generate-plan')}
+        onRegenerate={() => navigate(GENERATOR_PATH)}
       />
       {undo && (
         <UndoToast
@@ -118,6 +131,7 @@ export function PlanSettingChangeRoute() {
   const catalogue = useMemo(() => [...SEED_WORKOUTS], [])
 
   const activePlan = plans.find((plan) => plan.status === 'active')
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
   const race = activePlan?.raceId ? races.find((item) => item.id === activePlan.raceId) : undefined
 
   const planWorkouts = useMemo(() => {
@@ -154,8 +168,18 @@ export function PlanSettingChangeRoute() {
     [activePlan, setting, savePlanWithWorkouts, addJournalEntry, navigate],
   )
 
-  if (loading) return null
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Réglages du plan']} />
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan', 'Réglages du plan']}
+        headline={['Aucun', 'réglage à', 'rouvrir']}
+        sentence="Cet écran montre ce qu’un réglage change, semaine par semaine, avant de l’écrire. Sans plan actif, il n’y a pas d’avant / après à comparer."
+        archivedCount={archivedCount}
+      />
+    )
   // Un réglage inconnu ou non rejouable ne s'ouvre pas en avant / après : retour aux réglages,
   // qui portent l'explication sur la ligne concernée.
   if (!isReopenable(setting)) return <Navigate to={PLAN_SETTINGS_PATH} replace />
@@ -182,13 +206,24 @@ export function PlanJournalRoute() {
   const { journal } = useJournal()
 
   const activePlan = plans.find((plan) => plan.status === 'active')
+  const archivedCount = plans.filter((candidate) => candidate.status !== 'active').length
   const entries = useMemo(
     () => (activePlan ? journal.filter((entry) => entry.planId === activePlan.id) : []),
     [journal, activePlan],
   )
 
-  if (loading) return null
-  if (!activePlan) return <Navigate to={OPENING_PATH} replace />
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="detail" trail={['Plan', 'Réglages du plan', 'Journal']} />
+  if (!activePlan)
+    return (
+      <PlanMissingScreen
+        trail={['Plan', 'Réglages du plan', 'Journal']}
+        headline={['Aucun', 'journal']}
+        sentence="Le journal garde tous les changements d’un plan et ce qu’ils ont coûté. Sans plan actif, il n’a rien à retenir."
+        archivedCount={archivedCount}
+      />
+    )
 
   return <PlanJournalScreen entries={entries} onBack={() => navigate(PLAN_SETTINGS_PATH)} />
 }

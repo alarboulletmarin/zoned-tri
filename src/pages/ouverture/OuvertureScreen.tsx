@@ -23,9 +23,10 @@ import {
 } from '../../domain/planGenerator/form'
 import { todayIso } from '../../domain/planWeek'
 import { formatDurationCompact } from '../../domain/workoutFormat'
-import { PLANS_PATH } from '../../navigation'
+import { GENERATOR_PATH, PLANS_PATH } from '../../navigation'
 import styles from './OuvertureScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+import { PageLoading } from '../../components/PageLoading'
 
 /**
  * Écran d'ouverture — mockups 01 / 01b / 01c (mobile) et S9 / S9b / S9c (desktop).
@@ -53,7 +54,9 @@ export function OuvertureScreen() {
     [plans, races, workouts, profile],
   )
 
-  if (loading) return null
+  // Un vide se nomme, y compris celui d’une attente : le bandeau est là dès la première
+  // image, et le cadre pointillé n’apparaît qu’au-delà de 300 ms.
+  if (loading) return <PageLoading variant="opening" />
 
   return breakpoint === 'desktop' ? <DesktopLayout state={state} /> : <MobileLayout state={state} />
 }
@@ -195,7 +198,7 @@ function MobileLayout({ state }: { state: OpeningState }) {
       </div>
 
       <div className={styles.mobileActions}>
-        <PrimaryAction trailing="→" onClick={() => navigate('/generate-plan')}>
+        <PrimaryAction trailing="→" onClick={() => navigate(GENERATOR_PATH)}>
           {copy.primaryAction}
         </PrimaryAction>
         <SecondaryAction shape="link" className={styles.libraryLink} onClick={() => navigate('/workouts')}>
@@ -249,7 +252,7 @@ function DesktopLayout({ state }: { state: OpeningState }) {
             large
             trailing="→"
             className={styles.primaryActionDesktop}
-            onClick={() => navigate('/generate-plan')}
+            onClick={() => navigate(GENERATOR_PATH)}
           >
             {copy.primaryAction}
           </PrimaryAction>
