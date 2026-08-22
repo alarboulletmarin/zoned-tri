@@ -1,0 +1,84 @@
+/* G2 · Date — canevas lignes 56-77. */
+
+.duration {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--color-ink);
+}
+
+/* --- Barre de préparation (canevas lignes 61-65) --- */
+
+.bar {
+  display: flex;
+  gap: 3px;
+  height: 38px;
+  margin-top: var(--space-block-md);
+}
+
+.barAvailable {
+  background: var(--color-ink);
+}
+
+/* Hachures du canevas : le manque se lit au motif, pas à une seconde couleur. */
+.barMissing {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-ink) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+.barLegend {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: var(--space-label-gap-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Alerte de délai (canevas G2 : `margin:18px 20px 0; border:2px solid #E0B400; padding:14px`) --- */
+
+.alert {
+  margin: var(--space-18) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  border-radius: var(--radius-none);
+  padding: var(--space-block-lg);
+}
+
+.alertHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.alertTitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.alertText {
+  margin: 9px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-ink);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* --- Lignes de bas d'écran (canevas G2 : `margin:18px 20px 0; border-top:1px`) --- */
+
+.stats {
+  margin: var(--space-18) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.stats > *:last-child {
+  border-bottom: none;
+}

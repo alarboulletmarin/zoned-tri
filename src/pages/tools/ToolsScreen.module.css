@@ -1,0 +1,437 @@
+/* Écran 12 · Outils · Mes références (mobile / tablette) et S8 · Outils · desktop.
+ * Base = mobile, un seul flux vertical ; le desktop bascule sur les deux colonnes de S8. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--color-paper);
+}
+
+/* Compteur du bandeau desktop (S8 : mono 11 px, `#3B3A33`, pas de capitales). */
+.headerCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text);
+}
+
+/* --- Artboard 12 : la colonne mobile ------------------------------------------------------ */
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* `padding:16px 20px 14px` */
+.head {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* `font-size:40px; line-height:.88; letter-spacing:-.05em` */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 40px;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* `margin-top:10px` */
+.headMeta {
+  margin-top: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.frieze {
+  flex: none;
+}
+
+/* --- Références de l'athlète (artboard 12) ------------------------------------------------- */
+
+/* `margin:16px 20px 0; border-top:1px solid` */
+.refList {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* `padding:15px 0; border-bottom:1px`, sauf la dernière */
+.refRow {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+  padding: var(--space-15) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.refRow:last-child {
+  border-bottom: none;
+}
+
+.refBody {
+  flex: 1;
+  min-width: 0;
+}
+
+/* `font-size:10px; letter-spacing:.1em` */
+.refLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  color: var(--color-label);
+}
+
+/* Appel de note : `font-size:9px`, en encre alors que l'étiquette est en gris. */
+.refNote {
+  font-size: var(--fs-label-micro);
+  color: var(--color-ink);
+}
+
+/* `font-size:26px; font-weight:700; letter-spacing:-.03em; line-height:1.15` */
+.refValue {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+/* Le tiret veut dire « pas de donnée », pas zéro. */
+.refValueEmpty {
+  color: var(--color-inactive);
+}
+
+/* `font-size:13px; font-weight:400` */
+.refUnit {
+  font-size: 13px;
+  font-weight: var(--fw-regular);
+}
+
+.refMeta {
+  flex: none;
+  max-width: 40%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.4;
+  color: var(--color-label);
+  text-align: right;
+}
+
+/* --- Tableau Mesure / Valeur (artboard 12) -------------------------------------------------- */
+
+/* `margin:16px 20px 0; border:2px solid` */
+.table {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* `display:grid; grid-template-columns:1fr auto`, aplat d'encre, `padding:8px 10px` par cellule */
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-8) var(--space-10);
+}
+
+/* `padding:10px; border-bottom:1px`, sauf la dernière */
+.tableRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableLabel {
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+
+.tableValue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.tableValueEmpty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-inactive);
+}
+
+/* --- Note de bas d'écran (artboard 12, note 7) ---------------------------------------------- */
+
+/* `margin:14px 20px 0; border-top:1px solid; padding-top:12px; gap:8px` */
+.footnote {
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-12);
+  display: flex;
+  gap: var(--space-8);
+}
+
+.footnoteMark,
+.footnoteText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+}
+
+.footnoteMark {
+  flex: none;
+}
+
+.footnoteText {
+  color: var(--color-label);
+}
+
+/* --- Action principale (artboard 12) ---------------------------------------------------------- */
+
+/* `margin-top:auto; padding:0 20px 20px` */
+.cta {
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-gutter-mobile);
+}
+
+/* `padding:16px` en encre + ombre orange : 16 + 16 + la ligne mono de 12 px valent 49 px, au-dessus
+ * des 44 px exigés — c'est la gouttière qui porte la hauteur, comme dans le canevas. */
+.ctaButton {
+  width: 100%;
+  min-height: var(--action-height-min);
+  padding: var(--space-16);
+  justify-content: center;
+  box-shadow: var(--shadow-primary);
+  font-size: 12px;
+}
+
+/* --- Artboard S8 : deux colonnes sur grand écran ------------------------------------------- */
+
+/* Canevas S8 l. 2094 : `grid-template-columns:1fr 400px`. La valeur paramétrée de S4
+ * (`desk ? '1.3fr 400px' : tab ? '1fr 292px'`) donne exactement la même largeur, une seule
+ * piste flexible étant en jeu ; on écrit celle de S4, comme les autres écrans repris. */
+.layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  align-items: stretch;
+}
+
+.layoutDesktop {
+  grid-template-columns: minmax(0, 1.3fr) 400px;
+}
+
+.layoutTablet {
+  grid-template-columns: minmax(0, 1fr) 292px;
+}
+
+/* `padding:18px 20px` */
+.grid {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-18) var(--space-gutter-mobile);
+  display: flex;
+  flex-direction: column;
+}
+
+/* `display:grid; grid-template-columns:1fr 1fr; gap:14px` */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-14);
+}
+
+.layoutTablet .cards {
+  grid-template-columns: 1fr;
+}
+
+/* `margin-top:16px` — encart jaune « Un calcul ne modifie rien tout seul » */
+.gridNote {
+  margin-top: var(--space-16);
+  padding: var(--space-11);
+}
+
+/* `margin-top:auto; padding-top:14px; border-top:1px solid` */
+.gridFooter {
+  margin-top: auto;
+  padding-top: var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* `border-left:1px solid; padding:18px 22px` */
+.side {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-18) var(--space-22);
+  display: flex;
+  flex-direction: column;
+}
+
+.sideLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `border-top:1px solid; margin-top:10px` */
+.sideList {
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  margin-top: var(--space-10);
+}
+
+/* `padding:11px 0; border-bottom:1px` */
+.sideRow {
+  display: flex;
+  gap: var(--space-10);
+  align-items: center;
+  padding: var(--space-11) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.sideRowBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.sideRowName {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+
+/* `margin-top:2px` */
+.sideRowSince {
+  display: block;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.sideRowValue {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+}
+
+.sideRowValueEmpty {
+  color: var(--color-inactive);
+}
+
+/* `margin-top:14px; border:2px dashed; background:#E4E1D6; padding:11px` — le seul vide du canevas
+ * qui porte un aplat : `EmptyState` ne le pose pas, l'écran le pose ici. */
+.sideEmpty {
+  margin-top: var(--space-14);
+  background: var(--color-neutral-fill);
+  padding: var(--space-11);
+}
+
+.sideEmptyTitle {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.sideEmptyBody {
+  display: block;
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* `margin-top:14px; border-top:1px solid; padding-top:12px` */
+.sideBlock {
+  margin-top: var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-12);
+}
+
+/* `margin-top:8px` */
+.sideBlockTitle {
+  margin-top: var(--space-8);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+}
+
+/* `margin-top:4px` */
+.sideBlockMeta {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-label);
+}
+
+.sideBlockEmpty {
+  margin-top: var(--space-8);
+}
+
+/* `margin-top:auto; padding-top:14px; gap:10px; align-items:stretch` */
+.sideActions {
+  margin-top: auto;
+  padding-top: var(--space-14);
+  display: flex;
+  gap: var(--space-10);
+  align-items: stretch;
+}
+
+/* `min-height:46px` en aplat d'encre, ombre orange */
+.sidePrimary {
+  flex: 1;
+  min-height: 46px;
+  justify-content: center;
+  box-shadow: var(--shadow-primary);
+  font-size: var(--fs-button);
+}
+
+/* `border:2px; min-height:46px; padding:0 11px` en `content-box` — le contour s'ajoute. */
+.sideChip {
+  width: auto;
+  min-height: calc(46px + 2 * var(--border-width-structure));
+  padding: 0 var(--space-11);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0;
+}
+
+/* Dès la tablette, l'écran se borne au cadre : ce sont les deux colonnes de S8 qui défilent, chacune
+ * de son côté, et leurs pieds ancrés (`margin-top:auto`) tombent bien en bas du cadre — pas au bout
+ * d'une page qui s'allonge. En mobile au contraire, le flux appartient à la coquille. */
+@media (min-width: 768px) {
+  .screen {
+    flex: 1 1 auto;
+  }
+}

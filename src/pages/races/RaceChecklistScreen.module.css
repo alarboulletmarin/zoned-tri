@@ -1,0 +1,82 @@
+/* Artboard 30 · checklist du parc à vélo — placement propre à l'écran. */
+
+/* Canevas : `padding:9px 0`, soit 36 px de haut avec la case de 18 px. La règle §3 du README
+ * (cible ≥ 44 px) l'emporte : la ligne EST la cible, sur toute la largeur, et un pseudo-élément
+ * d'extension mordrait sur les lignes voisines. Écart assumé de 8 px par ligne, signalé au rapport. */
+.itemRow {
+  display: flex;
+  gap: var(--space-11);
+  align-items: center;
+  min-height: var(--action-height-min);
+  padding: var(--space-9) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  cursor: pointer;
+}
+
+.itemRow:last-child {
+  border-bottom: none;
+}
+
+/* Case de 18 px bordée de 2 px ; cochée, elle devient un aplat d'encre portant une coche lime.
+ * Aucun coche natif : le trait porte tout, et le rayon reste nul. */
+.checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: none;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  cursor: pointer;
+}
+
+.checkbox:checked {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  background-image: linear-gradient(to bottom, transparent, transparent);
+  position: relative;
+}
+
+.checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1;
+  color: var(--color-signal-lime);
+}
+
+.checkbox:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 2px;
+}
+
+.label,
+.labelDone {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+}
+
+/* Fait : barré et reculé d'un ton. Ce n'est pas une erreur, c'est une chose de moins à faire. */
+.labelDone {
+  color: var(--color-label);
+  text-decoration: line-through;
+}
+
+.footer {
+  padding-bottom: var(--space-16);
+}
+
+/* Canevas : `padding:6px 8px`, mono 10 px — le `chip` par défaut est en 9 px / `5px 9px`. */
+.exportChip {
+  padding: var(--space-6) var(--space-8);
+  font-size: var(--fs-label-section);
+}

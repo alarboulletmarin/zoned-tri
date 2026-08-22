@@ -1,0 +1,95 @@
+/* Artboards 01b / S6 : `padding:12px` pour une carte, `12px 10px` pour une colonne étroite —
+ * la seconde n'a pas de titre, le padding horizontal se resserre de lui-même. */
+.frame {
+  box-sizing: border-box;
+  border-radius: var(--radius-none);
+  padding: var(--space-12);
+  background: transparent;
+}
+
+.empty {
+  border: var(--border-style-empty);
+}
+
+.hypothesis {
+  border: var(--border-style-simulation);
+}
+
+/* Artboard 26 l. 2952 : `border:2px dashed #0B0B0A; background:#E4E1D6; padding:16px 14px`. */
+.dead-end {
+  border: var(--border-style-simulation);
+  background: var(--color-neutral-fill);
+  padding: var(--space-16) var(--space-14);
+}
+
+/* 26 l. 2953 : 32 px, `line-height:.9`, `letter-spacing:-.05em`, en encre pleine — ici le titre du
+ * vide EST le titre de l'écran, il ne s'éteint pas. */
+/* Le titre de 26 est coupé en deux lignes (« Rien à ce / croisement »). La coupure vit dans le
+ * texte, jamais dans un `<br>` : même silhouette, mot rendu (méthode §5 bis). */
+.dead-end .headline {
+  white-space: pre-line;
+  font-size: var(--fs-poster-sm);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--color-ink);
+}
+
+/* 26 l. 2954 : `font-size:14px; line-height:1.5; text-wrap:pretty`, en General Sans et en encre. */
+.dead-end .sentence {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  line-height: 1.5;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+
+.dead-end .headline + .sentence {
+  margin-top: var(--space-12);
+}
+
+.dead-end .action {
+  margin-top: var(--space-16);
+}
+
+/* 01b : `font-size:22px; line-height:1; letter-spacing:-.04em; color:#3B3A33` — le titre d'un vide
+ * n'est jamais en encre pleine : rien à lire ici, il ne doit pas attirer l'œil comme un vrai titre. */
+.headline {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.sentence {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+.headline + .sentence {
+  margin-top: var(--space-7);
+}
+
+.action {
+  margin-top: var(--space-10);
+}
+
+/* S9b : sur grand écran le titre du vide passe à 24 px et sa phrase respire (`1.6`, `margin-top:9px`). */
+@media (min-width: 1024px) {
+  .headline {
+    font-size: var(--fs-screen-title);
+  }
+
+  .sentence {
+    line-height: 1.6;
+  }
+
+  .headline + .sentence {
+    margin-top: var(--space-9);
+  }
+}

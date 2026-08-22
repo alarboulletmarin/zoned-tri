@@ -1,0 +1,259 @@
+/*
+ * Zoned TRI Brut — design tokens
+ * Source de vérité : thoughts/shared/research/2026-08-21-design-spec.md §7
+ * Règle absolue (rappel pour tous les composants) : toute quantité passe en Space Mono, jamais en General Sans.
+ */
+
+:root {
+  /* Couleurs neutres — papier & encre */
+  --color-ink: #0b0b0a;
+  /* ENCRE = couleur de texte PAR DÉFAUT. Le canevas pose `color:#0B0B0A` sur sa racine
+   * (`Zoned TRI Brut - App.dc.html`, l. 22) et chaque artboard en hérite : tout titre, tout
+   * libellé de liste, toute valeur qui ne déclare pas sa couleur est en encre. `--color-text`
+   * (#3B3A33) n'est JAMAIS une valeur héritée : c'est une exception que le canevas écrit
+   * explicitement, et seulement pour du texte secondaire — paragraphes d'explication (02a l. 290),
+   * corps des encarts (01 l. 88, S9 l. 2233), libellés de rail non actifs (S5 l. 1672),
+   * noms de plans archivés (S9 l. 2222), et le titre de 02b, volontairement éteint quand la
+   * séance est faite. Le défaut est posé sur `body` dans src/index.css. */
+  --color-text: #3b3a33;
+  --color-label: #5b594f;
+  --color-inactive: #9a978c;
+  --color-hairline: #cfccc0;
+  --color-neutral-fill: #e4e1d6;
+  --color-offscreen-bg: #efede6;
+  --color-paper: #fcfbf6;
+  --color-paper-a4: #ffffff;
+  /* Surfaces d'encre (menu plein écran S1) : sur fond `--color-ink`, le canevas écrit en « desk »
+   * #EFEDE6, trace ses filets en #2A2A26 et grise ses compteurs en #8F8F86 — trois valeurs qui
+   * n'existent pas dans la palette papier. */
+  --color-on-ink-text: #efede6;
+  --color-on-ink-hairline: #2a2a26;
+  --color-on-ink-muted: #8f8f86;
+  /* Quatrième valeur des surfaces d'encre : le sous-titre d'une ligne active (S3, « langue de
+   * référence »), plus clair que le compteur gris mais moins que le texte plein. */
+  --color-on-ink-soft: #bdbbb2;
+
+  /* Couleurs disciplines — la couleur ne dit que la discipline ou la zone, jamais autre chose */
+  --color-discipline-n: #3aa0c8;
+  --color-discipline-v: #2f6be0;
+  --color-discipline-c: #ff5a3c;
+  --color-discipline-r: #8f8f86;
+
+  /* Couleurs zones d'intensité Z1-Z6 */
+  --color-zone-1: #8f8f86;
+  --color-zone-2: #2fa84a;
+  --color-zone-3: #e0b400;
+  --color-zone-4: #ff6a1f;
+  --color-zone-5: #e5261b;
+  --color-zone-6: #8a46e0;
+
+  /* Phases d'un plan (artboard 04). Le canevas réemploie la palette des zones, mais **une phase
+   * n'est pas une intensité** : les alias disent le sens, et le jour où la palette des phases
+   * diverge de celle des zones, un seul endroit change. */
+  --color-phase-base: var(--color-zone-1);
+  --color-phase-build: var(--color-zone-2);
+  --color-phase-specific: var(--color-zone-4);
+  --color-phase-taper: var(--color-zone-3);
+
+  /* Signaux d'interface — 3 seulement, sens fixe */
+  --color-signal-lime: #d6f24b;
+  --color-signal-yellow: #e0b400;
+  --color-signal-red: #e5261b;
+
+  /* Ombres décalées — jamais floutées, deux couleurs possibles seulement */
+  --shadow-primary: 6px 6px 0 #ff6a1f;
+  --shadow-featured: 5px 5px 0 #d6f24b;
+  /* Variantes desktop de l'écran d'ouverture (S9) : seul écran du canevas où l'ombre orange passe
+   * à 8 px (CTA de la colonne sombre) et l'ombre lime à 6 px (carte du plan en cours). */
+  --shadow-primary-lg: 8px 8px 0 #ff6a1f;
+  /* Seule ombre orange de 5 px du canevas : le cadre du vide monté en affiche (artboard 26). */
+  --shadow-primary-sm: 5px 5px 0 #ff6a1f;
+  --shadow-featured-lg: 6px 6px 0 #d6f24b;
+
+  /* Typographie */
+  --font-display: 'General Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Échelle General Sans (titres, prose — jamais de chiffre) */
+  --fs-display-min: 34px;
+  --fs-display-max: 96px;
+  /* Titre d'affiche de l'ouverture : 38 px en mobile (artboard 01), 104 px en desktop (S9, la plus
+   * grande valeur du canevas). La tablette n'a pas d'artboard : 80 px, la valeur qui remplit la
+   * bande d'encre sans faire déborder « POURQUOI » à 768 px. */
+  --fs-display-tablet: 80px;
+  --fs-display-desktop: 104px;
+  --lh-display-min: 0.82;
+  --lh-display-max: 0.94;
+  --ls-display-min: -0.045em;
+  --ls-display-max: -0.055em;
+  /* Titre de semaine des artboards 03 et 16, et `dateSize` non-mobile de S4 : 38 px, entre le
+   * titre d'écran de 24 et le héros mobile. */
+  /* Échelle des titres d'étape du générateur, relevée artboard par artboard :
+   * 40 (G1, G2, G6) · 38 (G3) · 36 (G4, G5) · 34 (06) · 30 (37, 39). */
+  --fs-title-xl: 40px;
+  --fs-title-lg: 38px;
+  --fs-title-md: 36px;
+  --fs-title-screen: 30px;
+  /* Titres des fiches de séance, une taille par discipline (artboards 05, 28, 29 et panneau S5). */
+  --fs-title-fiche-lg: 44px;
+  --fs-title-fiche-md: 36px;
+  --fs-title-fiche-sm: 34px;
+  /* Titre d'affiche mobile de la Bibliothèque (artboard 07) : 42 px. L'échelle sautait de 38 à 96. */
+  --fs-poster-mobile: 42px;
+  /* Titre d'un vide monté en affiche (artboard 26) : 32 px. */
+  --fs-poster-sm: 32px;
+  /* Titre de section d'un écran de liste (artboard 41). Même valeur que `--fs-display-min`, autre
+   * sens : celui-là nomme le héros de l'ouverture, celui-ci un titre de section. */
+  --fs-title-section: 34px;
+  --fs-poster-card: 56px;
+  /* Croix de fermeture d'une feuille pleine page (artboard 20). */
+  --fs-glyph-close: 13px;
+  --fs-screen-title: 24px;
+  /* Titre de carte / de section de contenu : 26 px, sous le titre d'écran (artboards 11 « DÉPART »,
+   * 27 titre de carte de course, 01 « Semaine 07 / 18 »). */
+  --fs-title-sm: 26px;
+  --fs-subtitle: 17px;
+  --fs-list-title: 14px;
+  /* Les listes de la Bibliothèque titrent une taille au-dessus (artboards 07 et S5). */
+  --fs-list-title-lg: 15px;
+  --fs-prose: 13px;
+  --lh-prose: 1.45;
+  --measure-prose: 52ch;
+
+  /* Échelle Space Mono (étiquettes + TOUTES les quantités).
+   * Les trois valeurs `--fs-data-sm/md/lg` comblent le saut de 11 à 40 px : les artboards des
+   * courses chiffrent à 12, 16 et 26 px (08 « 1 900 m », 10 « × 2 » et « ~600 mg/h »). */
+  --fs-label-section: 10px;
+  --ls-label-section: 0.14em;
+  --fs-label-micro: 9px;
+  --ls-label-micro: 0.08em;
+  /* Deux chasses intermédiaires que le canevas emploie sans qu'elles figurent dans l'échelle :
+   * `.12em` sur les intitulés d'encart et les en-têtes de colonne de S6, `.06em` sur la mention
+   * d'état du bandeau. */
+  --ls-label-tight: 0.12em;
+  --ls-label-loose: 0.06em;
+  --fs-button: 11px;
+  --ls-button: 0.1em;
+  --fs-data-min: 11px;
+  --fs-data-sm: 12px;
+  --fs-data-md: 16px;
+  --fs-data-lg: 26px;
+  --fs-data-xl: 28px;
+  /* Carte de séance PNG (artboard 23) : dessinée à 420 px, écrite à 1080. */
+  --fs-data-card: 22px;
+  --fs-data-lg-alt: 24px;
+  --fs-data-max: 40px;
+
+  /* Échelle d'espacement brute — README §2 « Formes » : 4 / 7 / 9 / 12 / 14 / 18 / 20 / 22 / 26 px,
+   * complétée des valeurs intermédiaires que les artboards utilisent réellement (10, 11, 13, 16).
+   * C'est cette échelle que les écrans refaits emploient : une valeur d'artboard doit rester lisible
+   * dans le CSS de l'écran. Les jetons sémantiques ci-dessous servent les écrans pas encore repris. */
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-3: 3px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-6: 6px;
+  --space-7: 7px;
+  --space-8: 8px;
+  --space-9: 9px;
+  --space-10: 10px;
+  --space-11: 11px;
+  --space-12: 12px;
+  --space-13: 13px;
+  --space-14: 14px;
+  --space-15: 15px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-22: 22px;
+  /* 24 et 28 : gouttières des deux colonnes de S4 en desktop (`mainPad:26px 28px 22px`,
+   * `sidePad:24px 26px 22px`) et de son en-tête (`headPad:18px 24px 16px`). */
+  --space-24: 24px;
+  --space-25: 25px;
+  --space-26: 26px;
+  --space-28: 28px;
+  --space-30: 30px;
+
+  /* Rythme vertical */
+  --space-block-sm: 11px;
+  --space-block-md: 12px;
+  --space-block-lg: 14px;
+  --space-label-gap-sm: 8px;
+  --space-label-gap-lg: 10px;
+  --space-hairline-gap: 10px;
+  --space-list-row-gap: 10px;
+  --space-footer-gap: 9px;
+  --space-gutter-mobile: 20px;
+  --space-gutter-dense: 18px;
+  /* Gouttiere des colonnes desktop (ecran S5 : liste maitre du patron liste+fiche) */
+  --space-gutter-desktop: 24px;
+
+  /* Traits */
+  --border-width-structure: 2px;
+  --border-width-hairline: 1px;
+  /* Deux pointillés, deux sens (README §2 « Formes ») : le clair nomme un vide, l'encre marque une
+   * hypothèse (simulation, avant/après) — 4 occurrences claires et 10 en encre dans le canevas. */
+  --border-style-empty: 2px dashed var(--color-hairline);
+  /* Même pointillé clair, tracé au filet : la colonne du jour libre de l'histogramme de contexte
+   * (canevas S4 l. 1625 — `border:1px dashed`), plus fine que le vide plein écran. */
+  --border-style-empty-hairline: 1px dashed var(--color-hairline);
+  --border-style-simulation: 2px dashed var(--color-ink);
+  /* Trame « séance clé » des gabarits A4 (artboards 21 et 22) : sur du noir sur blanc, une hachure
+   * remplace la couleur — c'est le seul endroit du produit où la palette ne s'applique pas. */
+  --pattern-hatch-ink: repeating-linear-gradient(45deg, var(--color-ink) 0 1px, transparent 1px 5px);
+
+  /* Actions (README §4) : la principale est un aplat lime posé sur le papier avec son ombre orange ;
+   * l'action « sur encre » (bouton d'une carte, ex. « Reprendre ») inverse le couple et n'a pas
+   * d'ombre. README §3 : cibles ≥ 44 px, actions principales 48-56 px. */
+  --action-height-primary: 52px;
+  --action-height-ink: 48px;
+  --action-height-min: 44px;
+  /* Actions d'une feuille (artboard 40, « Tout retirer » / « Voir les 37 séances ») : 46 px, entre
+   * l'action d'écran et la cible minimale. */
+  --action-height-sheet: 46px;
+  /* Puces d'export d'une fiche (artboards 05, 28, 29). */
+  --action-height-chip: 46px;
+  /* Champs encadrés du générateur (G1, G2, G5) : deux hauteurs, mesurées sur les artboards. */
+  --field-height-md: 52px;
+  --field-height-lg: 58px;
+
+  /* Rayon d'angle — toujours 0, variable explicite pour documenter l'interdit */
+  --radius-none: 0;
+
+  /* Grille de référence */
+  --screen-width: 390px;
+  --screen-height: 780px;
+  --a4-width: 210mm;
+  --a4-height: 297mm;
+
+  /* Rail de navigation (coquille responsive, écran S4/S5 — desktop uniquement, 1280x648 dans le mockup).
+   * README §3 : « rail gauche 240 px ». Le rail remplace le burger, jamais les deux ensemble. */
+  --rail-width-desktop: 240px;
+  /* Hauteur commune à l'en-tête du rail et au bandeau desktop (canevas S4/S5/S6 : `min-height:52px`) :
+   * leurs filets bas doivent s'aligner de part et d'autre du rail. */
+  --shell-header-height: 52px;
+  /* Bandeau unique des écrans mobiles (canevas 01, 02, 03, 05, 07, G1 : `height:46px`). */
+  --screen-header-height-mobile: 46px;
+  /* Panneau de detail cote a cote (ecran S5, patron liste+fiche desktop) */
+  --detail-panel-width-desktop: 440px;
+  /* Largeur de la fiche de séance quand elle vit seule : celle du panneau de S5, le seul artboard
+   * qui la montre en large. Au-delà, la largeur servirait à allonger les lignes. */
+  --fiche-panel-width: 440px;
+  /* Hauteurs de graphe, une par artboard (28, 29, panneau S5). */
+  --fiche-chart-h-bike: 44px;
+  --fiche-chart-h-run: 48px;
+  --fiche-chart-h-wide: 34px;
+  /* Panneau de contexte semaine des ecrans detail seance (ecran S4, colonne de droite) */
+  --context-panel-width-desktop: 300px;
+  --context-panel-width-tablet: 240px;
+
+  /* Points de rupture (voir src/hooks/useBreakpoint.ts) */
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+}

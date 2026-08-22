@@ -1,0 +1,22 @@
+.card {
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+}
+
+.plain,
+.featured {
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.featured {
+  box-shadow: var(--shadow-featured);
+}
+
+.featured.large {
+  box-shadow: var(--shadow-featured-lg);
+}
+
+.hypothesis {
+  border: var(--border-style-simulation);
+  box-shadow: none;
+}

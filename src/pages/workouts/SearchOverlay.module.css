@@ -1,0 +1,174 @@
+/*
+ * Artboard 25 · Recherche en place. Le champ occupe exactement la place du bandeau qu'il remplace :
+ * 46 px, filet de 2 px compris — sinon la page « saute » à l'ouverture de la loupe, ce que
+ * l'intention de l'artboard interdit (« Annuler remet la page à l'identique »).
+ */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: var(--color-paper);
+}
+
+/* 25 l. 2891 : `height:46px; padding:0 16px; border-bottom:2px; gap:10px`, en `border-box`. */
+.header {
+  flex: none;
+  box-sizing: border-box;
+  height: var(--screen-header-height-mobile);
+  padding: 0 var(--space-16);
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+.icon {
+  flex: none;
+  display: block;
+}
+
+/* 25 l. 2893 : 17 px, `letter-spacing:-.02em`. Le canevas dessine un curseur lime de 2 × 19 px ;
+ * une saisie réelle a le sien — on le colore plutôt que d'en peindre un second à côté. */
+.input {
+  flex: 1;
+  min-width: 0;
+  /* Le champ occupe toute la hauteur de la barre : sa boîte de texte ne fait que 23 px, et une
+   * zone de saisie sous les 44 px se rate au doigt. Sans fond ni filet, l'étirement ne se voit pas. */
+  align-self: stretch;
+  border: none;
+  background: none;
+  outline: none;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-subtitle);
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  caret-color: var(--color-signal-lime);
+}
+
+.cancel {
+  position: relative;
+  flex: none;
+  margin-left: auto;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.cancel::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* 25 l. 2897 : `padding:12px 20px 0`, deux mentions aux deux bouts. */
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-12) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 25 l. 2900 : `margin:14px 20px 0`. */
+.group,
+.empty {
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+}
+
+/* 25 l. 2901 : mono 9 px, `letter-spacing:.14em`. */
+.groupLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 25 l. 2901 : `border-top:1px solid #CFCCC0; margin-top:7px`. */
+.list {
+  margin-top: var(--space-7);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.mark {
+  background: var(--color-signal-lime);
+  color: inherit;
+}
+
+/* 25 l. 2919 : ligne de calculateur — intitulé à gauche, compteur `03 / 12` à droite. */
+/* La ligne de calculateur n'a pas de sous-titre : elle mesure 40 px là où celle d'une séance en
+ * fait 55. Sa cible est portée à 44 px par un pseudo-élément, sans toucher au dessin. */
+.toolRow::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}
+
+.toolRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  width: 100%;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  padding: var(--space-block-sm) 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-ink);
+}
+
+.toolRow:last-child {
+  border-bottom: none;
+}
+
+.toolTitle {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+}
+
+.toolCounter {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* 25 l. 2934 : `margin-top:auto; padding:10px 20px 16px; border-top:1px; line-height:1.5`. */
+.footerNote {
+  margin: auto 0 0;
+  padding: var(--space-10) var(--space-gutter-mobile) var(--space-16);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}

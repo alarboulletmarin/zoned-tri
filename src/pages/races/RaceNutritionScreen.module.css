@@ -1,0 +1,121 @@
+/* Artboard 10 · plan nutrition — placement propre à l'écran. */
+
+.headline {
+  padding: var(--space-12) var(--space-gutter-mobile) var(--space-10);
+}
+
+/* Écart assumé : le canevas écrit ce total en General Sans. La méthode §3 est non négociable —
+ * toute quantité passe en Space Mono. Taille (56 px) et chasse serrée conservées. */
+.total {
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 56px;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.rate {
+  margin-top: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+  color: var(--color-text);
+}
+
+.noteRef {
+  font-size: var(--fs-label-micro);
+  color: var(--color-ink);
+}
+
+.noteRefSm {
+  font-size: var(--fs-data-min);
+}
+
+.shareLegend {
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- À emporter --------------------------------------------------------------------------- */
+
+.carried {
+  margin: var(--space-14) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-13);
+}
+
+.carriedList {
+  margin-top: var(--space-8);
+}
+
+.carriedRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-12);
+  padding: var(--space-12) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.carriedRow:last-child {
+  border-bottom: none;
+}
+
+.quantity {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-md);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+
+/* --- Encadré sodium ------------------------------------------------------------------------- */
+
+/* Canevas : `border:2px solid #E0B400; padding:11px`. `NoteBox` pose `9px 11px` : la variante de
+ * l'artboard 10 respire d'un pixel de plus en haut et en bas. */
+.sodium {
+  margin: var(--space-10) var(--space-gutter-mobile) 0;
+  padding: var(--space-11);
+}
+
+.sodiumTitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* Quantité en Space Mono, comme partout ailleurs (le canevas l'écrit ici en General Sans). */
+.sodiumValue {
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-data-lg);
+  /* Interligne aligné sur ce que General Sans rendrait sans interligne déclarée (35 px pour 26). */
+  line-height: 1.35;
+  letter-spacing: -0.04em;
+}
+
+.sodiumText {
+  margin: var(--space-7) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-prose);
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* --- Notes de bas d'écran ---------------------------------------------------------------------- */
+
+.notes {
+  margin-top: auto;
+  padding: var(--space-8) var(--space-gutter-mobile) var(--space-12);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}

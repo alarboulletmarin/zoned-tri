@@ -1,0 +1,420 @@
+/* --- Gabarits A4 · artboards 21 (atlas des zones) et 22 (plan) -------------------------------
+ *
+ * UNE SEULE ENCRE. C'est le seul endroit du produit où la palette de couleur ne s'applique pas :
+ * une feuille imprimée se photocopie, se plie et finit dans une poche de maillot. La couleur y
+ * serait perdue — un aplat gris, une trame ou une hachure la remplacent. `--color-paper-a4`
+ * (#FFFFFF) existe pour ça : le papier de l'A4 n'est pas le papier de l'écran.
+ *
+ * L'UNITÉ `--u`. Le canevas dessine ses deux A4 dans un cadre de 520 × 735 px — exactement le
+ * rapport 210 × 297. Chaque valeur ci-dessous est donc CELLE DE L'ARTBOARD, multipliée par une
+ * unité qui vaut 1 px à l'écran et 210 mm / 520 sur le papier. `padding: calc(26 * var(--u))` se
+ * relit contre `padding:26px` de l'artboard, se mesure à 26 px avec `cmp.mjs`, et imprime
+ * 10,5 mm. Aucun `zoom`, aucune `transform` : la boîte de page reste une vraie boîte de page. */
+
+/* Une A4 ne se rétrécit pas : elle fait 210 mm. Sous 560 px de large, la feuille ne tient donc
+ * pas, et c'est le document qui défile latéralement — comme n'importe quel aperçu de page. La
+ * réduire à la largeur du téléphone ramènerait son corps de texte à 6 px, ce qui n'est plus une
+ * feuille mais une vignette. `safe center` centre tant qu'il y a la place et revient au bord dès
+ * qu'il faut défiler : sans lui, le centrage rognerait la gauche de la feuille. */
+.document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-items: safe center;
+  gap: var(--space-26);
+  padding: var(--space-26) var(--space-20);
+  background: var(--color-offscreen-bg);
+  overflow-x: auto;
+}
+
+.page {
+  flex: none;
+  --u: 1px;
+  --hatch-ink: repeating-linear-gradient(45deg, var(--color-ink) 0 1px, transparent 1px 5px);
+
+  box-sizing: border-box;
+  width: calc(520 * var(--u));
+  height: calc(735 * var(--u));
+  padding: calc(26 * var(--u));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper-a4);
+  color: var(--color-ink);
+  /* Sur l'écran de recette, la feuille se distingue du fond ; à l'impression, elle EST la page. */
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* --- En-tête commun aux deux pages ---------------------------------------------------------- */
+
+/* 21 l. 2742 · 22 l. 2786 : `justify-content:space-between; align-items:flex-end;
+ * border-bottom:2px solid #0B0B0A; padding-bottom:12px`. */
+.sheetHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: calc(16 * var(--u));
+  padding-bottom: calc(12 * var(--u));
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* `font-weight:700; font-size:30px; line-height:.9; letter-spacing:-.05em`. */
+.sheetTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: calc(30 * var(--u));
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* `font-size:10px; letter-spacing:.12em; color:#5B594F; margin-top:8px`. */
+.sheetSubtitle {
+  margin: calc(8 * var(--u)) 0 0;
+  font-family: var(--font-mono);
+  font-size: calc(10 * var(--u));
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:9px; letter-spacing:.1em; text-align:right; line-height:1.7`. Deux lignes, deux
+ * éléments : le canevas les coupe avec un `<br>`, qui n'apporte aucune espace au texte. */
+.sheetStamp {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.7;
+  color: var(--color-label);
+}
+
+/* --- Pied commun aux deux pages -------------------------------------------------------------- */
+
+/* 21 l. 2779 · 22 l. 2822 : `margin-top:auto; border-top:2px solid #0B0B0A; padding-top:12px`. */
+.sheetFoot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: calc(16 * var(--u));
+  padding-top: calc(12 * var(--u));
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.sheetFoot > span:last-child {
+  flex: none;
+}
+
+/* --- 21 · Atlas des zones --------------------------------------------------------------------- */
+
+/* 21 l. 2748 : `grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:16px; font-size:10px`. */
+.references {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: calc(12 * var(--u));
+  margin-top: calc(16 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(10 * var(--u));
+}
+
+.reference {
+  padding: calc(8 * var(--u));
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+/* 21 l. 2753 : `margin-top:18px; border:2px solid #0B0B0A`. */
+.zoneTable {
+  margin-top: calc(18 * var(--u));
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.zoneTable table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* `grid-template-columns:52px 1fr 1fr 1fr 74px` du canevas, rendu en colonnes de tableau : ce
+ * sont des données, elles s'annoncent en lignes et en colonnes. */
+.zoneTable col:first-child {
+  width: calc(52 * var(--u));
+}
+
+.zoneTable col:last-child {
+  width: calc(74 * var(--u));
+}
+
+/* 21 l. 2754 : `background:#0B0B0A; color:#FFFFFF; font-size:9px; letter-spacing:.12em`. */
+.zoneTable th {
+  padding: calc(7 * var(--u)) calc(8 * var(--u));
+  background: var(--color-ink);
+  color: var(--color-paper-a4);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-regular);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  text-align: left;
+}
+
+/* 21 l. 2757 : `border-bottom:1px solid #CFCCC0; font-size:11px`, cellules `padding:9px 8px`. */
+.zoneTable td {
+  padding: calc(9 * var(--u)) calc(8 * var(--u));
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: calc(11 * var(--u));
+}
+
+.zoneTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.zoneTable td:first-child {
+  font-weight: var(--fw-bold);
+}
+
+/* La ligne du seuil, celle qu'on cherche du doigt : aplat `#E4E1D6`, pas de couleur. */
+.zoneRowEmphasis td {
+  background: var(--color-neutral-fill);
+}
+
+.atlasEmpty {
+  margin-top: calc(18 * var(--u));
+}
+
+/* 21 l. 2764 : `display:flex; gap:16px; margin-top:16px`, chaque encart `flex:1;
+ * border:1px solid #0B0B0A; padding:12px`. */
+.atlasBoxes {
+  display: flex;
+  gap: calc(16 * var(--u));
+  margin-top: calc(16 * var(--u));
+}
+
+.atlasBox {
+  flex: 1;
+  padding: calc(12 * var(--u));
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+.boxLabel {
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 21 l. 2767 : la barre de répartition, `height:14px; margin-top:10px; border:1px solid`. */
+.distributionBar {
+  margin-top: calc(10 * var(--u));
+}
+
+/* 21 l. 2768 : `justify-content:space-between; font-size:9px; color:#5B594F; margin-top:7px`. */
+.distributionLegend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: calc(7 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  color: var(--color-label);
+}
+
+/* 21 l. 2772 : `font-size:12px; line-height:1.5; margin-top:8px`. */
+.atlasProse {
+  margin: calc(8 * var(--u)) 0 0;
+  font-size: calc(12 * var(--u));
+  line-height: 1.5;
+}
+
+/* --- 22 · Plan ---------------------------------------------------------------------------------- */
+
+/* 22 l. 2791 : `display:flex; gap:14px; margin-top:14px; font-size:9px; letter-spacing:.1em`. */
+.planLegend {
+  display: flex;
+  align-items: center;
+  gap: calc(14 * var(--u));
+  margin-top: calc(14 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.planLegendItem {
+  display: flex;
+  align-items: center;
+  gap: calc(5 * var(--u));
+}
+
+.planLegendCodes {
+  margin-left: auto;
+}
+
+/* Les quatre pastilles de la légende : `width:12px; height:10px`. */
+.swatch {
+  width: calc(12 * var(--u));
+  height: calc(10 * var(--u));
+}
+
+.swatchSession {
+  background: var(--color-ink);
+}
+
+.swatchEasy {
+  background: var(--color-on-ink-muted);
+}
+
+.swatchKey {
+  box-sizing: content-box;
+  background-image: var(--hatch-ink);
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+.swatchRest {
+  box-sizing: content-box;
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+/* 22 l. 2798 : `margin-top:12px; border:2px solid #0B0B0A`. */
+.planTable {
+  margin-top: calc(12 * var(--u));
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.planTable table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* `grid-template-columns:64px repeat(7,1fr) 58px`. */
+.planTable col:first-child {
+  width: calc(64 * var(--u));
+}
+
+.planTable col:last-child {
+  width: calc(58 * var(--u));
+}
+
+/* 22 l. 2799 : `background:#0B0B0A; color:#FFFFFF; font-size:9px; letter-spacing:.1em`. */
+.planTable th {
+  padding: calc(6 * var(--u)) calc(4 * var(--u));
+  background: var(--color-ink);
+  color: var(--color-paper-a4);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-regular);
+  font-size: calc(9 * var(--u));
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.planTable th:first-child {
+  padding: calc(6 * var(--u)) calc(7 * var(--u));
+  text-align: left;
+}
+
+.planTable th:last-child {
+  padding: calc(6 * var(--u)) calc(6 * var(--u));
+  text-align: right;
+}
+
+/* 22 l. 2801 : lignes `border-bottom:1px solid #CFCCC0; font-size:9px`, cellules `padding:5px 4px`. */
+.planTable td {
+  padding: calc(5 * var(--u)) calc(4 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(9 * var(--u));
+  text-align: center;
+}
+
+.planTable tbody tr {
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.planTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+.planTable th[scope='row'] {
+  padding: calc(6 * var(--u)) calc(7 * var(--u));
+  background: none;
+  color: inherit;
+  font-size: calc(9 * var(--u));
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: left;
+}
+
+.planVolume {
+  padding: calc(5 * var(--u)) calc(6 * var(--u));
+  text-align: right;
+}
+
+/* Semaine réduite : la ligne entière bascule sur l'aplat, sans un gramme de couleur. */
+.planRowReduced,
+.planRowReduced th[scope='row'] {
+  background: var(--color-neutral-fill);
+}
+
+/* Semaine courante ou semaine de course : la ligne passe en gras (22 l. 2807, l. 2813). */
+.planRowEmphasis,
+.planRowEmphasis th[scope='row'] {
+  font-weight: var(--fw-bold);
+}
+
+.cellEasy {
+  background: var(--color-on-ink-muted);
+}
+
+.cellKey {
+  background-image: var(--hatch-ink);
+}
+
+.cellInk {
+  background: var(--color-ink);
+  color: var(--color-paper-a4);
+}
+
+/* --- Impression -------------------------------------------------------------------------------- */
+
+@media print {
+  /* Le reste de l'application n'a rien à faire sur le papier. La classe est posée sur `body` par
+   * `PrintDocument` et retirée à son démontage : l'isolation ne vaut QUE pendant que le document
+   * est monté, elle ne peut pas fausser l'impression d'un autre écran. */
+  :global(body.zt-printing) * {
+    visibility: hidden;
+  }
+
+  :global(body.zt-printing) .document,
+  :global(body.zt-printing) .document * {
+    visibility: visible;
+  }
+
+  :global(body.zt-printing) .document {
+    position: absolute;
+    inset: 0 auto auto 0;
+    gap: 0;
+    padding: 0;
+    background: var(--color-paper-a4);
+  }
+
+  .page {
+    /* 520 unités d'artboard = 210 mm. La hauteur suit (735 × 210/520 = 296,8 mm), très
+     * légèrement sous les 297 mm : de quoi ne jamais déborder sur une seconde feuille. */
+    --u: calc(210mm / 520);
+    border: none;
+    break-inside: avoid;
+  }
+
+  .page + .page {
+    break-before: page;
+  }
+}

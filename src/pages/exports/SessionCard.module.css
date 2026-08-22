@@ -1,0 +1,201 @@
+/* Artboard 23 · Carte de séance · PNG 1080 (l. 2827-2851), dessinée à 420 px.
+ * Le gabarit ci-dessous EST la carte : c'est lui qu'on mesure contre l'artboard, et le canevas
+ * 2D reprend les mêmes valeurs à l'échelle 1080/420. */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-20);
+  padding: var(--space-20);
+}
+
+/* 23 l. 2827 : `width:420px; height:420px; background:#EFEDE6; border:2px solid #0B0B0A;
+ * padding:24px`. Le cadre fait partie du FICHIER — une image partagée n'a pas d'écran autour
+ * d'elle pour lui donner un bord. */
+.card {
+  box-sizing: border-box;
+  width: 420px;
+  height: 420px;
+  max-width: 100%;
+  padding: var(--space-24);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-offscreen-bg);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+/* 23 l. 2829 : `display:flex; gap:6px`. Les deux jetons sont ceux du système, taille `lg`
+ * (`font-size:11px; padding:4px 8px`) — exactement les valeurs de l'artboard. */
+.badges {
+  display: flex;
+  gap: var(--space-6);
+}
+
+/* 23 l. 2832 : `font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#5B594F`. */
+.context {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 23 l. 2834 : `font-weight:700; font-size:56px; line-height:.84; letter-spacing:-.055em;
+ * text-transform:uppercase; margin-top:20px`. */
+.title {
+  margin: var(--space-20) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-poster-card);
+  line-height: 0.84;
+  letter-spacing: var(--ls-display-max);
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* 23 l. 2835 : `display:flex; gap:26px; margin-top:20px`, tout en mono. */
+.stats {
+  display: flex;
+  gap: var(--space-26);
+  margin-top: var(--space-20);
+  font-family: var(--font-mono);
+}
+
+/* `font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#5B594F`. */
+.statLabel {
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:22px; font-weight:700; margin-top:4px` — une quantité, donc en mono. */
+.statValue {
+  margin-top: var(--space-4);
+  font-size: var(--fs-data-card);
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+}
+
+/* 23 l. 2839 : `display:flex; align-items:flex-end; gap:2px; height:44px; margin-top:22px`. */
+.profile {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: var(--action-height-min);
+  margin-top: var(--space-22);
+}
+
+.profileBar {
+  flex: none;
+}
+
+/* Un arrêt reste un filet de 2 px, jamais une barre écrasée. */
+.profileRest {
+  flex: none;
+  min-height: var(--border-width-structure);
+  align-self: flex-end;
+}
+
+/* 23 l. 2844 : `display:flex; gap:11px; margin-top:8px; font-size:9px; color:#5B594F`. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-11);
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.legendSwatch {
+  width: var(--space-9);
+  height: var(--space-9);
+}
+
+.legendRest {
+  width: var(--space-11);
+  height: var(--border-width-structure);
+  background: var(--color-hairline);
+}
+
+/* 23 l. 2846 : `margin-top:auto; border-top:2px solid #0B0B0A; padding-top:12px;
+ * justify-content:space-between; font-size:10px; letter-spacing:.1em; text-transform:uppercase`. */
+.foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding-top: var(--space-12);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+}
+
+.footLeft {
+  color: var(--color-label);
+}
+
+.footRight {
+  flex: none;
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+}
+
+/* --- Ce qui entoure la carte, et qui n'est PAS dans le fichier ------------------------------- */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  max-width: 420px;
+}
+
+.save {
+  width: 100%;
+}
+
+.note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+}
+
+.error {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-signal-red);
+}
+
+/* Le support du fichier : il n'a rien à montrer, le gabarit au-dessus montre déjà la carte. */
+.canvas {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
+}

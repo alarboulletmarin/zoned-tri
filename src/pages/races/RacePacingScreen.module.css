@@ -1,0 +1,130 @@
+/* Artboard 09 · plan de pacing — placement propre à l'écran. */
+
+.target {
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* 46 px de Space Mono : c'est une durée, elle ne peut pas être en General Sans. */
+.targetValue {
+  margin-top: var(--space-10);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 46px;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* --- Tableau des segments ------------------------------------------------------------------- */
+
+.table {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHead {
+  display: flex;
+  align-items: center;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.headSeg,
+.headTarget,
+.headCumul {
+  padding: var(--space-8) var(--space-10);
+}
+
+.headSeg {
+  flex: none;
+}
+
+.headTarget {
+  flex: 1;
+  min-width: 0;
+}
+
+.headCumul {
+  flex: none;
+  text-align: right;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-10);
+  align-items: center;
+  padding: var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle,
+.rowTitleStrong {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+}
+
+/* Le canevas distingue la transition (500) du segment couru (600) : la transition n'est pas une
+ * discipline, elle pèse moins dans la lecture. */
+.rowTitle {
+  font-weight: var(--fw-medium);
+}
+
+.rowTitleStrong {
+  font-weight: var(--fw-semibold);
+}
+
+.rowTarget {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+  overflow-wrap: anywhere;
+}
+
+/* Appel de note : encre pleine sur un texte éteint, c'est lui qui doit se voir. */
+.noteRef {
+  font-size: var(--fs-label-micro);
+  color: var(--color-ink);
+}
+
+.rowTimes {
+  flex: none;
+  text-align: right;
+}
+
+.rowDuration {
+  font-family: var(--font-mono);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-bold);
+}
+
+.rowCumul {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Pourquoi cette intensité ------------------------------------------------------------------ */
+
+.why {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-13);
+}
+
+/* Le pied porte la note ET l'action : le filet n'appartient qu'à la note. */
+.footnoteBlock {
+  padding-bottom: var(--space-14);
+}

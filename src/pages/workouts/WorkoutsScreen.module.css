@@ -1,0 +1,287 @@
+/*
+ * Bibliothèque — artboard 07 (mobile) et S5 (desktop). Ce fichier ne porte que le placement et les
+ * mesures propres à l'écran : les jetons, les barres et les lignes sont des composants.
+ */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--color-paper);
+}
+
+/* 07 l. 983-985 : `padding:18px 20px 16px`, 42 px, `line-height:.86`, `letter-spacing:-.055em`. */
+.hero {
+  margin: 0;
+  padding: var(--space-18) var(--space-gutter-mobile) var(--space-16);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-poster-mobile);
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+/* 07 l. 986 : la bande est écrite `height:14px` entre deux filets de 2 px, en `content-box` — soit
+ * 18 px occupés. `ProgressBar framed` porte cette règle. */
+.distribution {
+  flex: none;
+}
+
+/* 07 l. 987 : `padding:14px 20px 0; gap:8px`. */
+.controlsRow {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+  padding: var(--space-14) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* Les trois commandes mesurent 26 à 28 px de haut dans le canevas. Leur CIBLE doit faire 44 px
+ * (README §3 règle 3) : elle est étendue par un pseudo-élément centré, invisible, qui ne déplace
+ * rien — le même procédé que la loupe du bandeau et le jeton de `SecondaryAction`. */
+.filtersButton::after,
+.sortButton::after,
+.pdfButton::after,
+.chipRemove::after,
+.clearAll::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.filtersButton,
+.sortButton,
+.pdfButton {
+  position: relative;
+  flex: none;
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+/* 07 l. 988 : aplat d'encre, `padding:8px 11px`, le compteur lime à l'intérieur. */
+.filtersButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  border: none;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  padding: var(--space-8) var(--space-11);
+}
+
+.filtersBadge {
+  background: var(--color-signal-lime);
+  color: var(--color-ink);
+  padding: var(--space-1) var(--space-5);
+}
+
+/* 07 l. 989 : `border:2px solid; padding:7px 11px`. */
+.sortButton {
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+  padding: var(--space-7) var(--space-11);
+}
+
+/* 07 l. 990 : `border:2px solid; padding:6px 9px; margin-left:auto`. Inerte faute de moteur
+ * d'export : le `title` dit pourquoi, jamais un bouton mort sans explication. */
+.pdfButton {
+  margin-left: auto;
+  border: var(--border-width-structure) solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+  padding: var(--space-6) var(--space-9);
+}
+
+.pdfButton:disabled {
+  color: var(--color-inactive);
+  border-color: var(--color-inactive);
+  cursor: not-allowed;
+}
+
+/* 07 l. 992 : `padding:10px 20px 0; gap:6px`, chasse resserrée à `.06em`. */
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-10) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+}
+
+/* 07 l. 993 : `border:1px solid; padding:5px 8px; gap:8px`. Le filet est d'un pixel — le jeton
+ * ACTIF de la feuille de filtres est un aplat, celui de la liste un contour : deux objets. */
+.chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  border: var(--border-width-hairline) solid var(--color-ink);
+  padding: var(--space-5) var(--space-8);
+}
+
+.chipRemove {
+  position: relative;
+  border: none;
+  background: none;
+  border-radius: var(--radius-none);
+  color: var(--color-label);
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* 07 l. 996 : souligné, `text-underline-offset:3px`, `padding:5px 2px`. */
+.clearAll {
+  position: relative;
+  border: none;
+  background: none;
+  border-radius: var(--radius-none);
+  color: var(--color-label);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: var(--space-5) var(--space-2);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+/* 07 l. 998 : `padding:9px 20px 0`. */
+.countLine {
+  padding: var(--space-9) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* 07 l. 999 : `margin:16px 20px 0; border-top:1px solid #CFCCC0`. */
+.list {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* --- Artboard S5 · desktop ------------------------------------------------------------------ */
+
+/* Ces six classes ne sont posées QUE par la branche desktop de `WorkoutsScreen` : le DOM diffère
+ * réellement d'un artboard à l'autre, la bascule se fait en `useBreakpoint()`, pas en media query.
+ * Elles n'ont donc pas à se masquer en dessous de 1024 px — elles n'y sont jamais rendues. */
+
+/* S5 l. 1694 : `padding:10px 20px; border-bottom:1px solid #CFCCC0`, jetons puis décompte. */
+.chipsBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-6);
+  flex: none;
+  padding: var(--space-10) var(--space-gutter-mobile);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-loose);
+  text-transform: uppercase;
+}
+
+/* S5 l. 1699 : le décompte est poussé à droite, en bas de casse et sans chasse ajoutée — c'est une
+ * phrase, pas une étiquette. */
+.chipsCount {
+  margin-left: auto;
+  color: var(--color-label);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* S5 l. 1696 : `grid-template-columns:1fr 440px`. */
+.masterDetail {
+  display: grid;
+  grid-template-columns: 1fr var(--detail-panel-width-desktop);
+  flex: 1;
+  min-height: 0;
+}
+
+.masterColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Les lignes portent elles-mêmes leur gouttière de 14 px : l'aplat d'encre de la ligne active doit
+ * aller d'un bord à l'autre de la colonne (S5 l. 1698). */
+.masterList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* S5 l. 1732 : `margin-top:auto; padding:11px 14px; border-top:1px solid #CFCCC0`. */
+.listFooter {
+  margin: 0;
+  flex: none;
+  padding: var(--space-block-sm) var(--space-14);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* S5 l. 1734 : `border-left:1px solid #CFCCC0`. Pas de gouttière ici : les gabarits de fiche
+ * portent déjà la leur, et leurs bandes pleine largeur doivent toucher le filet. */
+.detailPanel {
+  --detail-cta-export-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+  overflow-y: auto;
+}
+
+/* S5 l. 1770 : `padding:11px 20px 13px; border-top:1px solid #CFCCC0; line-height:1.5`. */
+.screenFooter {
+  margin: 0;
+  flex: none;
+  padding: var(--space-block-sm) var(--space-gutter-mobile) var(--space-13);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Le point de rupture reproduit `DESKTOP_QUERY` de src/hooks/useBreakpoint.ts. Il ne porte que ce
+ * qui dépend VRAIMENT de la largeur : le cadre borné, et les commandes resserrées du bandeau. */
+@media (min-width: 1024px) {
+  /* La hauteur est bornée par la coquille : c'est la colonne liste qui défile, la barre de jetons
+     et les deux pieds restant visibles (S5 est un cadre de 648 px sans défilement d'écran). */
+  .screen {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* S5 l. 1690-1692 : les trois commandes sont DANS le bandeau, d'un ou deux pixels plus serrées. */
+  .filtersButton {
+    padding: var(--space-7) var(--space-10);
+  }
+
+  .sortButton {
+    padding: var(--space-6) var(--space-10);
+  }
+}

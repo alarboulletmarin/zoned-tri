@@ -1,0 +1,26 @@
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-label-gap-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-label-gap-sm);
+}
+
+.source {
+  font-family: var(--font-display);
+  font-size: var(--fs-prose);
+  line-height: var(--lh-prose);
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+}
+
+.noteNumber {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: var(--ls-label-micro);
+  color: var(--color-label);
+}

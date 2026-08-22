@@ -1,0 +1,67 @@
+/* Artboard 01 : `border:2px solid #E0B400; padding:9px 11px` — la forme majoritaire du canevas. */
+.box {
+  border: var(--border-width-structure) solid var(--color-signal-yellow);
+  border-radius: var(--radius-none);
+  padding: var(--space-9) var(--space-11);
+  background: transparent;
+}
+
+.yellow {
+  border-color: var(--color-signal-yellow);
+}
+
+/* Artboard 18 : `border:2px dashed #0B0B0A; padding:16px; background:#E4E1D6`. */
+.hypothesis {
+  border: var(--border-style-simulation);
+  padding: var(--space-16);
+  background: var(--color-neutral-fill);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* `letter-spacing:.14em; color:#5B594F` — l'intitulé d'un encart d'hypothèse est un intitulé de
+ * section, pas un titre d'alerte. */
+.hypothesis .title {
+  letter-spacing: var(--ls-label-section);
+  color: var(--color-label);
+}
+
+/* `font-size:13px; line-height:1.5` en General Sans : ce corps-là est de la prose, pas une donnée. */
+.hypothesis .body {
+  font-family: var(--font-display);
+  font-size: var(--fs-prose);
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+.hypothesis .title + .body {
+  margin-top: var(--space-8);
+}
+
+.body {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+.title + .body {
+  margin-top: var(--space-5);
+}
+
+/* S9 : le même encart respire d'un pixel de plus sur grand écran (`margin-top:6px`, `line-height:1.6`). */
+@media (min-width: 1024px) {
+  .body {
+    line-height: 1.6;
+  }
+
+  .title + .body {
+    margin-top: var(--space-6);
+  }
+}

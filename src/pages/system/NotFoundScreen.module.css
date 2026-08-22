@@ -1,0 +1,190 @@
+/* Écran 18 · Adresse introuvable (404). Toutes les valeurs viennent de l'artboard. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* `padding:24px 20px 0` */
+.head {
+  flex: none;
+  padding: var(--space-24) var(--space-gutter-mobile) 0;
+}
+
+/* `font-size:11px; letter-spacing:.14em; background:#0B0B0A; color:#D6F24B; padding:6px 9px` */
+.errorTag {
+  display: inline-block;
+  padding: var(--space-6) var(--space-9);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+}
+
+/* `font-weight:700; font-size:46px; line-height:.86; letter-spacing:-.055em; margin-top:18px` */
+.title {
+  margin: var(--space-18) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 46px;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+/* `font-size:14px; line-height:1.5; color:#3B3A33; margin:16px 0 0` */
+.lead {
+  margin: var(--space-16) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  line-height: 1.5;
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* `font-family:'Space Mono'; font-size:12px` — une adresse est une donnée, elle passe en mono.
+ * `overflow-wrap` : une adresse longue casse plutôt que de déborder la colonne de 390 px. */
+.address {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+  overflow-wrap: anywhere;
+}
+
+/* --- Ce qui s'en rapproche le plus ---------------------------------------------------------------- */
+
+/* `margin:20px 20px 0; border-top:1px solid #CFCCC0; padding-top:14px` */
+.nearest {
+  margin: var(--space-gutter-mobile) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-14);
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `margin-top:8px` */
+.nearestList {
+  margin-top: var(--space-label-gap-sm);
+}
+
+/* `display:flex; gap:10px; align-items:center; padding:12px 0; border-bottom:1px solid #CFCCC0` */
+.nearestRow {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--action-height-min);
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-12) 0;
+  border: 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.nearestRow:last-child {
+  border-bottom: none;
+}
+
+.nearestBody {
+  flex: 1;
+  min-width: 0;
+}
+
+/* `font-size:14px; font-weight:600` */
+.nearestTitle {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+  font-weight: var(--fw-semibold);
+}
+
+/* `font-size:10px; color:#5B594F` */
+.nearestMeta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `font-size:11px` */
+.nearestArrow {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.nearestEmpty {
+  margin-top: var(--space-label-gap-sm);
+}
+
+/* --- Encart « si tu viens de ton plan » ------------------------------------------------------------- */
+
+/* `margin:18px 20px 0` — le pointillé, le rembourrage et l'aplat viennent de `NoteBox hypothesis`. */
+.planNote {
+  margin: var(--space-18) var(--space-gutter-mobile) 0;
+}
+
+/* --- Pied d'écran -------------------------------------------------------------------------------------- */
+
+/* `margin-top:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:12px` */
+.footer {
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-gutter-mobile);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-12);
+}
+
+/* `padding:16px; text-align:center; font-size:11px; letter-spacing:.1em` — soit 48 px mesurés sur
+ * l'artboard, là où le jeton `ink-shadow` en pose 51 pour le générateur. L'artboard 18 resserre son
+ * rembourrage depuis sa propre feuille, comme le composant le prévoit. */
+.libraryAction {
+  min-height: 48px;
+  padding: var(--space-16);
+  font-size: var(--fs-button);
+}
+
+/* `font-size:14px; font-weight:600; text-align:center; text-underline-offset:4px` — le composant
+ * `link` pose 15 px : l'artboard 18 le resserre d'un pixel et le centre. */
+.planLink {
+  align-self: center;
+  font-size: var(--fs-list-title);
+}
+
+/* --- Grand écran : la colonne se borne ---------------------------------------------------------------- */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+}

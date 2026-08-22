@@ -1,0 +1,99 @@
+/* G6 · Récapitulatif — canevas lignes 236-273. */
+
+/* --- Tableau étape / valeur (canevas G6 : `margin:16px 20px 0; border:2px`) --- */
+
+.table {
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: 8px 10px;
+}
+
+/* Les lignes portent elles-mêmes leur rembourrage de 10 px (canevas G6). */
+.tableBody {
+  display: flex;
+  flex-direction: column;
+}
+
+/* La dernière ligne touche le cadre : son filet ferait un double trait. */
+.tableBody > :last-child {
+  border-bottom: none;
+}
+
+/* --- Ce que le moteur va faire --- */
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-label-gap-lg);
+  margin: var(--space-block-md) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rule {
+  display: flex;
+  gap: var(--space-label-gap-lg);
+  align-items: flex-start;
+}
+
+.pipApplied,
+.pipRule,
+.pipDiscarded {
+  flex: none;
+  width: 22px;
+  height: 9px;
+  margin-top: 5px;
+  border-radius: var(--radius-none);
+}
+
+/* Appliqué et sourcé. */
+.pipApplied {
+  background: var(--color-ink);
+}
+
+/* Règle métier assumée, sans source citée. */
+.pipRule {
+  border: var(--border-width-structure) solid var(--color-ink);
+  box-sizing: border-box;
+}
+
+/* Écarté faute de preuve — hachures à bords nets (arrêts durs), jamais un dégradé. */
+.pipDiscarded {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  box-sizing: border-box;
+  background-color: var(--color-paper);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-ink),
+    var(--color-ink) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
+
+.ruleText {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+
+.ruleNote {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  margin-left: 1px;
+}

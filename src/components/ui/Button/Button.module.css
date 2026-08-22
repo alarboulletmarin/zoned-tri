@@ -1,0 +1,48 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 var(--space-block-lg);
+  border-radius: var(--radius-none);
+  border: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Pas d'opacité globale : elle délavait le CTA principal (encre / lime / ombre orange décalée)
+ * du canevas. L'indisponibilité passe par le curseur, l'attribut `disabled` (lu par les
+ * lecteurs d'écran) et le `title` explicatif. */
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.secondary:disabled {
+  opacity: 0.5;
+}
+
+.primary {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  box-shadow: var(--shadow-primary);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: none;
+}
+
+.withEndAdornment {
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 var(--space-block-lg);
+  gap: var(--space-block-md);
+}
+
+.end {
+  flex: none;
+}

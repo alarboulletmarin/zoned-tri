@@ -1,0 +1,112 @@
+/* Carte de calculateur — artboard S8 : `border:2px solid; padding:13px`.
+ * Même carte en grille sur desktop et en liste sur mobile : le canevas n'en dessine qu'une. */
+
+.card {
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: var(--space-13);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+/* `font-size:17px; font-weight:700; letter-spacing:-.03em` */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 17px;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* Index du calculateur : une quantité, donc en mono. */
+.index {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `mono 10px; line-height:1.55; margin-top:6px` */
+.description {
+  margin: var(--space-6) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* `display:flex; gap:7px; margin-top:11px` */
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-7);
+  margin-top: var(--space-11);
+}
+
+/* `border:1px solid; padding:6px 9px; gap:6px; align-items:baseline` */
+.chip {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  padding: var(--space-6) var(--space-9);
+  display: flex;
+  gap: var(--space-6);
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.chipValue {
+  white-space: nowrap;
+}
+
+.chipValueEmpty {
+  color: var(--color-inactive);
+}
+
+/* `color:#5B594F; font-size:9px` */
+.chipUnit {
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+  white-space: nowrap;
+}
+
+/* `margin-top:11px; border-top:1px solid; padding-top:9px` */
+.footer {
+  margin-top: var(--space-11);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-9);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+/* `mono 17px 700` */
+.result {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: var(--fw-bold);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.resultEmpty {
+  color: var(--color-inactive);
+}
+
+/* `border:2px solid; padding:6px 9px; mono 10px; letter-spacing:.08em` — la cible est étendue à
+ * 44 px par le pseudo-élément de `SecondaryAction`, l'œil garde le jeton du canevas. */
+.action {
+  flex: none;
+  padding: var(--space-6) var(--space-9);
+  border-width: var(--border-width-structure);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+}

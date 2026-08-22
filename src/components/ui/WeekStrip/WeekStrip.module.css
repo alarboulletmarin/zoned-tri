@@ -1,0 +1,54 @@
+/* Artboard 03 : `display:flex; align-items:flex-end; gap:4px; height:84px`. */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-4);
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-none);
+}
+
+/* Jour libre : la colonne existe quand même, en pointillé clair et pleine hauteur — le vide occupe
+ * sa place au lieu de laisser un trou dans la comparaison (README §3 règle 4). */
+.empty,
+.emptyHairline {
+  height: 100%;
+  background: transparent;
+}
+
+.empty {
+  border: var(--border-style-empty);
+}
+
+/* Colonne libre de l'histogramme de contexte (canevas S4 l. 1625) : le même creux, au filet. */
+.emptyHairline {
+  border: var(--border-style-empty-hairline);
+}
+
+.today {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: -2px;
+}
+
+.initials {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.initials > span {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.initialToday {
+  font-weight: var(--fw-bold);
+  color: var(--color-ink);
+}

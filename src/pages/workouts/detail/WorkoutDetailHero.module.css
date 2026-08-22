@@ -1,0 +1,87 @@
+.headerBlock {
+  padding: var(--space-14) var(--detail-gutter, var(--space-gutter-mobile)) var(--space-12);
+}
+
+/* L'artboard 05 respire un peu moins que 28 et 29 : `padding:12px 20px 10px`. */
+.header_swim {
+  padding: var(--space-12) var(--detail-gutter, var(--space-gutter-mobile)) var(--space-10);
+}
+
+.headerWide {
+  padding: 0;
+}
+
+.badgeRow {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* S5 l. 1745 : dans la colonne large, la précision passe à droite de la rangée de pastilles. */
+.subtitleWide {
+  margin-left: auto;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  margin: var(--space-12) 0 0;
+}
+
+.header_swim .title {
+  margin-top: var(--space-10);
+}
+
+/* Trois corps littéraux, un par artboard : 05 l. 574 (44 px / .88), 28 l. 3066 (36 px / .9),
+ * 29 l. 3127 (34 px / .9). Aucun jeton de l'échelle actuelle ne porte ces trois valeurs — les
+ * trois à câbler sont listés dans le rapport de reprise. */
+.swim {
+  font-size: var(--fs-title-fiche-lg);
+  line-height: 0.88;
+}
+
+.bike {
+  font-size: var(--fs-title-fiche-md);
+  line-height: 0.9;
+}
+
+.run {
+  font-size: var(--fs-title-fiche-sm);
+  line-height: 0.9;
+}
+
+/* Panneau de S5 (l. 1743) : `font-size:34px; line-height:.9; margin-top:12px`. C'est la SEULE
+ * fiche large que le canevas dessine — le 38/46 px précédent venait de S4, qui est l'écran
+ * Aujourd'hui et non une fiche de séance. Mesure bornée à 22 caractères (README §3 règle 6). */
+.titleWide {
+  font-size: var(--fs-title-fiche-sm);
+  line-height: 0.9;
+  margin-top: var(--space-12);
+  max-width: 22ch;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-sm);
+  color: var(--color-text);
+  margin-top: var(--space-10);
+}
+
+/* Le canevas dessine 14 px de couleur ENTRE deux filets de 2 px, soit une bande de 18 px : en
+ * `border-box` (le défaut du projet) la couleur tombait à 10 px. Mesuré : design 18 px / app 14 px. */
+.strip {
+  box-sizing: content-box;
+  height: var(--space-14);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}

@@ -1,0 +1,292 @@
+/*
+ * Artboard 40 · Feuille de filtres. La feuille elle-même (voile, filet haut, poignée, titre) est
+ * portée par `BottomSheet` ; ce fichier ne tient que les cinq rangées et le pied.
+ */
+
+/* 40 l. 3787 : `margin:13px 20px 0`. */
+.section,
+.columns {
+  margin: var(--space-13) var(--space-gutter-mobile) 0;
+}
+
+.sectionLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* 40 l. 3788 : `gap:6px; margin-top:9px`, mono 10 px capitales. */
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* 40 l. 3790 : inactif = filet de 1 px, `padding:6px 10px`, texte `#3B3A33`. Le filet compte dans
+ * la boîte : le jeton actif, sans filet, prend un pixel de gouttière de plus et les deux formes
+ * gardent exactement la même hauteur. */
+.chip {
+  position: relative;
+  border: var(--border-width-hairline) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: transparent;
+  color: var(--color-text);
+  padding: var(--space-6) var(--space-10);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+/* 40 l. 3789 : `background:#0B0B0A; color:#EFEDE6; padding:7px 10px`. */
+.chipActive {
+  border: none;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  padding: var(--space-7) var(--space-10);
+}
+
+/* 40 l. 3797 : `gap:6px; margin-top:9px`, mono 11 px gras. */
+.zoneRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  font-weight: var(--fw-bold);
+}
+
+/* 40 l. 3798-3803 : `padding:6px 9px`, et l'aplat éteint à 0,4 quand la zone est hors filtre. */
+.zoneToggle {
+  position: relative;
+  border: none;
+  border-radius: var(--radius-none);
+  padding: var(--space-6) var(--space-9);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: var(--color-ink);
+  opacity: 0.4;
+}
+
+.zoneToggle[data-active='true'] {
+  opacity: 1;
+}
+
+.zoneToggle[data-zone='Z1'] { background: var(--color-zone-1); }
+.zoneToggle[data-zone='Z2'] { background: var(--color-zone-2); }
+.zoneToggle[data-zone='Z3'] { background: var(--color-zone-3); }
+.zoneToggle[data-zone='Z4'] { background: var(--color-zone-4); }
+.zoneToggle[data-zone='Z5'] { background: var(--color-zone-5); color: var(--color-paper); }
+.zoneToggle[data-zone='Z6'] { background: var(--color-zone-6); color: var(--color-paper); }
+
+/* Jetons de 24 à 27 px : cible portée à 44 px par un pseudo-élément centré, sans les grossir. */
+.chip::after,
+.zoneToggle::after,
+.option::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+/* 40 l. 3806 : `gap:10px; margin-top:11px`. */
+.durationRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  margin-top: var(--space-block-sm);
+}
+
+/* Le rail garde la hauteur de ses carrés — 14 px — et rien de plus : les curseurs le débordent
+ * pour offrir 44 px de prise sans peser sur la hauteur de la feuille. */
+.rail {
+  position: relative;
+  flex: 1;
+  height: var(--space-14);
+}
+
+.railTrack,
+.railFill {
+  position: absolute;
+  top: 50%;
+  height: var(--border-width-structure);
+  transform: translateY(-50%);
+}
+
+.railTrack {
+  left: 0;
+  width: 100%;
+  background: var(--color-hairline);
+}
+
+/* 40 l. 3808 : la portion retenue est en encre, le reste en `#CFCCC0`. */
+.railFill {
+  background: var(--color-ink);
+}
+
+.railInput {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: var(--action-height-min);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  /* Deux curseurs superposés : seul le carré prend le pointeur, sinon celui du dessus mangerait
+   * l'autre. Le clavier, lui, atteint les deux par tabulation. */
+  pointer-events: none;
+}
+
+.railInput::-webkit-slider-runnable-track {
+  height: var(--border-width-structure);
+  background: transparent;
+}
+
+.railInput::-moz-range-track {
+  height: var(--border-width-structure);
+  background: transparent;
+}
+
+/* 40 l. 3807 : `width:14px; height:14px; background:#0B0B0A` — un carré, jamais une pastille. */
+.railInput::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--space-14);
+  height: var(--space-14);
+  margin-top: -6px;
+  border: none;
+  border-radius: var(--radius-none);
+  background: var(--color-ink);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.railInput::-moz-range-thumb {
+  width: var(--space-14);
+  height: var(--space-14);
+  border: none;
+  border-radius: var(--radius-none);
+  background: var(--color-ink);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.railInput:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-signal-lime);
+  outline-offset: var(--space-2);
+}
+
+.durationValue {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  white-space: nowrap;
+}
+
+/* 40 l. 3814 : `display:flex; gap:22px`, deux colonnes égales. */
+.columns {
+  display: flex;
+  gap: var(--space-22);
+}
+
+.columns > section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 40 l. 3817 : `line-height:1.9; margin-top:7px`, mono 11 px `#3B3A33`. */
+.optionList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: var(--space-7);
+}
+
+.option {
+  position: relative;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.9;
+  color: var(--color-text);
+}
+
+/* 40 l. 3817 : la valeur retenue passe en encre et prend son ✓. */
+.optionActive {
+  color: var(--color-ink);
+}
+
+/* Colonne inerte faute de champ dans le modèle : le survol dit pourquoi (méthode §4). */
+.inertColumn {
+  margin: var(--space-7) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  line-height: 1.9;
+  color: var(--color-inactive);
+  cursor: help;
+}
+
+/* 40 l. 3828 : `margin:12px 20px 0; border-top:1px solid; padding-top:9px; line-height:1.55`. */
+.helper {
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  padding-top: var(--space-9);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* 40 l. 3829 : `padding:11px 20px 14px; gap:10px; align-items:stretch`. */
+.footer {
+  display: flex;
+  gap: var(--space-10);
+  align-items: stretch;
+  padding: var(--space-block-sm) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* 40 l. 3830 : `border:2px; padding:0 13px; min-height:46px`, mono 10 px capitales — le jeton par
+ * défaut de `SecondaryAction` est plus petit ; l'artboard donne ici sa mesure d'action pleine. */
+.clearButton {
+  flex: none;
+  /* Le canevas est en `content-box` : `min-height:46px` + `border:2px` occupe 50 px, et c'est
+   * cette hauteur-là que la rangée entière prend (`align-items:stretch`). */
+  min-height: calc(var(--action-height-sheet) + 2 * var(--border-width-structure));
+  padding: 0 var(--space-13);
+  font-size: var(--fs-label-section);
+}
+
+/* 40 l. 3831 : `flex:1; min-height:46px`, mono 11 px, texte centré. La feuille est le seul endroit
+ * où l'action encre-et-ombre descend à 46 px : ailleurs le canevas l'écrit à 51. */
+.applyButton {
+  flex: 1;
+  min-height: var(--action-height-sheet);
+  padding: 0 var(--space-13);
+  font-size: var(--fs-button);
+  justify-content: center;
+}

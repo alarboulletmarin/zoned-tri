@@ -1,0 +1,236 @@
+/*
+ * Écran S1 « Menu (burger ouvert) » du canevas.
+ * Cadre de référence : 390 × 780, fond encre, texte « desk », gouttière 16 px.
+ */
+
+.panel {
+  /* Gouttière propre à l'écran S1 (16 px), plus serrée que `--space-gutter-mobile`. */
+  --menu-gutter: 16px;
+
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* En-tête : mot-symbole à gauche, croix de fermeture à droite, filet épais en bas. */
+.header {
+  flex: none;
+  height: 46px;
+  padding: 0 var(--menu-gutter);
+  border-bottom: var(--border-width-structure) solid var(--color-on-ink-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 19px;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* La croix mesure 18 px dans le canevas ; le rembourrage élargit la cible tactile sans
+   * décaler le glyphe de la gouttière. */
+  padding: 9px;
+  margin-right: -9px;
+}
+
+.closeGlyph {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.closeBar {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+
+.closeBar:first-child {
+  transform: rotate(45deg);
+}
+
+.closeBar:last-child {
+  transform: rotate(-45deg);
+}
+
+/* Les 4 sections racines : filets fins entre les lignes, dernier filet fermé en bas. */
+.sections {
+  padding: 20px var(--menu-gutter) 0;
+}
+
+.sectionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sectionLink {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-label-gap-lg);
+  padding: 15px 0;
+  border-top: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+  color: inherit;
+  text-decoration: none;
+}
+
+.sectionList li:last-child .sectionLink {
+  border-bottom: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+}
+
+.sectionLabel {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 30px;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.sectionCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  color: var(--color-on-ink-muted);
+}
+
+/* Trois actions : la génération en lime pleine, les deux autres cerclées. */
+.actions {
+  padding: 18px var(--menu-gutter) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block-md);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-label-gap-lg);
+  padding: 13px 15px;
+  border: var(--border-width-structure) solid var(--color-on-ink-text);
+  border-radius: var(--radius-none);
+  color: var(--color-on-ink-text);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+/* Pleine, sans filet : 1 px de rembourrage en plus de chaque côté, comme dans le canevas. */
+.actionFeatured {
+  background: var(--color-signal-lime);
+  color: var(--color-ink);
+  border: none;
+  padding: 14px 15px;
+}
+
+/* « Ce qui n'existe pas encore » : la section reste visible mais grisée. */
+.future {
+  margin: 20px var(--menu-gutter) 0;
+  border-top: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+  padding-top: 14px;
+}
+
+.futureLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-on-ink-muted);
+}
+
+.futureRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-label-gap-lg);
+  margin-top: var(--space-label-gap-sm);
+  padding: var(--space-block-md) 0;
+  border-top: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+}
+
+.futureItem {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 20px;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.futureNote {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* Pied : langue à gauche, version collée à droite en casse et chasse normales. */
+.footer {
+  margin-top: auto;
+  padding: 14px var(--menu-gutter);
+  border-top: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+  display: flex;
+  align-items: center;
+  gap: var(--space-label-gap-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+}
+
+.langLabel {
+  color: var(--color-on-ink-muted);
+}
+
+.lang {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+  padding: 6px 10px;
+  color: var(--color-on-ink-muted);
+  cursor: pointer;
+}
+
+.lang:disabled {
+  cursor: default;
+}
+
+.langActive {
+  background: var(--color-on-ink-text);
+  color: var(--color-ink);
+}
+
+.version {
+  margin-left: auto;
+  color: var(--color-on-ink-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}

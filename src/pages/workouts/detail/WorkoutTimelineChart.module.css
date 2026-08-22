@@ -1,0 +1,86 @@
+.wrap {
+  padding: var(--space-10) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+}
+
+.swim { padding-top: var(--space-10); }
+.bike { padding-top: var(--space-14); }
+.run { padding-top: var(--space-11); }
+
+/* Panneau de S5 (l. 1746) : pas de retrait propre, l'écart se prend en marge haute. */
+.wide {
+  padding: 0;
+  margin-top: var(--space-16);
+}
+
+.caption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+}
+
+.swim .chart { height: var(--space-24); }
+.bike .chart { height: 44px; margin-top: var(--space-9); }
+.run .chart { height: 48px; }
+.wide .chart { height: 34px; }
+
+.bar {
+  align-self: flex-end;
+}
+
+.barThin {
+  align-self: flex-end;
+  background: var(--color-hairline);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-11);
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.wide .legend {
+  margin-top: var(--space-8);
+  color: var(--color-text);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.legendSwatch {
+  width: var(--space-9);
+  height: var(--space-9);
+  flex: none;
+}
+
+.legendLineSwatch {
+  width: var(--space-11);
+  height: var(--space-2);
+  flex: none;
+}
+
+/* 28 l. 3083 : `justify-content:space-between; font-size:10px; color:#5B594F; margin-top:7px`. */
+.scale {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}

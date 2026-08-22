@@ -1,0 +1,221 @@
+/* Écran 14 · Import / export · sources. Toutes les valeurs viennent de l'artboard. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* `padding:12px 20px 10px` */
+.head {
+  flex: none;
+  padding: var(--space-12) var(--space-gutter-mobile) var(--space-10);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:36px; line-height:.88; letter-spacing:-.05em; margin-top:8px` */
+.title {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 36px;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* `height:14px; background:#0B0B0A` — sans filets, contrairement à la frise de l'artboard 12. */
+.frieze {
+  flex: none;
+  height: 14px;
+  background: var(--color-ink);
+}
+
+/* --- Tableau des sorties -------------------------------------------------------------------- */
+
+/* `margin:16px 20px 0; border:2px solid` */
+.table {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-8) var(--space-10);
+}
+
+/* `padding:10px; border-bottom:1px; align-items:baseline` */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-10);
+  padding: var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* `font-size:14px; font-weight:600` */
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+}
+
+/* `font-size:10px; margin-top:2px` */
+.rowMeta {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `font-size:11px; font-weight:700` — le format EST l'action de la ligne. */
+.rowAction {
+  flex: none;
+  width: auto;
+  border: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rowAction:disabled {
+  text-decoration: none;
+}
+
+/* Une erreur d'export ne reste jamais silencieuse (absent de l'artboard : il n'en dessine pas). */
+.error {
+  margin: var(--space-10) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-signal-red);
+  padding: var(--space-9) var(--space-10);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* --- Sources du moteur ------------------------------------------------------------------------ */
+
+/* `margin:12px 20px 0; border-top:1px solid; padding-top:11px` */
+.sources {
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-11);
+}
+
+/* `display:flex; flex-direction:column; gap:5px; margin-top:8px` */
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+}
+
+/* `display:flex; gap:10px; align-items:flex-start` */
+.source {
+  display: flex;
+  gap: var(--space-10);
+  align-items: flex-start;
+}
+
+/* `width:22px; height:9px; margin-top:5px` en `content-box` — le contour s'ajoute. */
+.mark {
+  box-sizing: content-box;
+  width: 22px;
+  height: 9px;
+  margin-top: var(--space-5);
+  flex: none;
+}
+
+/* Source retenue et solide : aplat plein. */
+.markSolid {
+  background: var(--color-ink);
+}
+
+/* Source transposée : contour de 2 px, aplat vide. */
+.markOutline {
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* Règle écartée : hachure d'encre sur filet de 1 px — un motif, pas un dégradé. */
+.markHatch {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  background-image: repeating-linear-gradient(45deg, var(--color-ink) 0 1px, transparent 1px 5px);
+}
+
+/* `font-size:13px; font-weight:600` */
+.sourceTitle {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+}
+
+.sourceMeta {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Bandeau d'encre de pied d'écran ------------------------------------------------------------ */
+
+/* `margin-top:auto; padding:10px 16px 12px; border-top:2px; background:#0B0B0A; color:#EFEDE6` */
+.pledge {
+  margin-top: auto;
+  padding: var(--space-10) var(--space-16) var(--space-12);
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* --- Grand écran : la colonne se borne ------------------------------------------------------------ */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: var(--space-4) 0;
+  }
+}

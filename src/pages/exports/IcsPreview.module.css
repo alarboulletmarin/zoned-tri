@@ -1,0 +1,78 @@
+/* Artboard 24 · Contenu du fichier .ICS (l. 2854-2871).
+ * Le seul panneau d'encre de ce dossier : il montre un FICHIER, et un fichier se lit dans un
+ * terminal. Les trois valeurs de surface d'encre du système s'appliquent — texte `#EFEDE6`,
+ * filets `#2A2A26`, mentions grises `#8F8F86` — plus le lime des signaux pour le nom du fichier. */
+
+.panel {
+  box-sizing: border-box;
+  width: 420px;
+  max-width: 100%;
+  padding: var(--space-18);
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+/* 24 l. 2855 : `justify-content:space-between; border-bottom:1px solid #2A2A26; padding-bottom:10px`. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding-bottom: var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+}
+
+/* `font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#D6F24B`. */
+.fileName {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+  color: var(--color-signal-lime);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* `font-size:10px; color:#8F8F86` — une quantité, donc en mono. */
+.size {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-on-ink-muted);
+}
+
+/* 24 l. 2859 : `font-size:10px; line-height:1.85; margin-top:12px; color:#BDBBB2;
+ * white-space:pre-wrap`. */
+.body {
+  margin: var(--space-12) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.85;
+  color: var(--color-on-ink-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.line {
+  display: inline;
+}
+
+/* Ce que l'athlète lit dans son agenda passe en texte plein ; l'enveloppe reste en retrait. */
+.content {
+  color: var(--color-on-ink-text);
+}
+
+/* 24 l. 2870 : `border-top:1px solid #2A2A26; margin-top:12px; padding-top:10px;
+ * font-size:10px; line-height:1.7; color:#8F8F86`. */
+.foot {
+  margin-top: var(--space-12);
+  padding-top: var(--space-10);
+  border-top: var(--border-width-hairline) solid var(--color-on-ink-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.7;
+  color: var(--color-on-ink-muted);
+}

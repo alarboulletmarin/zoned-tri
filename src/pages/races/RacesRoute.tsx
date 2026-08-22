@@ -1,0 +1,151 @@
+import { useNavigate, useParams } from 'react-router-dom'
+import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
+import { EmptyState } from '../../components/ui/EmptyState/EmptyState'
+import { usePlans, useRaces } from '../../context/AppDataContext'
+import { findCurrentWeek, todayIso } from '../../domain/planWeek'
+import type { Race, TrainingPlan } from '../../domain/types'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import { RaceChecklistScreen } from './RaceChecklistScreen'
+import { RaceDayScreen } from './RaceDayScreen'
+import { RaceNutritionScreen } from './RaceNutritionScreen'
+import { RacePacingScreen } from './RacePacingScreen'
+import { RaceSheetScreen } from './RaceSheetScreen'
+import { RacesDesktopScreen } from './RacesDesktopScreen'
+import { RacesListScreen, type PlanPosition } from './RacesListScreen'
+import s from './RaceScreens.module.css'
+
+/** Plan actif qui vise cette course — c'est lui qui donne « semaine 07 / 18 » et l'affûtage. */
+function planForRace(plans: TrainingPlan[], raceId: string | undefined): TrainingPlan | undefined {
+  return plans.find((plan) => plan.status === 'active' && plan.raceId === raceId)
+}
+
+function planPosition(plan: TrainingPlan | undefined, today: string): PlanPosition | undefined {
+  if (!plan) return undefined
+  const week = findCurrentWeek(plan, today) ?? plan.weeks[0]
+  if (!week) return undefined
+  return { weekNumber: week.weekNumber, weeksCount: plan.weeksCount }
+}
+
+function taperWeeks(plan: TrainingPlan | undefined): number | undefined {
+  return plan?.phases.find((phase) => phase.name === 'Taper')?.weeksCount
+}
+
+/**
+ * Route `/races` — la racine de la section. Trois formes, selon ce qu'il y a à montrer :
+ *
+ * - desktop (≥ 1024 px) : l'artboard S7, calendrier et fiche côte à côte ;
+ * - mobile et tablette, plusieurs courses : l'artboard 27, « Mes courses » ;
+ * - mobile et tablette, une seule course : l'artboard 08 directement — une liste d'un seul élément
+ *   ferait perdre un appui pour rien, et 08 se décrit lui-même comme la racine « onglet Courses ».
+ *
+ * Le canevas ne donne pas de mise en page tablette à la section : la tablette suit donc le mobile.
+ */
+export function RacesRoute() {
+  const breakpoint = useBreakpoint()
+  const { races, loading } = useRaces()
+  const { plans } = usePlans()
+  const today = todayIso()
+
+  if (loading) return null
+
+  if (races.length === 0) {
+    return (
+      <div className={s.screen}>
+        <AppHeader variant="root" label="Courses" desktopTitle="Courses" />
+        <div className={s.column}>
+          <div className={s.emptyBlock}>
+            <EmptyState
+              headline="Aucune course"
+              sentence="Aucune course n’est enregistrée : c’est une course objectif qui donne au plan sa date de fin et son affûtage."
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (breakpoint === 'desktop') {
+    const goalId = races.find((race) => race.role === 'primary_goal' && race.date >= today)?.id
+    return (
+      <RacesDesktopScreen races={races} today={today} taperWeeks={taperWeeks(planForRace(plans, goalId))} />
+    )
+  }
+
+  if (races.length === 1) {
+    return <RaceSheetScreen race={races[0]} today={today} variant="root" />
+  }
+
+  const goal = races.find((race) => race.role === 'primary_goal' && race.date >= today)
+  return (
+    <RacesListScreen
+      races={races}
+      today={today}
+      planPosition={planPosition(planForRace(plans, goal?.id), today)}
+    />
+  )
+}
+
+/** Écran d'une course introuvable — jamais un blanc muet, jamais un cul-de-sac. */
+function RaceNotFound() {
+  const navigate = useNavigate()
+  return (
+    <div className={s.screen}>
+      <AppHeader
+        variant="detail"
+        trail={['Courses', 'Introuvable']}
+        desktopTitle="Course introuvable"
+        onBack={() => navigate('/races')}
+      />
+      <div className={s.column}>
+        <div className={s.emptyBlock}>
+          <EmptyState
+            headline="Introuvable"
+            sentence="Cette course n’existe plus sur cet appareil : elle a été supprimée, ou son lien vient d’une autre sauvegarde."
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Charge la course de l'URL, ou dit qu'elle n'existe pas. Partagé par les cinq écrans de détail. */
+function useRaceOfRoute(): { race: Race | undefined; loading: boolean } {
+  const { id } = useParams<{ id: string }>()
+  const { races, loading } = useRaces()
+  return { race: races.find((race) => race.id === id), loading }
+}
+
+export function RaceSheetRoute() {
+  const { race, loading } = useRaceOfRoute()
+  if (loading) return null
+  if (!race) return <RaceNotFound />
+  return <RaceSheetScreen race={race} today={todayIso()} variant="detail" />
+}
+
+export function RacePacingRoute() {
+  const { race, loading } = useRaceOfRoute()
+  if (loading) return null
+  if (!race) return <RaceNotFound />
+  return <RacePacingScreen race={race} />
+}
+
+export function RaceNutritionRoute() {
+  const { race, loading } = useRaceOfRoute()
+  if (loading) return null
+  if (!race) return <RaceNotFound />
+  return <RaceNutritionScreen race={race} />
+}
+
+export function RaceDayRoute() {
+  const { race, loading } = useRaceOfRoute()
+  if (loading) return null
+  if (!race) return <RaceNotFound />
+  return <RaceDayScreen race={race} />
+}
+
+export function RaceChecklistRoute() {
+  const { race, loading } = useRaceOfRoute()
+  if (loading) return null
+  if (!race) return <RaceNotFound />
+  return <RaceChecklistScreen race={race} />
+}

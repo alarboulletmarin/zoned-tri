@@ -1,0 +1,172 @@
+/* Hauteur bornée à la fenêtre : le rail et le header restent en place, seul le contenu
+ * défile (dans `.main`, ou dans les colonnes internes des écrans qui en gèrent — ex. S5). */
+.shell {
+  display: flex;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--color-paper);
+}
+
+.rail {
+  width: var(--rail-width-desktop);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* Canevas S5 l. 1666 : `padding:0 18px; min-height:52px; gap:12px`, burger 20px puis mot-symbole. */
+.railHeader {
+  padding: 0 18px;
+  min-height: var(--shell-header-height);
+  box-sizing: border-box;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.railBurger {
+  flex: none;
+  display: flex;
+  color: var(--color-ink);
+}
+
+.railWordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 19px;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.railSectionLabel {
+  padding: 16px 18px 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.railNav {
+  margin-top: 10px;
+}
+
+/* Canevas S5 l. 1672-1675 : rangée `padding:11px 18px`, libellé 15px #3B3A33, index mono 11px. */
+.railLink {
+  /* `padding:11px 18px` au canevas (S4 l. 1551) donnait 43 px : un pixel sous la cible minimale du
+   * README §3. On ne change pas la gouttière, on pose le plancher. */
+  min-height: var(--action-height-min);
+  padding: 11px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.railFooter {
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.railIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  color: var(--color-label);
+}
+
+.railLabel {
+  font-size: 15px;
+  color: var(--color-text);
+}
+
+.railFooter .railLabel {
+  font-size: 14px;
+}
+
+/* Section courante : aplat d'encre et libellé lime en capitales — jamais un filet latéral. */
+.railLinkActive {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}
+
+.railLinkActive .railIndex,
+.railLinkActive .railLabel {
+  color: inherit;
+}
+
+.railLinkActive .railLabel {
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+/* Bloc contextuel publié par l'écran (canevas S5 l. 1677-1680 : « Bibliothèque · 312 séances »). */
+.railBlock {
+  margin: 16px 18px 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: 13px;
+}
+
+.railBlockTitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.railBlockLines {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  line-height: 1.9;
+  color: var(--color-text);
+}
+
+/* Bloc à barre d'avancement (canevas S4 l. 1558-1559) : la barre respire de 9 px sous l'intitulé,
+ * et la ligne qui la suit — « J-77 » — descend d'un cran, en 10 px effacés. S5 et S6, qui n'ont
+ * pas de barre, gardent leurs 11 px d'encre douce : c'est le canevas qui distingue les deux. */
+.railProgress {
+  margin-top: 9px;
+}
+
+.railProgress + .railBlockLines {
+  margin-top: 7px;
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+.railFooter {
+  margin-top: auto;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  /* Défilement par défaut des écrans qui ne bornent pas leur propre hauteur. */
+  overflow-y: auto;
+  background: var(--color-paper);
+}
+
+/* Encart jaune du rail (canevas S6 l. 1796) : `margin:14px 18px 0; padding:9px 10px`, mono 10 px,
+ * interligne 1.6. Le composant `NoteBox` porte le contour et la typographie ; le rail ne pose que
+ * sa gouttière. */
+.railNote {
+  margin: var(--space-14) var(--space-18) 0;
+  padding: var(--space-9) var(--space-10);
+}
+
+.railNote > div {
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+}

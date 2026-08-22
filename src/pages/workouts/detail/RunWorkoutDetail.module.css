@@ -1,0 +1,92 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--color-paper);
+}
+
+.statsGrid {
+  display: grid;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statsGrid[data-columns='1'] { grid-template-columns: 1fr; }
+.statsGrid[data-columns='2'] { grid-template-columns: 1fr 1fr; }
+.statsGrid[data-columns='3'] { grid-template-columns: 1fr 1fr 1fr; }
+
+.statCell {
+  padding: var(--space-12) var(--space-10);
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statCell:first-child {
+  padding-inline: var(--detail-gutter, var(--space-gutter-mobile));
+  border-left: none;
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+/* 24 px littéral (29 l. 3131), collé à son intitulé comme dans le canevas. */
+.statValue {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-data-lg-alt);
+  letter-spacing: -0.04em;
+}
+
+.table {
+  margin: var(--space-11) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+}
+
+.tableHeader > div {
+  padding: var(--space-7) var(--space-9);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow > div {
+  padding: var(--space-8) var(--space-9);
+}
+
+.tableRowEmphasis {
+  font-weight: var(--fw-bold);
+  background: var(--color-neutral-fill);
+}
+
+/* 29 l. 3162 : `margin:9px 20px 0; border-top:1px solid #CFCCC0; padding-top:9px`, mono 10 px. */
+.terrain {
+  margin: var(--space-9) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}

@@ -1,0 +1,61 @@
+.toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-block-md);
+  padding: var(--space-block-md) var(--space-gutter-mobile);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: var(--radius-none);
+}
+
+.message {
+  font-family: var(--font-display);
+  font-size: var(--fs-list-title);
+}
+
+.undoButton {
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--color-signal-lime);
+  border: var(--border-width-structure) solid var(--color-signal-lime);
+  border-radius: var(--radius-none);
+  font-family: var(--font-mono);
+  font-size: var(--fs-button);
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  padding: var(--space-label-gap-sm) var(--space-label-gap-lg);
+  cursor: pointer;
+}
+
+.timerTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--color-label);
+}
+
+.timerFill {
+  height: 100%;
+  width: 100%;
+  background: var(--color-signal-lime);
+  animation: undoToastDrain 6s linear forwards;
+}
+
+:global {
+  @keyframes undoToastDrain {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+}

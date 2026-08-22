@@ -1,0 +1,70 @@
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: var(--radius-none);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.withTrailing {
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.lime {
+  min-height: var(--action-height-primary);
+  padding: 0 var(--space-18);
+  background: var(--color-signal-lime);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-primary);
+}
+
+/* Artboard S9 : la colonne sombre de l'ouverture desktop est le seul endroit où l'action grandit —
+ * 56 px de haut, 13 px de mono, `padding:0 22px`, ombre de 8 px. */
+.lime.large {
+  min-height: 56px;
+  padding: 0 var(--space-22);
+  font-size: 13px;
+  box-shadow: var(--shadow-primary-lg);
+}
+
+.ink {
+  min-height: var(--action-height-ink);
+  padding: 0 var(--space-14);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  box-shadow: none;
+}
+
+/* Encre pleine, texte lime ET ombre orange : l'action d'encre posée sur le papier redevient
+ * l'action de l'écran (G1→G6 « Continuer », 18 « Ouvrir la bibliothèque », 19 « Choisir un autre
+ * fichier »). Le canevas l'écrit `padding:17px 18px` sur 12 px de mono, soit 51 px occupés. */
+.ink-shadow {
+  min-height: 51px;
+  padding: var(--space-16) var(--space-18);
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+  box-shadow: var(--shadow-primary);
+}
+
+.label {
+  min-width: 0;
+}
+
+.trailing {
+  flex: none;
+}
+
+/* Pas d'opacité : elle déteindrait l'aplat lime. L'indisponibilité passe par le curseur, l'attribut
+ * `disabled` que lisent les technologies d'assistance, et le `title` qui dit pourquoi. */
+.action:disabled {
+  cursor: not-allowed;
+}

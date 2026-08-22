@@ -1,0 +1,114 @@
+/* G5 · Références — canevas lignes 183-231. */
+
+.reference {
+  display: flex;
+  gap: var(--space-block-md);
+  align-items: center;
+  padding: var(--space-block-lg) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.reference:last-child {
+  border-bottom: none;
+}
+
+.referenceBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.referenceLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+/*
+ * Référence connue : 22 px mono soulignés d'un filet 2 px encre.
+ * Référence absente : 15 px en gris inactif sur un filet 1 px hairline — la différence d'épaisseur
+ * dit, sans texte, qu'il n'y a rien à lire ici.
+ */
+.valueFilled,
+.valueEmpty {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  font-family: var(--font-mono);
+  color: var(--color-ink);
+}
+
+.valueFilled {
+  margin-top: 4px;
+  padding-bottom: 2px;
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  font-size: 22px;
+}
+
+.valueEmpty {
+  margin-top: 6px;
+  padding-bottom: 3px;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-size: 15px;
+  color: var(--color-inactive);
+}
+
+/* Le canevas dessine une valeur soulignée, haute de 30 à 33 px — pas une boîte. On garde ce jeton
+   et on porte la CIBLE à 44 px : le champ déborde de 6 px de part et d'autre de sa ligne de base
+   sans peser sur la mise en page, le filet reste exactement où l'artboard le pose. */
+.valueInput {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--action-height-min);
+  margin-block: -6px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.valueEmpty .valueInput::placeholder {
+  color: var(--color-inactive);
+}
+
+.valueInput:focus {
+  outline: var(--border-width-hairline) solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.unit {
+  flex: none;
+  font-size: 12px;
+}
+
+.referenceMeta {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Test proposé --- */
+
+.tests {
+  margin-top: var(--space-label-gap-lg);
+}
+
+.tests > button:last-child {
+  border-bottom: none;
+}
+
+/* --- Pourquoi pas d'estimation --- */
+
+.proofText {
+  margin: var(--space-footer-gap) 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-text);
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}

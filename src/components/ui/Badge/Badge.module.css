@@ -1,0 +1,48 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: var(--radius-none);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  /* Aucune valeur imposée : le canevas laisse `normal`, ce qui donne 22 px de haut à 11 px de mono
+   * (16 de ligne + 2 × 3 de gouttière). Forcer 1.3 rabotait le jeton de 2 px. */
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* Trois gabarits relevés au caractère près sur les artboards. */
+.sm {
+  font-size: 10px;
+  padding: var(--space-2) var(--space-6);
+}
+
+.md {
+  font-size: 11px;
+  padding: var(--space-3) var(--space-7);
+}
+
+.lg {
+  font-size: 11px;
+  padding: var(--space-4) var(--space-8);
+}
+
+/* Variante `outline` (artboards 03 l. 469 / 16 l. 2503) : filet d'encre 1 px et gouttière réduite
+ * d'un pixel, ce qui laisse la pastille exactement à la hauteur de ses voisines pleines. */
+.outline {
+  border: var(--border-width-hairline) solid var(--color-ink);
+  background: transparent;
+  color: var(--color-label);
+}
+
+.outline.sm {
+  padding: var(--space-1) var(--space-5);
+}
+
+/* Variante `ink` (artboards 03 l. 452 / 16 l. 2524) : la ligne du jour courant est en aplat lime,
+ * la pastille s'y inverse. */
+.ink {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}

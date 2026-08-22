@@ -1,0 +1,29 @@
+.notFound {
+  padding: var(--space-gutter-mobile);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* `flex: 1 0 auto` et non `flex: 1` : la colonne s'étire pour que le pied de fiche tombe en bas du
+ * cadre (`margin-top:auto`), mais ne se comprime JAMAIS sous la hauteur de son contenu — sinon le
+ * `.main` de la coquille la rabote et l'action se retrouve hors du cadre, sans rien pour défiler.
+ * Mesuré : 782 px de fiche dans une colonne rabotée à 748 px sur desktop. */
+.column {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tablette et desktop : la même colonne, bornée et centrée. Le canevas ne dessine pas de fiche
+ * pleine largeur ; l'étirer allongerait les lignes bien au-delà des ≈ 46 caractères du README §3
+ * règle 6. 440 px est la largeur que S5 donne au panneau de fiche (l. 1700). */
+.columnBounded {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--fiche-panel-width);
+  margin-inline: auto;
+  border-inline: var(--border-width-hairline) solid var(--color-hairline);
+}

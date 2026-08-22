@@ -1,0 +1,298 @@
+/* Écran 37 · Réglages du plan — canevas `data-screen-label="37"`.
+ * Base = mobile (390 px), gouttière de 20 px, chaque bloc la porte lui-même. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Tête (canevas : `padding:13px 20px 10px`) --- */
+
+.head {
+  flex: none;
+  padding: var(--space-13) var(--space-gutter-mobile) var(--space-10);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title-screen);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.headNote {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.band {
+  flex: none;
+}
+
+/* --- Tableau des six réglages (canevas : `margin:12px 20px 0; border:2px`) --- */
+
+.table {
+  flex: none;
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.tableHead,
+.row,
+.rowInert {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.tableHead {
+  background: var(--color-ink);
+  color: var(--color-on-ink-text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-7) var(--space-9);
+}
+
+/*
+ * Le canevas serre la ligne à `padding:6px 9px`, soit 29 px. Mais la ligne EST le contrôle
+ * (« chaque ligne se change sans refaire le plan ») et six lignes contiguës ne peuvent pas étendre
+ * leur cible par un pseudo-élément sans se chevaucher. La règle des 44 px l'emporte donc ici, et
+ * le tableau s'allonge de 90 px par rapport à l'artboard : c'est un écart assumé, pas un oubli.
+ */
+.row,
+.rowInert {
+  min-height: var(--action-height-min);
+  padding: 0;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  font-family: inherit;
+  color: var(--color-ink);
+}
+
+.row {
+  cursor: pointer;
+}
+
+.rowInert {
+  cursor: default;
+}
+
+.table > :last-child {
+  border-bottom: none;
+}
+
+.rowLabel {
+  padding: var(--space-6) var(--space-9);
+  font-size: 13px;
+}
+
+.rowValue {
+  padding: var(--space-6) var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+  text-align: right;
+}
+
+.rowImpact {
+  padding: var(--space-6) var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  white-space: nowrap;
+}
+
+/* Trois portées, trois signaux — le sens de chaque couleur est fixe dans tout le produit. */
+.impactSessions {
+  color: var(--color-zone-2);
+}
+
+.impactUpcoming {
+  color: var(--color-signal-yellow);
+}
+
+.impactWhole {
+  color: var(--color-signal-red);
+}
+
+/* Une ligne d'impact « tout » n'est pas une action : elle s'éteint. */
+.rowInert .rowLabel,
+.rowInert .rowValue {
+  color: var(--color-label);
+}
+
+/* --- Légende (canevas : `margin:9px 20px 0`, mono 9 px, pastilles de 9 px) --- */
+
+.legend {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  margin: var(--space-9) var(--space-gutter-mobile) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  color: var(--color-label);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.legendPip {
+  display: block;
+  width: var(--space-9);
+  height: var(--space-9);
+  flex: none;
+}
+
+.impactSessionsFill {
+  background: var(--color-zone-2);
+}
+
+.impactUpcomingFill {
+  background: var(--color-signal-yellow);
+}
+
+.impactWholeFill {
+  background: var(--color-signal-red);
+}
+
+/* --- Décisions du moteur (canevas : `margin:12px 20px 0; border-top:1px; padding-top:11px`) --- */
+
+.decisions {
+  flex: none;
+  margin: var(--space-12) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-11);
+}
+
+.sectionLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.decisionList {
+  margin-top: var(--space-8);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.decision {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-7) 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.decisionList > :last-child {
+  border-bottom: none;
+}
+
+.decisionBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.decisionTitle {
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink);
+}
+
+.decisionReason {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+  color: var(--color-label);
+}
+
+/* Canevas : `border:2px; padding:4px 7px`, mono 9 px. `SecondaryAction` porte déjà la cible de
+   44 px par pseudo-élément : le jeton reste petit, le doigt touche large. */
+.decisionAction {
+  align-self: center;
+  padding: var(--space-4) var(--space-7);
+}
+
+.noDecision {
+  margin-top: var(--space-8);
+}
+
+/* --- Pied (canevas : `margin-top:auto; padding:0 20px 14px`) --- */
+
+.footer {
+  flex: none;
+  margin-top: auto;
+  padding: 0 var(--space-gutter-mobile) var(--space-14);
+}
+
+.footerNote {
+  margin: 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding: var(--space-9) 0 var(--space-11);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+/* Canevas : `border:2px; padding:9px 11px`, mono 10 px capitales. Hauteur rendue 39 px : la cible
+   de 44 px vient du pseudo-élément de `SecondaryAction`. */
+.footerButton {
+  padding: var(--space-9) var(--space-11);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+}
+
+.footerButtonEnd {
+  margin-left: auto;
+}
+
+/* Desktop : colonne bornée, comme le reste de la section Plan. */
+@media (min-width: 1024px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: 0 var(--space-28);
+  }
+}

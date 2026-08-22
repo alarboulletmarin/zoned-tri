@@ -1,0 +1,489 @@
+/* Écran 13 · Calculateur — la fiche d'un des douze.
+ * Toutes les valeurs viennent de l'artboard ; le desktop borne la colonne, il ne l'étire pas. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* `padding:16px 20px 14px` */
+.head {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+/* `font-size:10px; letter-spacing:.14em` */
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:34px; line-height:.9; letter-spacing:-.05em; margin-top:8px` */
+.title {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 34px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* `height:14px` en `content-box`, entre deux filets de 2 px. */
+.frieze {
+  flex: none;
+  box-sizing: content-box;
+  height: 14px;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+}
+
+/* --- Saisie ------------------------------------------------------------------------------- */
+
+/* `margin:16px 20px 0` */
+.fields {
+  margin: var(--space-16) var(--space-gutter-mobile) 0;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* Les champs secondaires portent `letter-spacing:.1em` sur l'artboard, les principaux `.14em`. */
+.fieldLabelSmall {
+  letter-spacing: var(--ls-button);
+}
+
+/* Champ principal : `border:2px; box-shadow:4px 4px 0 #D6F24B; padding:13px 14px; margin-top:8px`.
+ * La gouttière verticale est portée par la saisie elle-même : la boîte garde la hauteur de
+ * l'artboard, et le `<input>` mesure bien plus de 44 px de haut. */
+.mainField {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  border: var(--border-width-structure) solid var(--color-ink);
+  box-shadow: 4px 4px 0 var(--color-signal-lime);
+  padding: 0 var(--space-14);
+  margin-top: var(--space-8);
+  background: var(--color-paper);
+  cursor: text;
+}
+
+.mainInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  padding: var(--space-13) 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--color-ink);
+}
+
+.mainInput:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 3px;
+}
+
+/* `font-size:12px; color:#5B594F` */
+.mainUnit {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-label);
+}
+
+/* `display:flex; gap:12px; margin-top:14px` */
+.fieldRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  margin-top: var(--space-14);
+}
+
+.field {
+  flex: 1 1 40%;
+  min-width: 0;
+}
+
+/* `border:2px; padding:9px 11px; margin-top:6px; font-size:13px` */
+.fieldControl {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-6);
+  border: var(--border-width-structure) solid var(--color-ink);
+  padding: 0 var(--space-11);
+  margin-top: var(--space-6);
+  /* README §3 règle 3 : aucune cible sous 44 px. L'artboard dessine 39 px (9 + 9 + une ligne mono
+   * de 13 px) : on porte la boîte à 44, et son `<label>` implicite en fait la cible entière. */
+  min-height: var(--action-height-min);
+  box-sizing: border-box;
+  background: var(--color-paper);
+  cursor: pointer;
+}
+
+.fieldInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  padding: var(--space-9) 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink);
+}
+
+.fieldInput:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 3px;
+}
+
+.fieldSelect {
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-none);
+  background: none;
+  padding: var(--space-9) 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.fieldSelect:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 3px;
+}
+
+.fieldUnit {
+  flex: none;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* Un champ = son étiquette + sa boîte, dans un seul `<label>` : toute la hauteur est cible. */
+.fieldBlock {
+  display: block;
+}
+
+/* Ligne d'étiquette du champ principal : l'artboard 13 y écrit « Allure en bassin 25 m ». */
+.mainLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+/* Choix : les options se rangent en jetons bordés, l'option retenue en aplat d'encre.
+ * Taille visible = celle du champ de l'artboard (`padding:9px 11px`, mono 13 px) ; la cible est
+ * portée à 44 px par un pseudo-élément, comme le fait `SecondaryAction`. */
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.choicesInline {
+  margin-top: 0;
+  flex: none;
+}
+
+.choice {
+  position: relative;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  padding: var(--space-9) var(--space-11);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.choice::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  min-width: var(--action-height-min);
+  height: var(--action-height-min);
+}
+
+.choicesInline .choice {
+  padding: 0 var(--space-6);
+  font-size: var(--fs-label-micro);
+  line-height: 15px;
+}
+
+.choiceOn {
+  background: var(--color-ink);
+  color: var(--color-signal-lime);
+}
+
+.choice:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-zone-4);
+  outline-offset: 2px;
+}
+
+/* --- Résultat -------------------------------------------------------------------------------- */
+
+/* `margin:18px 20px 0; border-top:1px solid; padding-top:14px` */
+.block {
+  margin: var(--space-18) var(--space-gutter-mobile) 0;
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  padding-top: var(--space-14);
+}
+
+.blockLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `font-size:56px; letter-spacing:-.055em; line-height:1; margin-top:8px`.
+ * ÉCART ASSUMÉ au canevas : l'artboard 13 ne pose aucune `font-family` sur cette valeur, elle hérite
+ * donc de General Sans. C'est une quantité, et l'interdit du système est sans exception — « toute
+ * quantité en Space Mono ». On garde le mono et on signale l'écart. */
+.headline {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+/* L'unité et son appel de note ne se coupent jamais : à 390 px, « /100 m » se brisait entre
+ * « /100 » et « m », l'exposant venant s'intercaler. Une unité qui se lit en deux morceaux ne
+ * dit plus rien. */
+.headlineUnit {
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.headline {
+  text-wrap: balance;
+}
+
+.headlineNote {
+  font-size: 15px;
+}
+
+/* `font-size:12px; color:#3B3A33; margin-top:8px` */
+.secondary {
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+/* --- Fourchette (artboard 13) ------------------------------------------------------------------ */
+
+/* `margin-top:16px` */
+.range {
+  margin-top: var(--space-16);
+}
+
+/* `display:flex; height:14px; border:1px solid` en `content-box`. */
+.rangeBar {
+  display: flex;
+  box-sizing: content-box;
+  height: 14px;
+  border: var(--border-width-hairline) solid var(--color-ink);
+}
+
+.rangeBlank {
+  background: var(--color-paper);
+}
+
+/* Hachure d'encre : un motif, pas un dégradé — la seule exception que le système autorise. */
+.rangeHatch {
+  flex: 1;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-ink) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+/* `margin-top:7px` */
+.rangeLabels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-top: var(--space-7);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* Résultat impossible : le vide se nomme, et rien n'est estimé à la place. */
+.resultEmpty {
+  margin-top: var(--space-8);
+}
+
+/* --- Tableau de zones (vocabulaire de l'artboard 12) --------------------------------------------- */
+
+/* `margin-top:8px; border:2px solid` */
+.table {
+  margin-top: var(--space-8);
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tableHead > span {
+  padding: var(--space-8) var(--space-10);
+}
+
+.tableRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-10);
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+
+.tableValue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: right;
+}
+
+/* --- Ce que vaut ce chiffre ---------------------------------------------------------------------- */
+
+.worthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10);
+}
+
+/* Un IF, un TSS ou une conversion n'est pas une affirmation scientifique : pas de jauge, un mot. */
+.worthKind {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-micro);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+/* `margin:9px 0 0; font-size:14px; line-height:1.5` */
+.worthText {
+  margin: var(--space-9) 0 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: var(--measure-prose);
+  text-wrap: pretty;
+}
+
+/* La source du calculateur, citée telle qu'elle sort du domaine. */
+.worthSource {
+  margin-top: var(--space-9);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
+/* --- Note de pied de fiche ------------------------------------------------------------------------ */
+
+/* `margin-top:auto; padding:12px 20px 18px; border-top:1px solid; gap:8px` */
+.footnote {
+  margin-top: auto;
+  padding: var(--space-12) var(--space-gutter-mobile) var(--space-18);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+  display: flex;
+  gap: var(--space-8);
+}
+
+.footnoteMark,
+.footnoteText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.5;
+}
+
+.footnoteMark {
+  flex: none;
+}
+
+.footnoteText {
+  color: var(--color-label);
+}
+
+.notFound {
+  padding: var(--space-gutter-mobile);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+/* --- Grand écran : la colonne se borne, la ligne ne s'allonge pas ------------------------------- */
+
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .column {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    padding-block: var(--space-4) 56px;
+  }
+}

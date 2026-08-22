@@ -1,0 +1,87 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--color-paper);
+}
+
+/* 28 l. 3069-3072 : trois colonnes égales — DURÉE, CIBLE, IF. */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.statCell {
+  padding: var(--space-12) var(--space-10);
+  border-left: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+/* La première cellule garde la gouttière d'écran, les suivantes se resserrent (l. 3070-3072). */
+.statCell:first-child {
+  padding-inline: var(--detail-gutter, var(--space-gutter-mobile));
+  border-left: none;
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: 0.1em;
+  color: var(--color-label);
+}
+
+/* Le canevas colle la valeur à son intitulé : aucune marge entre les deux (mesuré : 2 px de trop).
+ * 24 px littéral (28 l. 3070, 29 l. 3131) — aucun jeton de l'échelle de données ne le porte. */
+.statValue {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-data-lg-alt);
+  letter-spacing: -0.04em;
+}
+
+.table {
+  margin: var(--space-14) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-tight);
+  text-transform: uppercase;
+}
+
+.tableHeader > div {
+  padding: var(--space-7) var(--space-9);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-data-min);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow > div {
+  padding: var(--space-6) var(--space-9);
+}
+
+.tableRowEmphasis {
+  font-weight: var(--fw-bold);
+  background: var(--color-neutral-fill);
+}
+
+/* 28 l. 3092 : `margin:12px 20px 0; border:2px solid #E0B400; padding:11px`. */
+.noPower {
+  margin: var(--space-12) var(--detail-gutter, var(--space-gutter-mobile)) 0;
+  padding: var(--space-11);
+}

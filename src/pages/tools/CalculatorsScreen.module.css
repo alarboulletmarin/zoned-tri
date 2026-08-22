@@ -1,0 +1,72 @@
+/* Écran 13 (liste) · les douze calculateurs. Le canevas ne dessine que la fiche : la liste emprunte
+ * son en-tête à l'artboard 13 et sa carte à l'artboard S8 — aucun jeton nouveau. */
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+}
+
+.column {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Artboard 13 : `padding:16px 20px 14px` */
+.head {
+  flex: none;
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-14);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  letter-spacing: var(--ls-label-section);
+  text-transform: uppercase;
+  color: var(--color-label);
+}
+
+.title {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 34px;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* Artboard 14 : la frise pleine encre, `height:14px`, sans filets. */
+.frieze {
+  flex: none;
+  height: 14px;
+  background: var(--color-ink);
+}
+
+/* Artboard S8 : `gap:14px` entre les cartes. */
+.list {
+  padding: var(--space-16) var(--space-gutter-mobile) var(--space-gutter-mobile);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-14);
+}
+
+/* Tablette et desktop : la largeur sert à comparer, pas à allonger les lignes. */
+@media (min-width: 768px) {
+  .screen {
+    flex: 0 0 auto;
+  }
+
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .list {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

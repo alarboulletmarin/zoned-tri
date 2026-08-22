@@ -1,0 +1,225 @@
+/* G3 · Disponibilité — canevas lignes 99-138. */
+
+/* --- Volume hebdo visé --- */
+
+.volume {
+  margin-top: var(--space-label-gap-sm);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  /* Le canevas écrit « 7 H 30 » : la casse est portée par le style, pas par la donnée. */
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* Le canevas donne au rail 2 px de haut : la poignée de 20 px le chevauche sans l'épaissir
+   (`height:2px; position:relative` puis une poignée en absolu). Le bloc mesure donc 2 px. */
+.slider {
+  position: relative;
+  height: 2px;
+  margin-top: 22px;
+}
+
+.rail,
+.fill {
+  position: absolute;
+  top: 0;
+  height: 2px;
+}
+
+.rail {
+  left: 0;
+  right: 0;
+  background: var(--color-hairline);
+}
+
+.fill {
+  left: 0;
+  background: var(--color-ink);
+}
+
+/* Le contrôle natif reste le seul élément interactif : rail et part parcourue sont peints
+   derrière lui, seule la poignée est stylée. Il déborde du rail de 21 px de part et d'autre pour
+   offrir les 44 px de cible tactile sans épaissir le trait dessiné. */
+.range {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: var(--action-height-min);
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: var(--radius-none);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: var(--action-height-min);
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  background: var(--color-signal-lime);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.range::-moz-range-track {
+  height: var(--action-height-min);
+  background: none;
+  border: none;
+  border-radius: var(--radius-none);
+}
+
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  background: var(--color-signal-lime);
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+}
+
+.marks {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: var(--space-block-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  color: var(--color-label);
+}
+
+.markCurrent {
+  color: var(--color-ink);
+}
+
+/* Cible au-dessus du plafond déclaré : le repère devient un signal, pas une décoration. */
+.markOver {
+  color: var(--color-signal-red);
+  font-weight: var(--fw-bold);
+}
+
+/* --- Jours d'entraînement --- */
+
+.days {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--space-block-md);
+}
+
+/* Le canevas dessine des pastilles de 36 px (`padding:9px 0` sur 12 px de mono). On garde ce
+   jeton visible et on étend la CIBLE à 44 px par un pseudo-élément centré, comme `SecondaryAction`. */
+.day {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0;
+  box-sizing: border-box;
+  border: var(--border-width-structure) solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  color: var(--color-inactive);
+}
+
+.day::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  height: var(--action-height-min);
+}
+
+.day[data-active='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-offscreen-bg);
+}
+
+/* --- Séances maxi par discipline --- */
+
+.disciplines {
+  margin-top: var(--space-label-gap-lg);
+  border-top: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.disciplineRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* Les boutons du compteur portent déjà la cible tactile de 44px : la ligne n'a pas besoin
+     d'ajouter la sienne, sinon le bloc dépasse la hauteur d'écran du canevas. */
+  padding: 6px 0;
+  border-bottom: var(--border-width-hairline) solid var(--color-hairline);
+}
+
+.disciplines > *:last-child {
+  border-bottom: none;
+}
+
+.disciplineName {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  color: var(--color-ink);
+}
+
+.counter {
+  display: flex;
+  align-items: stretch;
+  flex: none;
+}
+
+.counterButton {
+  width: 38px;
+  min-height: 44px;
+  padding: 0;
+  border: var(--border-width-structure) solid var(--color-ink);
+  border-radius: var(--radius-none);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-ink);
+}
+
+.counterButton:disabled {
+  border-color: var(--color-hairline);
+  color: var(--color-inactive);
+  cursor: default;
+}
+
+.counterValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 66px;
+  padding: 0 6px;
+  border-top: var(--border-width-structure) solid var(--color-ink);
+  border-bottom: var(--border-width-structure) solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-ink);
+}
