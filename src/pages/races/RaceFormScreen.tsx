@@ -10,6 +10,7 @@ import {
   raceDeletionEffect,
   validateRaceDraft,
   type RaceDraft,
+  type RaceFieldKey,
 } from '../../domain/raceEdit'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { ConfirmSheet } from '../../components/ui/ConfirmSheet/ConfirmSheet'
@@ -52,6 +53,15 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
   const existing = mode === 'edit' ? races.find((race) => race.id === id) : undefined
   const [edits, setEdits] = useState<Partial<RaceDraft>>({})
   const [confirmDelete, setConfirmDelete] = useState(false)
+  // Un formulaire vierge n'a rien fait de mal : ses champs obligatoires disent ce qu'ils attendent,
+  // en gris, et ne passent au rouge qu'une fois qu'on y a touché. Une page qui s'ouvre en accusant
+  // n'apprend rien de plus qu'une page qui explique.
+  const [touched, setTouched] = useState<Partial<Record<RaceFieldKey, true>>>({})
+
+  function edit(key: RaceFieldKey, value: string) {
+    setEdits((current) => ({ ...current, [key]: value }))
+    setTouched((current) => ({ ...current, [key]: true }))
+  }
 
   const trail = mode === 'create' ? ['Courses', 'Nouvelle course'] : ['Courses', existing?.name ?? '…', 'Modifier']
 
@@ -119,13 +129,17 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
                 className={styles.input}
                 value={draft.name}
                 placeholder="70.3 Vichy"
-                aria-invalid={errors.name ? true : undefined}
+                aria-invalid={errors.name && touched.name ? true : undefined}
                 aria-describedby={errors.name ? 'error-name' : undefined}
-                onChange={(event) => setEdits({ ...edits, name: event.target.value })}
+                onChange={(event) => edit('name', event.target.value)}
               />
             </div>
             {errors.name && (
-              <p id="error-name" className={styles.error} role="alert">
+              <p
+                id="error-name"
+                className={touched.name ? styles.error : styles.hint}
+                {...(touched.name ? { role: 'alert' as const } : {})}
+              >
                 {errors.name}
               </p>
             )}
@@ -142,7 +156,7 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
                 className={styles.input}
                 value={draft.date}
                 aria-describedby={errors.date ? 'error-date' : undefined}
-                onChange={(event) => setEdits({ ...edits, date: event.target.value })}
+                onChange={(event) => edit('date', event.target.value)}
               />
             </div>
             {errors.date && (
@@ -207,7 +221,7 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
                 placeholder="07:20"
                 aria-invalid={errors.startTime ? true : undefined}
                 aria-describedby={errors.startTime ? 'error-start' : 'hint-start'}
-                onChange={(event) => setEdits({ ...edits, startTime: event.target.value })}
+                onChange={(event) => edit('startTime', event.target.value)}
               />
             </div>
             {errors.startTime ? (
@@ -234,7 +248,7 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
                     className={styles.input}
                     value={draft.purpose}
                     placeholder="test d’allure"
-                    onChange={(event) => setEdits({ ...edits, purpose: event.target.value })}
+                    onChange={(event) => edit('purpose', event.target.value)}
                   />
                 </div>
               </div>
@@ -252,7 +266,7 @@ export function RaceFormScreen({ mode }: RaceFormScreenProps) {
                     placeholder="3"
                     aria-invalid={errors.easyDaysBefore ? true : undefined}
                     aria-describedby={errors.easyDaysBefore ? 'error-easy' : undefined}
-                    onChange={(event) => setEdits({ ...edits, easyDaysBefore: event.target.value })}
+                    onChange={(event) => edit('easyDaysBefore', event.target.value)}
                   />
                 </div>
                 {errors.easyDaysBefore && (

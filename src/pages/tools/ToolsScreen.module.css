@@ -293,7 +293,21 @@
   flex-direction: column;
 }
 
+/* Le titre de la page desktop : présent pour la structure, invisible à l'œil — l'artboard S8 n'en
+   dessine aucun, et en ajouter un visible referait sa mise en page. */
+.gridHeading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .sideLabel {
+  margin: 0;
   font-family: var(--font-mono);
   font-size: var(--fs-label-section);
   letter-spacing: var(--ls-label-section);

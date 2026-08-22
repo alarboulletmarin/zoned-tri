@@ -58,11 +58,25 @@ describe('RaceFormScreen · créer', () => {
     expect(race.distances).toEqual({ swimM: 3800, bikeKm: 180, runKm: 42.2 })
   })
 
-  it('refuse une course sans nom, en le disant sur le champ', async () => {
+  it('dit ce qu’il attend sans accuser un formulaire qu’on vient d’ouvrir', async () => {
     renderForm('create', '/races/nouvelle')
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/Une course a un nom/)
+    // Le motif de l'action indisponible est écrit à l'écran dès l'ouverture…
+    expect(await screen.findByText(/Une course a un nom/)).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Créer la course' })).toBeDisabled()
+  })
+
+  it('passe à l’alerte une fois qu’on a touché au champ et laissé vide', async () => {
+    const user = userEvent.setup()
+    renderForm('create', '/races/nouvelle')
+
+    const name = await screen.findByLabelText('Nom de la course')
+    await user.type(name, 'V')
+    await user.clear(name)
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/Une course a un nom/)
+    expect(name).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('n’ouvre les deux champs de prépa que sur une course de préparation', async () => {

@@ -223,6 +223,11 @@ function DesktopLayout({
   return (
     <div className={`${styles.layout} ${tablet ? styles.layoutTablet : styles.layoutDesktop}`}>
       <div className={styles.grid}>
+        {/* L'artboard S8 ne pose aucun titre : la page n'avait donc, en desktop, PAS UN SEUL
+            en-tête — un lecteur d'écran qui navigue par titres n'y trouvait rien. Les deux
+            intitulés mono de la colonne, eux, sont bien des titres de bloc : ils le deviennent,
+            sans changer d'un pixel. */}
+        <h1 className={styles.gridHeading}>Calculateurs et références</h1>
         <div className={styles.cards}>
           {CALCULATORS.map((definition) => (
             <CalculatorCard key={definition.id} definition={definition} profile={profile} />
@@ -241,7 +246,7 @@ function DesktopLayout({
       </div>
 
       <div className={styles.side}>
-        <div className={styles.sideLabel}>Mes références actuelles</div>
+        <h2 className={styles.sideLabel}>Mes références actuelles</h2>
 
         {view.lines.length === 0 ? (
           <EmptyState
@@ -297,7 +302,7 @@ function DesktopLayout({
         )}
 
         <div className={styles.sideBlock}>
-          <div className={styles.sideLabel}>Prochain test au plan</div>
+          <h2 className={styles.sideLabel}>Prochain test au plan</h2>
           {nextTest ? (
             <>
               <div className={styles.sideBlockTitle}>{nextTest.title}</div>
