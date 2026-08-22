@@ -19,6 +19,7 @@ import {
 import type { Race } from '../../domain/types'
 import { splitName } from './splitName'
 import { racePath } from './routes'
+import { EXPORTS_PRINT_PATH } from '../exports/exportsRoutes'
 import s from './RaceScreens.module.css'
 import own from './RacesDesktopScreen.module.css'
 
@@ -241,7 +242,13 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
                   >
                     Checklist parc à vélo
                   </SecondaryAction>
-                  <SecondaryAction shape="chip" className={own.chip} disabled title="Bientôt disponible">
+                  {/* L'atlas des zones n'était pas « à venir » : c'est la première page du
+                      document A4, qui se rend depuis toujours dans `PrintDocument`. */}
+                  <SecondaryAction
+                    shape="chip"
+                    className={own.chip}
+                    onClick={() => navigate(EXPORTS_PRINT_PATH)}
+                  >
                     Atlas des zones
                   </SecondaryAction>
                   <SecondaryAction shape="chip" className={own.chip} disabled title="Bientôt disponible">

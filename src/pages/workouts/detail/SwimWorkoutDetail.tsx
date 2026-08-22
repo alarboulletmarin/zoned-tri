@@ -92,7 +92,7 @@ export function SwimWorkoutDetail({ workout, layout = 'compact' }: DisciplineDet
 
       {workout.why && <WorkoutWhySection title="Pourquoi cette séance" why={workout.why} />}
 
-      <DetailCtaRow exportChips={['.FIT', '.PNG']} sourceRef={workout.why?.sourceRef} />
+      <DetailCtaRow exportChips={['.FIT', '.PNG']} workoutId={workout.id} sourceRef={workout.why?.sourceRef} />
     </div>
   )
 }

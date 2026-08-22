@@ -1,10 +1,26 @@
+import { Link } from 'react-router-dom'
 import { PrimaryAction } from '../../../components/ui/PrimaryAction/PrimaryAction'
+import { exportCardPath, exportSheetPath } from '../../exports/exportsRoutes'
 import styles from './DetailCtaRow.module.css'
 
 export interface DetailCtaRowProps {
   exportChips: string[]
+  /** Séance de la fiche : c'est elle que les formats visent. */
+  workoutId: string
   /** Source de la note « pourquoi » — le canevas la pose ICI, pas sous la prose (05 l. 613-615). */
   sourceRef?: string
+}
+
+/**
+ * Destination d'un format, depuis la fiche d'une séance.
+ *
+ * Le `.PNG` a son propre écran — la carte 1080 × 1080 de l'artboard 23, qui s'écrit depuis un
+ * canevas. Les autres passent par la feuille d'export, qui annonce ce que contient chaque fichier
+ * avant de l'écrire. Le `.FIT` y est rendu inerte avec SON motif (binaire Garmin non écrit) :
+ * c'est la feuille qui le dit, une fois, plutôt que chaque puce du produit.
+ */
+function chipDestination(chip: string, workoutId: string): string {
+  return chip === '.PNG' ? exportCardPath(workoutId) : exportSheetPath({ workoutId })
 }
 
 /**
@@ -17,12 +33,12 @@ export interface DetailCtaRowProps {
  * séance de plan (IndexedDB), pas au gabarit de bibliothèque consulté ici — pas de fausse
  * confirmation de complétion, et un `title` qui dit pourquoi (méthode §4).
  *
- * Les formats d'export ne sont pas des boutons : rien ne se produit au clic tant que la fabrique de
- * fichiers n'est pas branchée. Le canevas les dessine `border:2px; min-height:46px; padding:0 9px`,
- * et c'est cette forme-là qui est rendue — un `SecondaryAction` désactivé les voilerait à 50 %
- * d'opacité, ce que le canevas n'écrit nulle part.
+ * Les formats d'export sont des LIENS : chacun mène là où son fichier s'écrit — la carte 1080 pour
+ * le `.PNG`, la feuille d'export pour les autres. Le canevas les dessine `border:2px;
+ * min-height:46px; padding:0 9px`, et c'est cette forme-là qui est rendue — un `SecondaryAction`
+ * désactivé les voilerait à 50 % d'opacité, ce que le canevas n'écrit nulle part.
  */
-export function DetailCtaRow({ exportChips, sourceRef }: DetailCtaRowProps) {
+export function DetailCtaRow({ exportChips, workoutId, sourceRef }: DetailCtaRowProps) {
   return (
     <div className={styles.footer}>
       {sourceRef && (
@@ -42,9 +58,9 @@ export function DetailCtaRow({ exportChips, sourceRef }: DetailCtaRowProps) {
         </PrimaryAction>
         <span className={styles.exportChips}>
           {exportChips.map((chip) => (
-            <span key={chip} className={styles.exportChip} aria-disabled="true" title="Export — bientôt disponible">
+            <Link key={chip} className={styles.exportChip} to={chipDestination(chip, workoutId)}>
               {chip}
-            </span>
+            </Link>
           ))}
         </span>
       </div>

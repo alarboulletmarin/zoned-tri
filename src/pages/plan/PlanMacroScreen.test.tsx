@@ -80,14 +80,13 @@ describe('PlanMacroScreen · artboard 04', () => {
     expect(screen.getByRole('img', { name: 'Preuve faible' })).toBeInTheDocument()
   })
 
-  it('rend les exports inertes en disant pourquoi, plutôt qu’un bouton mort', () => {
+  // Les deux formats n'étaient pas « à venir » : le document A4 et la feuille d'export existent,
+  // testés, depuis la reprise des artboards 20 à 22. Il ne leur manquait qu'une porte.
+  it('mène le .PDF au document A4 et le .ICS à la feuille d’export', () => {
     renderScreen()
 
-    for (const format of ['.PDF', '.ICS']) {
-      const button = screen.getByRole('button', { name: format })
-      expect(button).toBeDisabled()
-      expect(button).toHaveAttribute('title', 'Bientôt disponible')
-    }
+    expect(screen.getByRole('link', { name: '.PDF' })).toHaveAttribute('href', '/exports/impression')
+    expect(screen.getByRole('link', { name: '.ICS' })).toHaveAttribute('href', '/exports')
     expect(screen.getByText('Exporter les 18 semaines')).toBeInTheDocument()
   })
 

@@ -67,3 +67,13 @@
   padding: 0 var(--space-9);
   color: var(--color-inactive);
 }
+
+/* Les puces de format sont devenues des liens : mêmes cadre et typographie, plus le `href` qui
+   permet d'ouvrir un export dans un onglet et d'en copier l'adresse. */
+a.exportChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}

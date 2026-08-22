@@ -203,10 +203,10 @@ describe('TodayScreen · deux colonnes (S4)', () => {
     expect(screen.queryByText(/Prochaine référence/)).not.toBeInTheDocument()
   })
 
-  it('offers the inert .FIT export at the bottom of the session column', () => {
+  it('mène le .FIT au bas de la colonne vers la feuille d’export de CETTE séance', () => {
     mockMatchMediaWidth(1280)
     renderScreen('2026-06-16')
-    expect(screen.getByRole('button', { name: '.FIT' })).toBeDisabled()
+    expect(screen.getByRole('link', { name: '.FIT' }).getAttribute('href')).toMatch(/^\/exports\?seance=/)
   })
 
   it('names how many sessions remain in the desktop band', () => {
@@ -258,11 +258,12 @@ describe('TodayScreen · deux séances (15)', () => {
     expect(screen.getByText(/jambes fatiguées/)).toBeInTheDocument()
   })
 
-  it('keeps the day exports visible but inert', () => {
+  it('mène les trois exports de la journée à la feuille, semaine et séance nommées', () => {
     renderScreen('2026-06-20')
-    expect(screen.getByRole('button', { name: '.ICS' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: '.PDF' })).toBeDisabled()
-    expect(screen.getAllByRole('button', { name: '.FIT' })[0]).toBeDisabled()
+    for (const format of ['.ICS', '.PDF']) {
+      expect(screen.getByRole('link', { name: format }).getAttribute('href')).toMatch(/^\/exports\?semaine=/)
+    }
+    expect(screen.getAllByRole('link', { name: '.FIT' })[0].getAttribute('href')).toMatch(/^\/exports\?seance=/)
   })
 })
 

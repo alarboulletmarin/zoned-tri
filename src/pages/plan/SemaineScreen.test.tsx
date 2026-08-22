@@ -109,8 +109,10 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
     renderScreen(singleSessionPerDay())
     // 81 + 19 = 100 : les deux parts se complètent, la formule du canevas tient telle quelle.
     expect(screen.getByText('81 % facile / 19 % dur')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '.ICS' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: '.PDF' })).toBeDisabled()
+    // Le `.ICS` porte LA semaine regardée, pas celle du calendrier : le rang passe par l'URL, qui
+    // reste donc partageable.
+    expect(screen.getByRole('link', { name: '.ICS' })).toHaveAttribute('href', '/exports?semaine=7')
+    expect(screen.getByRole('link', { name: '.PDF' })).toHaveAttribute('href', '/exports/impression')
   })
 
   // Le moteur produit trois parts — facile, modéré, dur. N'en afficher que deux donnait

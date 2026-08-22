@@ -107,7 +107,7 @@ export function BikeWorkoutDetail({ workout, layout = 'compact', profile }: Disc
 
       {workout.why && <WorkoutWhySection title="Pourquoi cette séance" why={workout.why} proseSize="sm" />}
 
-      <DetailCtaRow exportChips={['.ZWO', '.FIT']} sourceRef={workout.why?.sourceRef} />
+      <DetailCtaRow exportChips={['.ZWO', '.FIT']} workoutId={workout.id} sourceRef={workout.why?.sourceRef} />
     </div>
   )
 }

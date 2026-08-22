@@ -77,6 +77,7 @@ const TRAIL_DESTINATIONS: Record<string, string> = {
   Courses: '/races',
   Outils: '/tools',
   Calculateurs: '/tools/calculateurs',
+  Exporter: '/exports',
   'Import-export': '/import-export',
   Réglages: '/settings',
   /* « Réglages » tout court mène aux réglages de l'application. Les écrans du plan écrivent donc

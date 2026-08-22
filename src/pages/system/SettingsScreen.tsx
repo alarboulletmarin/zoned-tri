@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useGoBack } from '../../hooks/useGoBack'
+import { OPENING_PATH } from '../../navigation'
 import { useJournal, usePlans, useProfile, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { todayIso } from '../../domain/planWeek'
 import { APP_VERSION, type AppTheme } from '../../domain/types'
@@ -72,7 +74,9 @@ export interface SettingsScreenProps {
  *   l'appareil, il n'y a rien à activer.
  */
 export function SettingsScreen({ onWipe }: SettingsScreenProps) {
-  const navigate = useNavigate()
+  // Les réglages s'ouvrent depuis le rail, le burger — ou un lien direct. Dans ce dernier cas il
+  // n'y a rien derrière : on remonte à l'ouverture plutôt que de sortir de l'application.
+  const goBack = useGoBack(OPENING_PATH)
   const { profile, saveProfile } = useProfile()
   const { plans } = usePlans()
   const { workouts } = useWorkouts()
@@ -111,7 +115,7 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
 
   return (
     <div className={styles.screen}>
-      <AppHeader variant="detail" trail={['Réglages']} onBack={() => navigate(-1)} />
+      <AppHeader variant="detail" trail={['Réglages']} onBack={goBack} />
 
       <div className={styles.column}>
         <div className={styles.head}>

@@ -45,7 +45,7 @@ export function GenericWorkoutDetail({ workout, layout = 'compact' }: Discipline
 
       {workout.why && <WorkoutWhySection title="Pourquoi cette séance" why={workout.why} />}
 
-      <DetailCtaRow exportChips={['.PNG']} sourceRef={workout.why?.sourceRef} />
+      <DetailCtaRow exportChips={['.PNG']} workoutId={workout.id} sourceRef={workout.why?.sourceRef} />
     </div>
   )
 }

@@ -27,6 +27,7 @@ import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { WeekStrip, type WeekStripDay } from '../../components/ui/WeekStrip/WeekStrip'
+import { exportSheetPath } from '../exports/exportsRoutes'
 import styles from './TodayScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 
@@ -494,13 +495,18 @@ function SessionsState({
 
       {framed && (
         <div className={styles.exportRow}>
-          <span className={styles.exportLabel}>Exporter la journée</span>
-          <button type="button" className={styles.chipButton} disabled title="Bientôt disponible">
+          {/* Le canevas écrit « Exporter la journée ». Les deux fichiers qui sortent d'ici portent
+              la SEMAINE (`.ICS` : sept événements ; `.PDF` : le plan et l'atlas des zones) : le
+              libellé perd donc son « la journée », qu'il ne tenait pas. La feuille d'export dit
+              ensuite exactement ce que chaque format contient, avant qu'on écrive quoi que ce
+              soit — c'est là que la règle nº 2 se joue, pas sur une puce. */}
+          <span className={styles.exportLabel}>Exporter</span>
+          <Link className={styles.chipButton} to={exportSheetPath({ week: view.weekNumber })}>
             .ICS
-          </button>
-          <button type="button" className={styles.chipButton} disabled title="Bientôt disponible">
+          </Link>
+          <Link className={styles.chipButton} to={exportSheetPath({ week: view.weekNumber })}>
             .PDF
-          </button>
+          </Link>
         </div>
       )}
     </>
@@ -643,9 +649,9 @@ function SessionBlock({
           </Link>
         )}
         {(framed || wide) && (
-          <button type="button" className={styles.chipButton} disabled title="Bientôt disponible">
+          <Link className={styles.chipButton} to={exportSheetPath({ workoutId: workout.id })}>
             .FIT
-          </button>
+          </Link>
         )}
       </div>
     </>

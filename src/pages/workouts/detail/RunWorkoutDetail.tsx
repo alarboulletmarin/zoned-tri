@@ -76,7 +76,7 @@ export function RunWorkoutDetail({ workout, layout = 'compact' }: DisciplineDeta
 
       {workout.location && <p className={styles.terrain}>Terrain : {LOCATION_LABELS[workout.location].toLowerCase()}.</p>}
 
-      <DetailCtaRow exportChips={['.FIT', '.PNG']} sourceRef={workout.why?.sourceRef} />
+      <DetailCtaRow exportChips={['.FIT', '.PNG']} workoutId={workout.id} sourceRef={workout.why?.sourceRef} />
     </div>
   )
 }

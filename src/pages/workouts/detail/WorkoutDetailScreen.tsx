@@ -1,4 +1,8 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
+import { useGoBack } from '../../../hooks/useGoBack'
+
+/** La bibliothèque : parent de toute fiche de séance, quelle que soit l'origine du clic. */
+const WORKOUTS_PATH = '/workouts'
 import { AppHeader } from '../../../components/ui/AppHeader/AppHeader'
 import { useProfile, useWorkouts } from '../../../context/AppDataContext'
 import { SEED_WORKOUTS } from '../../../domain/seedWorkouts'
@@ -73,8 +77,10 @@ export function WorkoutDetailView({ workout, trail, profile, onBack }: WorkoutDe
  */
 export function WorkoutDetailScreen() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const location = useLocation()
+  // Une fiche de séance est ce qu'on partage le plus volontiers : ouverte par un lien collé, elle
+  // n'a rien derrière elle. Le retour remonte alors à la bibliothèque, jamais hors du produit.
+  const goBack = useGoBack(WORKOUTS_PATH)
   const { workouts, loading } = useWorkouts()
   const { profile } = useProfile()
 
@@ -89,7 +95,7 @@ export function WorkoutDetailScreen() {
     if (loading) return null
     return (
       <>
-        <AppHeader variant="detail" trail={['Séances', 'Introuvable']} onBack={() => navigate(-1)} />
+        <AppHeader variant="detail" trail={['Séances', 'Introuvable']} onBack={goBack} />
         <div className={styles.notFound}>
           <p>Séance introuvable.</p>
         </div>
@@ -108,7 +114,7 @@ export function WorkoutDetailScreen() {
       workout={workout}
       trail={trail}
       profile={profile ?? undefined}
-      onBack={() => navigate(-1)}
+      onBack={goBack}
     />
   )
 }

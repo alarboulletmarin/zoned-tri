@@ -1239,3 +1239,14 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Ces puces sont devenues des LIENS : elles mènent à la feuille d'export, qui dit ce que contient
+   chaque fichier avant qu'on l'écrive. Le rendu ne bouge pas d'un pixel — c'est le même cadre, avec
+   un `href` : on peut donc l'ouvrir dans un onglet, en copier l'adresse, et un lecteur d'écran
+   annonce enfin « lien » et non « bouton ». */
+a.chipButton {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  line-height: normal;
+}

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
 import { WeekNavigator } from './WeekNavigator'
@@ -29,6 +29,7 @@ import {
 import { DAY_LABELS, computeWeekBars, type WeekBar } from '../../domain/weekContext'
 import { buildWeekNav } from '../../domain/weekNav'
 import { formatDurationCompact, formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
+import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './SemaineScreen.module.css'
 
 /**
@@ -173,9 +174,9 @@ export function SemaineScreen({
               <button type="button" className={styles.headerButton} disabled title={INERT_TITLE}>
                 Bloquer la semaine
               </button>
-              <button type="button" className={styles.headerButton} disabled title={INERT_TITLE}>
+              <Link className={styles.headerButton} to={exportSheetPath({ week: week.weekNumber })}>
                 .ICS
-              </button>
+              </Link>
             </>
           ) : undefined
         }
@@ -315,12 +316,12 @@ function MobileWeek({ week, days, shares, counts, isDemo, onOpenWorkout }: Mobil
           </span>
         )}
         <span className={styles.exports}>
-          <button type="button" className={styles.exportButton} disabled title={INERT_TITLE}>
+          <Link className={styles.exportButton} to={exportSheetPath({ week: week.weekNumber })}>
             .ICS
-          </button>
-          <button type="button" className={styles.exportButton} disabled title={INERT_TITLE}>
+          </Link>
+          <Link className={styles.exportButton} to={EXPORTS_PRINT_PATH}>
             .PDF
-          </button>
+          </Link>
         </span>
       </div>
     </>

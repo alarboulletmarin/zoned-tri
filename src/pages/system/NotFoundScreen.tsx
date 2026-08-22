@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useGoBack } from '../../hooks/useGoBack'
 import { useWorkouts } from '../../context/AppDataContext'
-import { sectionForPath } from '../../navigation'
+import { OPENING_PATH, sectionForPath } from '../../navigation'
 import { LOCATION_LABELS, formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
 import type { Workout } from '../../domain/types'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
@@ -53,12 +54,17 @@ export function NotFoundScreen({ pathname, catalogue }: NotFoundScreenProps) {
   // le chemin réellement emprunté, pas celui de l'artboard.
   const section = sectionForPath(address)
 
+  // Une adresse introuvable arrive presque toujours par un lien collé : il n'y a donc rien
+  // derrière, et le carré de retour ferait sortir du produit. Il remonte à la section quand
+  // l'adresse en désigne une, à l'ouverture sinon — jamais hors de l'application.
+  const goBack = useGoBack(section?.to ?? OPENING_PATH)
+
   return (
     <div className={styles.screen}>
       <AppHeader
         variant="detail"
         trail={section ? [section.label, 'Introuvable'] : ['Introuvable']}
-        onBack={() => navigate(-1)}
+        onBack={goBack}
       />
 
       <div className={styles.column}>

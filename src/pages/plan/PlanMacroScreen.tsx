@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { PlanSegment } from '../../components/navigation/PlanSegment/PlanSegment'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
@@ -15,9 +16,9 @@ import {
 import { todayIso } from '../../domain/planWeek'
 import { formatDurationCompact } from '../../domain/workoutFormat'
 import type { Race, TrainingPlan } from '../../domain/types'
+import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './PlanMacroScreen.module.css'
 
-const INERT_TITLE = 'Bientôt disponible'
 
 /** Le mot que la note de bas d'écran reprend en encre — même vocabulaire que la jauge de preuve. */
 const PROOF_WORD = { solid: 'solide', moderate: 'modérée', weak: 'faible' } as const
@@ -107,12 +108,12 @@ export function PlanMacroScreen({ plan, race, today, onBack }: PlanMacroScreenPr
         <footer className={styles.footer}>
           <div className={styles.exportRow}>
             <span className={styles.exportLabel}>Exporter les {view.weeksLabel}</span>
-            <button type="button" className={styles.chipButton} disabled title={INERT_TITLE}>
+            <Link className={styles.chipButton} to={EXPORTS_PRINT_PATH}>
               .PDF
-            </button>
-            <button type="button" className={styles.chipButton} disabled title={INERT_TITLE}>
+            </Link>
+            <Link className={styles.chipButton} to={exportSheetPath()}>
               .ICS
-            </button>
+            </Link>
           </div>
 
           <div className={styles.footnote}>

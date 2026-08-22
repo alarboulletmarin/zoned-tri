@@ -1,15 +1,9 @@
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useShellChrome } from '../../../context/shellChrome'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
-import {
-  APP_NAME,
-  OPENING_PATH,
-  documentTitleFromTrail,
-  trailDestination,
-  trailLabel,
-  type TrailSegment,
-} from '../../../navigation'
+import { APP_NAME, OPENING_PATH, trailDestination, trailLabel, type TrailSegment } from '../../../navigation'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import { BackSquare } from '../BackSquare/BackSquare'
 import styles from './AppHeader.module.css'
 
@@ -256,13 +250,3 @@ function Trail({ segments, className }: { segments: TrailSegment[]; className: s
   )
 }
 
-/**
- * Titre de l'onglet. Il vient du fil et de lui seul : un écran qui nomme sa page nomme son onglet,
- * sans avoir à l'écrire une deuxième fois.
- */
-function useDocumentTitle(trail: TrailSegment[]) {
-  const title = documentTitleFromTrail(trail)
-  useEffect(() => {
-    document.title = title
-  }, [title])
-}
