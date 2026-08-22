@@ -211,6 +211,19 @@ export function SemaineScreen({
   )
 }
 
+/**
+ * Répartition d'intensité du pied de page. La part modérée — ce que le plan ne range ni en facile
+ * ni en dur — n'est écrite que si elle existe : sur une semaine où les deux parts se complètent,
+ * l'écran retrouve mot pour mot la formule du canevas.
+ */
+function intensityLabel(week: PlanWeek): string {
+  const moderate = 100 - week.easyPercent - week.hardPercent
+  const parts = [`${week.easyPercent} % facile`]
+  if (moderate > 0) parts.push(`${moderate} % modéré`)
+  parts.push(`${week.hardPercent} % dur`)
+  return parts.join(' / ')
+}
+
 /* --- Frise de répartition (03 l. 426 · 16 l. 2471 · S6 l. 1811) ----------------------------- */
 
 function proportionLabel(shares: DisciplineShare[]): string {
@@ -258,32 +271,33 @@ function MobileWeek({ week, days, shares, counts, isDemo, onOpenWorkout }: Mobil
         label={proportionLabel(shares)}
       />
 
-      {dense ? (
-        /* 16 l. 2472-2474 : la liste est trop haute pour l'histogramme, le canevas y met le
-           décompte des jours à la place. */
+      {/* 03 l. 427-429 : volume par discipline, sous la frise qui le découpe. */}
+      <div className={styles.shares}>
+        {shares.map((share) => (
+          <span key={share.discipline}>
+            {share.discipline} {formatDurationCompact(share.totalMin)}
+          </span>
+        ))}
+      </div>
+
+      {/* 16 l. 2472-2474 : le décompte des jours doublés. Le canevas le met À LA PLACE de
+          l'histogramme parce que son artboard est de hauteur fixe et que la liste, plus haute,
+          n'y laissait pas la place. L'application défile : les deux tiennent, et retirer la
+          partie graphique dès qu'un jour porte deux séances privait la semaine de sa lecture
+          d'ensemble — c'est précisément ce qu'on vient chercher ici. */}
+      {dense && (
         <div className={styles.counts}>
           <span>
             {plural(counts.sessionCount, 'séance')} · {plural(counts.activeDayCount, 'jour')}
           </span>
           <span>{plural(counts.doubledDayCount, 'jour')} doublé{counts.doubledDayCount > 1 ? 's' : ''}</span>
         </div>
-      ) : (
-        <>
-          {/* 03 l. 427-429 : volume par discipline, sous la frise qui le découpe. */}
-          <div className={styles.shares}>
-            {shares.map((share) => (
-              <span key={share.discipline}>
-                {share.discipline} {formatDurationCompact(share.totalMin)}
-              </span>
-            ))}
-          </div>
-
-          {/* 03 l. 430-443 : sept barres de 84 px, une par jour, puis l'initiale du jour. */}
-          <div className={styles.histogram}>
-            <WeekStrip days={bars.map(toStripDay)} height={84} label="Charge de la semaine" />
-          </div>
-        </>
       )}
+
+      {/* 03 l. 430-443 : sept barres de 84 px, une par jour, puis l'initiale du jour. */}
+      <div className={styles.histogram}>
+        <WeekStrip days={bars.map(toStripDay)} height={84} label="Charge de la semaine" />
+      </div>
 
       {/* 03 l. 444-482 · 16 l. 2475-2545 : la liste des jours, filet de tête compris. */}
       <div className={cls(styles.dayList, dense && styles.dayListDense)}>
@@ -294,9 +308,11 @@ function MobileWeek({ week, days, shares, counts, isDemo, onOpenWorkout }: Mobil
 
       {/* 03 l. 483-485 · 16 l. 2546-2550 */}
       <div className={cls(styles.footerBar, dense && styles.footerBarDense)}>
-        <span className={styles.intensitySplit}>
-          {week.easyPercent} % facile / {week.hardPercent} % dur
-        </span>
+        {/* Le canevas écrit « 81 % facile / 19 % dur », deux parts complémentaires. Le moteur en
+            produit TROIS — facile (Z1-Z2), modéré (Z3), dur (Z4+) — et n'en afficher que deux
+            donnait « 71 % facile / 15 % dur », qui se lit comme une erreur de calcul. La part
+            modérée est donc nommée quand elle existe. */}
+        <span className={styles.intensitySplit}>{intensityLabel(week)}</span>
         {/* Hors canevas, et assumé : le produit ne présente jamais une semaine de démonstration
             comme un plan réel (règle de l'artboard 01b). La mention part dès qu'un plan existe. */}
         {isDemo && (

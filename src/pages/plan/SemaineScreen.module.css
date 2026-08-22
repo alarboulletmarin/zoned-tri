@@ -413,9 +413,12 @@
  * Artboard S6 · desktop (canevas l. 1778-1956) — ce DOM n'est monté qu'au-delà de 1024 px.
  * ========================================================================================= */
 
+/* Le cadre suit son contenu et ne s'étire pas jusqu'au bas de la fenêtre : une semaine légère
+ * laissait sinon 200 px de colonnes vides, filets compris, sous la dernière carte. Les sept
+ * colonnes restent de hauteur égale — c'est la grille qui les aligne sur la plus haute — donc les
+ * filets courent bien du haut en bas et les pieds de colonne restent alignés. */
 .grid {
-  flex: 1;
-  min-height: 0;
+  flex: none;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
@@ -464,10 +467,11 @@
   color: inherit;
 }
 
+/* `flex: 1` garde le pied de chaque colonne collé en bas, donc aligné d'une colonne à l'autre —
+ * c'est la grille, et non la fenêtre, qui donne maintenant la hauteur. */
 .columnBody {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
   padding: var(--space-9);
   display: flex;
   flex-direction: column;

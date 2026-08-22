@@ -107,9 +107,19 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
 
   it('shows the intensity split and both exports in the footer', () => {
     renderScreen(singleSessionPerDay())
+    // 81 + 19 = 100 : les deux parts se complètent, la formule du canevas tient telle quelle.
     expect(screen.getByText('81 % facile / 19 % dur')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '.ICS' })).toBeDisabled()
     expect(screen.getByRole('button', { name: '.PDF' })).toBeDisabled()
+  })
+
+  // Le moteur produit trois parts — facile, modéré, dur. N'en afficher que deux donnait
+  // « 71 % facile / 15 % dur », qui se lit comme une erreur de calcul.
+  it('names the moderate share when the two others do not add up to the whole week', () => {
+    const week = singleSessionPerDay()
+    week.weeks[0] = { ...week.weeks[0], easyPercent: 71, hardPercent: 15 }
+    renderScreen(week)
+    expect(screen.getByText('71 % facile / 14 % modéré / 15 % dur')).toBeInTheDocument()
   })
 
   it('opens the session detail when a row is tapped', async () => {
@@ -137,11 +147,13 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
 })
 
 describe('SemaineScreen · artboard 16 (mobile, jours doublés)', () => {
-  it('counts the sessions, the days and the doubled days instead of the histogram', () => {
+  // Le canevas 16 remplace l'histogramme par ce décompte parce que son artboard est de hauteur
+  // fixe. L'application défile : elle garde les deux, et la semaine conserve sa lecture d'ensemble.
+  it('counts the sessions, the days and the doubled days, without losing the histogram', () => {
     renderScreen()
     expect(screen.getByText('7 séances · 6 jours')).toBeInTheDocument()
     expect(screen.getByText('1 jour doublé')).toBeInTheDocument()
-    expect(screen.queryByRole('img', { name: /^Charge de la semaine/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /^Charge de la semaine/ })).toBeInTheDocument()
   })
 
   it('writes the doubled day once and numbers its sessions', () => {

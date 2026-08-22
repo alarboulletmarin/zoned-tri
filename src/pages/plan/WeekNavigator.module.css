@@ -188,7 +188,25 @@
   color: var(--color-inactive);
 }
 
-/* Desktop : les dix-huit semaines tiennent d'un coup, plus rien à faire glisser. */
+/* `color:#0B0B0A` : le seul mot en encre de cette ligne, parce qu'il mène quelque part. */
+.monthLink {
+  color: var(--color-ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-8) 0;
+  margin: calc(var(--space-8) * -1) 0;
+}
+
+.monthLink:hover,
+.monthLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Desktop : les dix-huit semaines tiennent d'un coup, il n'y a plus rien à faire glisser — seul
+   le passage au mois reste, aligné à droite. */
 @media (min-width: 1024px) {
   .railCell {
     flex: 1 1 0;
@@ -200,6 +218,10 @@
   }
 
   .railFooter {
+    justify-content: flex-end;
+  }
+
+  .railFooter > span:first-child {
     display: none;
   }
 }

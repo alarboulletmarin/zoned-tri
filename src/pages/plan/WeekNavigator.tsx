@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { PLAN_MONTH_PATH } from '../../navigation'
 import type { WeekNavView } from '../../domain/weekNav'
 import styles from './WeekNavigator.module.css'
 
@@ -93,8 +95,13 @@ export function WeekNavigator({ view, onSelect }: WeekNavigatorProps) {
         ))}
       </div>
 
+      {/* 03 l. 434 : la mention de glissement à gauche, le passage au mois à droite. Le rail
+          s'arrête aux dix-huit semaines du plan ; au-delà, c'est le Mois qui prend le relais. */}
       <div className={styles.railFooter}>
         <span>{view.railHint}</span>
+        <Link className={styles.monthLink} to={PLAN_MONTH_PATH}>
+          Mois <span aria-hidden="true">→</span>
+        </Link>
       </div>
     </div>
   )
