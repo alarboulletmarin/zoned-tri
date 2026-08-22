@@ -13,6 +13,7 @@ import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { IMPORT_EXPORT_PATH } from '../tools/toolsRoutes'
 import { LANGUAGE_PATH, OFFLINE_PATH } from './systemRoutes'
 import styles from './SettingsScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /** Les trois segments d'« Apparence », dans l'ordre où l'artboard les pose. */
 const THEMES: { value: AppTheme; label: string }[] = [
@@ -135,7 +136,7 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
                   className={`${styles.themeOption} ${option.value === theme ? styles.themeOptionActive : ''}`}
                   aria-pressed={option.value === theme}
                   disabled={unavailable || !profile}
-                  title={unavailable ? NO_DARK_PALETTE : profile ? undefined : NO_PROFILE}
+                  aria-describedby={unavailable ? 'inert-theme' : !profile ? 'inert-theme-profil' : undefined}
                   onClick={() => void selectTheme(option.value)}
                 >
                   {option.label}
@@ -144,6 +145,9 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
               )
             })}
           </div>
+          {/* Le motif vivait dans un `title` : sur téléphone, deux commandes grises sans un mot. */}
+          <InertNote id="inert-theme">{NO_DARK_PALETTE}</InertNote>
+          {!profile && <InertNote id="inert-theme-profil">{NO_PROFILE}</InertNote>}
         </section>
 
         {/* Le canevas ne dessine pas de flèche sur ces deux lignes, mais S3 se dit « depuis
@@ -217,12 +221,16 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
             aria-checked="true"
             aria-label="Garder les fiches course lisibles hors ligne"
             disabled
-            title="Tout est écrit sur l’appareil : les fiches course sont lisibles hors ligne, sans réglage à activer."
+            aria-describedby="inert-hors-ligne"
           >
             <span className={styles.knob} aria-hidden="true" />
           </button>
           <span className={styles.toggleText}>Garder les fiches course lisibles hors ligne</span>
         </div>
+        <InertNote id="inert-hors-ligne">
+          Tout est écrit sur l’appareil : les fiches course sont lisibles hors ligne, sans réglage à
+          activer. L’interrupteur dit un état, il ne commande rien.
+        </InertNote>
 
         <div className={styles.footer}>
           <span>v {APP_VERSION} · aucun compte</span>

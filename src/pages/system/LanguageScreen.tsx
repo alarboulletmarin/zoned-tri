@@ -5,6 +5,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar/ProgressBar'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { SETTINGS_PATH } from './systemRoutes'
 import styles from './LanguageScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /**
  * Hachure d'encre du canevas — `repeating-linear-gradient(45deg,#0B0B0A 0 1px,transparent 1px 5px)`.
@@ -86,7 +87,7 @@ export function LanguageScreen({ workoutCount }: LanguageScreenProps) {
             className={`${styles.langRow} ${language === 'en' ? styles.langRowActive : ''}`}
             aria-pressed={language === 'en'}
             disabled
-            title="Aucune chaîne n’est traduite : passer en anglais laisserait tout l’écran en français."
+            aria-describedby="inert-langue-en"
           >
             <span className={styles.langBody}>
               <span className={styles.langName}>English</span>
@@ -98,6 +99,9 @@ export function LanguageScreen({ workoutCount }: LanguageScreenProps) {
               EN
             </span>
           </button>
+          <InertNote id="inert-langue-en">
+            Aucune chaîne n’est traduite : passer en anglais laisserait tout l’écran en français.
+          </InertNote>
         </section>
 
         <section className={styles.section}>

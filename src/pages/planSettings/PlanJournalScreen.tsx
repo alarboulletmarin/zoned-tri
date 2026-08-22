@@ -7,9 +7,13 @@ import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { canUndoJournalEntry } from '../../domain/journal'
 import type { PlanJournalEntry } from '../../domain/types'
 import styles from './PlanJournalScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
-/** Pourquoi « Défaire » est rendu mais inerte — cf. la LIMITATION du composant. */
-const UNDO_INERT_TITLE =
+/**
+ * Pourquoi « Défaire » est rendu mais inerte — cf. la LIMITATION du composant. Le motif est rendu
+ * à l'écran par un `InertNote`, et non dans un `title` qu'aucun doigt ne survole.
+ */
+const UNDO_INERT_REASON =
   'Un retour arrière suppose une copie du plan d’avant, et l’application n’en garde pas encore. Seul le bandeau d’annulation des 6 s qui suivent un changement sait revenir en arrière.'
 
 export interface PlanJournalScreenProps {
@@ -152,9 +156,14 @@ function JournalRow({ entry, now }: { entry: PlanJournalEntry; now: Date }) {
         </div>
       </div>
       {undoable && (
-        <SecondaryAction className={styles.rowAction} disabled title={UNDO_INERT_TITLE}>
-          Défaire
-        </SecondaryAction>
+        <>
+          <SecondaryAction className={styles.rowAction} disabled aria-describedby="inert-defaire">
+            Défaire
+          </SecondaryAction>
+          <InertNote id="inert-defaire" className={styles.rowInertNote}>
+            {UNDO_INERT_REASON}
+          </InertNote>
+        </>
       )}
     </div>
   )

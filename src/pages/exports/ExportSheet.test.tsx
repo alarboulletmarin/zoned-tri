@@ -80,7 +80,9 @@ describe('ExportSheet · artboard 20', () => {
     renderSheet()
     const fit = screen.getByText('.FIT').closest('button')!
     expect(fit).toBeDisabled()
-    expect(fit).toHaveAttribute('title', expect.stringContaining('binaire Garmin'))
+    // Le motif est rendu DANS la carte : la feuille s'ouvre au doigt, un `title` n'y existe pas.
+    expect(fit).not.toHaveAttribute('title')
+    expect(fit).toHaveAccessibleDescription(/binaire Garmin/)
   })
 
   it('écrit le .ICS de la semaine', async () => {
@@ -102,7 +104,7 @@ describe('ExportSheet · artboard 20', () => {
     renderSheet(demoSwimWorkout)
     const zwo = screen.getByText('.ZWO').closest('button')!
     expect(zwo).toBeDisabled()
-    expect(zwo).toHaveAttribute('title', 'Le .ZWO ne décrit qu’une séance de vélo.')
+    expect(zwo).toHaveAccessibleDescription('Le .ZWO ne décrit qu’une séance de vélo.')
   })
 
   it('appelle l’impression pour le .PDF', async () => {

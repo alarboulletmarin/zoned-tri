@@ -140,3 +140,16 @@
   color: var(--color-ink);
   font-weight: var(--fw-bold);
 }
+
+/* Motif d'un format inerte, dans la carte qu'il nuance. Même langue que le composant `InertNote` —
+   mono, encre douce, filet vertical — mais posé ici parce que la carte EST le bouton. */
+.cardInert {
+  margin-top: var(--space-8);
+  padding-left: var(--space-10);
+  border-left: var(--border-width-structure) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  color: var(--color-label);
+  text-align: left;
+}

@@ -18,6 +18,7 @@ import {
 import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RacePacingScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 export interface RacePacingScreenProps {
   race: Race
@@ -124,9 +125,18 @@ export function RacePacingScreen({ race }: RacePacingScreenProps) {
                   </span>
                 </div>
               )}
-              <PrimaryAction tone="ink" className={s.primary} disabled title="Bientôt disponible">
+              <PrimaryAction
+                tone="ink"
+                className={s.primary}
+                disabled
+                aria-describedby="inert-fiche-pacing"
+              >
                 Exporter la fiche
               </PrimaryAction>
+              <InertNote id="inert-fiche-pacing">
+                Les documents du produit portent le plan et les zones, pas une course : il n’existe
+                aucun gabarit de fiche de pacing à écrire.
+              </InertNote>
             </div>
           </>
         )}

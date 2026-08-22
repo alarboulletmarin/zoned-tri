@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { Card } from '../../components/ui/Card/Card'
 import { EmptyState } from '../../components/ui/EmptyState/EmptyState'
@@ -18,6 +18,7 @@ import type { Race } from '../../domain/types'
 import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RacesListScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /** Position du plan lié à l'objectif — « plan : semaine 07 / 18 » sur la carte de l'artboard 27. */
 export interface PlanPosition {
@@ -61,6 +62,7 @@ function shortDate(isoDate: string): string {
  * n'existe encore dans le produit.
  */
 export function RacesListScreen({ races, today, planPosition }: RacesListScreenProps) {
+  const navigate = useNavigate()
   const overview = racesOverview(races, today)
   const goal = overview.goal
   const shares = goal ? disciplineShares(goal) : []
@@ -191,9 +193,16 @@ export function RacesListScreen({ races, today, planPosition }: RacesListScreenP
             Une seule course est l’objectif principal : elle seule façonne le plan et son affûtage. Une
             prépa apparaît encadrée « PRÉPA », avec ses jours faciles avant.
           </div>
-          <PrimaryAction tone="ink" className={s.primary} disabled title="Bientôt disponible">
+          {/* La commande était grise sous « Bientôt disponible ». Le générateur, lui, crée bien une
+              course : il en demande le nom et la date, et `saveRace` l'écrit avec le plan. C'est le
+              seul chemin qui existe aujourd'hui — autant y mener plutôt que d'éteindre le bouton. */}
+          <PrimaryAction tone="ink" className={s.primary} onClick={() => navigate('/generate-plan')}>
             Ajouter une course
           </PrimaryAction>
+          <InertNote id="note-ajouter-course">
+            Une course s’ajoute avec son plan : le générateur en demande le nom et la date, puis les
+            écrit ensemble. Une course sans plan n’a pas encore d’écran.
+          </InertNote>
         </div>
       </div>
     </div>

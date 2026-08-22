@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { EmptyState } from '../../components/ui/EmptyState/EmptyState'
 import { ProgressBar } from '../../components/ui/ProgressBar/ProgressBar'
-import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { useRaces } from '../../context/AppDataContext'
 import type { ChecklistItem, Race } from '../../domain/types'
 import { checklistGroups, checklistProgress } from '../../domain/raceView'
@@ -100,16 +99,13 @@ export function RaceChecklistScreen({ race, onToggle }: RaceChecklistScreenProps
           <div className={`${s.footerNote} ${s.footerNoteTight}`}>
             Les cases restent cochées hors ligne et se remettent à zéro après la course. Aucun rappel.
           </div>
+          {/* Les deux puces d'export étaient grises sous un `title` invisible au doigt, et rien
+              dans le produit n'écrit une checklist : les seuls documents sont le plan, l'atlas des
+              zones et la carte de séance. Elles partent, et la phrase dit ce qui reste vrai. */}
           <div className={s.exportRow}>
-            <span className={s.exportLabel}>Imprimer ou exporter</span>
-            {/* `SecondaryAction shape="chip"` garde la taille du canevas (6 × 8 px, mono 10) et
-                porte sa cible de 44 px par un pseudo-élément : les deux règles sont tenues. */}
-            <SecondaryAction className={own.exportChip} disabled title="Bientôt disponible">
-              .PDF
-            </SecondaryAction>
-            <SecondaryAction className={own.exportChip} disabled title="Bientôt disponible">
-              .PNG
-            </SecondaryAction>
+            <span className={s.exportLabel}>
+              La checklist reste lisible hors ligne : c’est pour ça qu’elle tient sur un écran.
+            </span>
           </div>
         </div>
       </div>

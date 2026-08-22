@@ -8,6 +8,9 @@ import { disciplineShares, timelineGroups } from '../../domain/raceView'
 import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceDayScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { buildRaceIcs, raceIcsFileName } from '../../domain/exports/raceIcs'
+import { downloadIcs } from '../exports/download'
 
 export interface RaceDayScreenProps {
   race: Race
@@ -23,6 +26,7 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
   const navigate = useNavigate()
   const groups = timelineGroups(race)
   const shares = disciplineShares(race)
+  const ics = buildRaceIcs(race)
 
   return (
     <div className={s.screen}>
@@ -97,18 +101,35 @@ export function RaceDayScreen({ race }: RaceDayScreenProps) {
               className={s.primary}
               onClick={() => navigate(racePath(race.id, 'checklist'))}
               disabled={!race.transitionChecklist?.length}
-              title={
-                race.transitionChecklist?.length
-                  ? undefined
-                  : 'Aucune checklist de parc enregistrée pour cette course'
-              }
+              aria-describedby={race.transitionChecklist?.length ? undefined : 'inert-checklist'}
             >
               Checklist parc
             </PrimaryAction>
-            <button type="button" className={s.chipButton} disabled title="Bientôt disponible">
+            {/* Le moteur d'agenda existe depuis l'artboard 24 : il ne manquait qu'un lecteur de
+                timeline. Inerte seulement quand la course n'en porte aucune — il n'y a alors rien
+                à mettre dans un agenda, et la note le dit à l'écran. */}
+            <button
+              type="button"
+              className={s.chipButton}
+              disabled={!ics}
+              aria-describedby={ics ? undefined : 'inert-ics-course'}
+              onClick={() => ics && downloadIcs(raceIcsFileName(race), ics)}
+            >
               .ICS
             </button>
           </div>
+          {!race.transitionChecklist?.length && (
+            <InertNote id="inert-checklist">
+              Aucune checklist de parc enregistrée pour cette course : les affaires de T1, du vélo et
+              de T2 se saisissent course par course, et cet écran n’existe pas encore.
+            </InertNote>
+          )}
+          {!ics && (
+            <InertNote id="inert-ics-course">
+              Aucune heure de départ ni timeline enregistrée pour cette course : il n’y a rien à mettre
+              dans l’agenda.
+            </InertNote>
+          )}
         </div>
       </div>
     </div>

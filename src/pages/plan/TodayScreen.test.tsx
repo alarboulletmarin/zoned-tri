@@ -282,9 +282,15 @@ describe('TodayScreen · jour de repos (02a)', () => {
     expect(box.textContent).toContain('puis ')
   })
 
-  it('renders the light-session button but leaves it inert', () => {
+  /**
+   * « Ajouter une séance légère » était grise sous un `title` qu'aucun doigt ne survole, et rien
+   * dans le produit ne sait insérer une séance dans une semaine. Une commande morte de moins, une
+   * sortie qui marche de plus.
+   */
+  it('mène à la bibliothèque plutôt que d’offrir une commande morte', () => {
     renderScreen('2026-06-19')
-    expect(screen.getByRole('button', { name: 'Ajouter une séance légère' })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: 'Ajouter une séance légère' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Parcourir la bibliothèque' })).toBeEnabled()
   })
 })
 

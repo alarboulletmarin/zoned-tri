@@ -34,6 +34,7 @@ import type {
   Workout,
 } from '../../domain/types'
 import styles from './PlanSettingChangeScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 const DAY_INITIALS = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
 const DAY_NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
@@ -169,7 +170,7 @@ export function PlanSettingChangeScreen({
                 className={option.scope === scope ? styles.scopeChosen : styles.scope}
                 aria-pressed={option.scope === scope}
                 disabled={option.inertReason !== undefined}
-                title={option.inertReason}
+                aria-describedby={option.inertReason ? `inert-scope-${option.scope}` : undefined}
                 onClick={() => setScope(option.scope)}
               >
                 <span>{option.label}</span>
@@ -180,6 +181,14 @@ export function PlanSettingChangeScreen({
               </button>
             ))}
           </div>
+          {/* Une portée inerte disait pourquoi dans un `title` : invisible au doigt. */}
+          {scopes
+            .filter((option) => option.inertReason !== undefined)
+            .map((option) => (
+              <InertNote key={option.scope} id={`inert-scope-${option.scope}`}>
+                {option.label} — {option.inertReason}
+              </InertNote>
+            ))}
         </section>
 
         <div className={styles.table}>
@@ -216,11 +225,13 @@ export function PlanSettingChangeScreen({
             {taperWeeks > 0 ? `l’affûtage de ${taperWeeks} semaines. ` : ''}
             Le pointillé veut dire que rien n’est écrit — revenir en arrière rend l’état exact d’avant.
           </p>
+          {/* `disabled` est ici une BORNE, pas un motif : le tableau avant / après juste au-dessus
+              montre deux colonnes identiques tant que rien n'a bougé. Une note ne dirait rien de
+              plus que ce que l'écran montre déjà. */}
           <PrimaryAction
             tone="ink-shadow"
             className={styles.apply}
             disabled={!changed}
-            title={changed ? undefined : 'Rien n’a changé : il n’y a rien à appliquer.'}
             onClick={apply}
           >
             Appliquer aux {chosen.weeksLabel}

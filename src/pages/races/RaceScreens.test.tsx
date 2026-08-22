@@ -53,12 +53,24 @@ describe('RaceSheetScreen · artboard 08', () => {
     expect(screen.getAllByText('—')).toHaveLength(2)
   })
 
-  it('laisse les trois sorties inertes ET explicites quand la donnée manque', () => {
+  /**
+   * Trois commandes grises portaient leur motif dans un `title` qu'aucun doigt ne survole. Deux
+   * avaient une sortie évidente — le produit embarque le calculateur de pacing et celui des
+   * glucides de course : elles y mènent au lieu de s'éteindre. La troisième reste inerte, mais
+   * son motif est désormais écrit à l'écran.
+   */
+  it('mène aux calculateurs plutôt que de s’éteindre quand la donnée manque', () => {
     const bare: Race = { ...demoRace, pacing: undefined, nutrition: undefined, timeline: [] }
     renderScreen(<RaceSheetScreen race={bare} today={TODAY} />)
-    const pacing = screen.getByRole('button', { name: /Plan de pacing/ })
-    expect(pacing).toBeDisabled()
-    expect(pacing).toHaveAttribute('title', expect.stringContaining('Aucun plan de pacing'))
+
+    expect(screen.queryByRole('button', { name: /^Plan de pacing/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Calculer un plan de pacing/ })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /Calculer les glucides de course/ })).toBeEnabled()
+
+    const timeline = screen.getByRole('button', { name: /Timeline du jour J/ })
+    expect(timeline).toBeDisabled()
+    expect(timeline).toHaveAccessibleDescription(/Aucune timeline enregistrée/)
+    expect(screen.getByText(/Aucune timeline enregistrée/)).toBeVisible()
   })
 
   it('nomme le vide du profil quand le dénivelé est connu mais pas son découpage', () => {
@@ -140,7 +152,9 @@ describe('RaceDayScreen · artboard 11', () => {
     renderScreen(<RaceDayScreen race={{ ...demoRace, transitionChecklist: [] }} />)
     const cta = screen.getByRole('button', { name: 'Checklist parc' })
     expect(cta).toBeDisabled()
-    expect(cta).toHaveAttribute('title', expect.stringContaining('Aucune checklist'))
+    // Le motif est écrit à l'écran, pas dans un `title` qu'un doigt ne survole jamais.
+    expect(cta).not.toHaveAttribute('title')
+    expect(cta).toHaveAccessibleDescription(/Aucune checklist de parc/)
   })
 
   it('n’envoie aucune notification, et le dit', () => {
@@ -199,11 +213,17 @@ describe('RacesListScreen · artboard 27', () => {
     expect(screen.getByText(/Aucune course de préparation/)).toBeInTheDocument()
   })
 
-  it('laisse « Ajouter une course » inerte et explicite', () => {
+  /**
+   * La commande était grise sous « Bientôt disponible ». Le générateur crée pourtant bien une
+   * course — il en demande le nom et la date, et `saveRace` l'écrit avec le plan : c'est le seul
+   * chemin qui existe, autant y mener.
+   */
+  it('mène « Ajouter une course » au générateur, qui en écrit une', () => {
     renderScreen(<RacesListScreen races={demoRaces} today={TODAY} />)
     const add = screen.getByRole('button', { name: 'Ajouter une course' })
-    expect(add).toBeDisabled()
-    expect(add).toHaveAttribute('title', 'Bientôt disponible')
+    expect(add).toBeEnabled()
+    expect(add).not.toHaveAttribute('title')
+    expect(screen.getByText(/Une course s’ajoute avec son plan/)).toBeVisible()
   })
 })
 

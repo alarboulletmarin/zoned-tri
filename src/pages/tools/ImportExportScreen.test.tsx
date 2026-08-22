@@ -52,13 +52,26 @@ describe('ImportExportScreen · artboard 14', () => {
     expect(screen.getByText('7 séances datées')).toBeInTheDocument()
   })
 
-  it('leaves the three unwritten formats inert, each with its reason', () => {
+  /**
+   * L'écran annonçait le .ZWO et le .ICS « pas encore implémentés » alors que `zwoFile.ts` et
+   * `icsFile.ts` les écrivent, testés, depuis la reprise des artboards 20 et 24. Seul le .FIT
+   * reste inerte — et son motif est le vrai, rendu à l'écran.
+   */
+  it('mène les deux formats écrits à la feuille d’export, et dit pourquoi le .FIT ne l’est pas', () => {
     renderScreen()
-    for (const format of ['.FIT', '.ZWO', '.ICS']) {
-      const action = screen.getByRole('button', { name: new RegExp(`en \\${format}$`) })
-      expect(action).toBeDisabled()
-      expect(action).toHaveAttribute('title', expect.stringContaining('pas encore implémentée'))
+
+    for (const format of ['.ZWO', '.ICS']) {
+      expect(screen.getByRole('link', { name: new RegExp(`en \\${format}$`) })).toHaveAttribute(
+        'href',
+        '/exports',
+      )
     }
+
+    const fit = screen.getByRole('button', { name: /en \.FIT$/ })
+    expect(fit).toBeDisabled()
+    expect(fit).not.toHaveAttribute('title')
+    expect(fit).toHaveAccessibleDescription(/binaire Garmin/)
+
     expect(screen.getByRole('button', { name: /en \.JSON$/ })).toBeEnabled()
   })
 

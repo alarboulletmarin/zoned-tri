@@ -22,6 +22,7 @@ import { CALCULATORS, CALCULATOR_COUNT } from './calculators/registry'
 import { CALCULATORS_PATH, IMPORT_EXPORT_PATH } from './toolsRoutes'
 import styles from './ToolsScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /**
  * Frise de 14 px de l'artboard 12 : trois parts d'exactement `33% / 34% / 33%`. Elle ne mesure
@@ -317,14 +318,23 @@ function DesktopLayout({
             tone="ink"
             className={styles.sidePrimary}
             disabled
-            title="Écrire une référence change les allures du plan : l’écran qui montre quelles séances bougent n’existe pas encore."
+            aria-describedby="inert-enregistrer-reference"
           >
             Enregistrer une référence
           </PrimaryAction>
-          <SecondaryAction className={styles.sideChip} disabled title="Export .CSV pas encore disponible">
+          <SecondaryAction className={styles.sideChip} disabled aria-describedby="inert-csv">
             .CSV
           </SecondaryAction>
         </div>
+        <InertNote id="inert-enregistrer-reference">
+          Écrire une référence change les allures de toutes les séances à venir : l’écran qui montre
+          d’abord lesquelles bougent n’existe pas encore. En attendant, le générateur les demande à
+          l’étape 05.
+        </InertNote>
+        <InertNote id="inert-csv">
+          La sauvegarde complète sort en .JSON, depuis Import / export : un .CSV de références perdrait
+          la date de chaque mesure, qui est ce qui les rend lisibles.
+        </InertNote>
       </div>
     </div>
   )

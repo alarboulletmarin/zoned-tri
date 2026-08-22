@@ -238,3 +238,12 @@
 .importAction {
   width: 100%;
 }
+
+/* Les trois formats de fichier mènent à la feuille d'export : même forme que l'action de la
+   sauvegarde, plus le `href`. */
+.rowActionLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}

@@ -88,8 +88,13 @@ describe('37 · Réglages du plan', () => {
       .getAllByRole('button', { name: 'Changer' })
       .filter((button) => (button as HTMLButtonElement).disabled)
 
+    // Le motif vivait dans un `title` : au doigt, il n'existait pas. Il est désormais à l'écran,
+    // et rattaché à la commande par `aria-describedby`.
     expect(inert.length).toBeGreaterThan(0)
-    for (const button of inert) expect(button).toHaveAttribute('title')
+    for (const button of inert) {
+      expect(button).not.toHaveAttribute('title')
+      expect(button).toHaveAccessibleDescription()
+    }
   })
 
   it('annonce la règle avant tout geste', () => {
@@ -169,8 +174,11 @@ describe('38 · Avant / après', () => {
     renderScreen()
     const whole = screen.getByRole('button', { name: /Refaire tout le plan/ })
 
+    // Le motif vivait dans un `title` : au doigt, il n'existait pas. Il est désormais à l'écran,
+    // et rattaché à la commande par `aria-describedby`.
     expect(whole).toBeDisabled()
-    expect(whole).toHaveAttribute('title')
+    expect(whole).not.toHaveAttribute('title')
+    expect(whole).toHaveAccessibleDescription()
   })
 })
 
@@ -228,8 +236,11 @@ describe('39 · Journal du plan', () => {
     const undo = screen.getAllByRole('button', { name: 'Défaire' })
     // L'entrée déjà annulée n'en a plus.
     expect(undo).toHaveLength(1)
+    // Le motif vivait dans un `title` : au doigt, il n'existait pas. Il est désormais à l'écran,
+    // et rattaché à la commande par `aria-describedby`.
     expect(undo[0]).toBeDisabled()
-    expect(undo[0]).toHaveAttribute('title')
+    expect(undo[0]).not.toHaveAttribute('title')
+    expect(undo[0]).toHaveAccessibleDescription(/copie du plan d’avant/)
   })
 
   it('nomme le vide plutôt que de laisser un blanc muet', () => {

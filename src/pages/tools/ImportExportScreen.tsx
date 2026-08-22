@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { usePlans } from '../../context/AppDataContext'
 import { todayIso } from '../../domain/planWeek'
 import { exportBackup } from '../../storage/backup'
@@ -10,6 +10,8 @@ import { ENGINE_SOURCES, EXPORT_ROWS, type SourceMark } from './engineSources'
 import { TOOLS_PATH } from './toolsRoutes'
 import styles from './ImportExportScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { exportSheetPath } from '../exports/exportsRoutes'
 
 const MARK_CLASS: Record<SourceMark, string> = {
   solid: styles.markSolid,
@@ -79,6 +81,10 @@ export function ImportExportScreen() {
             <span>Sortie</span>
             <span>Format</span>
           </div>
+          {/* La sauvegarde s'écrit ici ; les trois formats de fichier passent par la feuille
+              d'export, qui dit ce que chacun contient avant de l'écrire. Le motif du `.FIT`, seul
+              format encore inerte, est rendu à l'écran plutôt que dans un `title` invisible au
+              doigt. */}
           {EXPORT_ROWS.map((row) => (
             <div key={row.format} className={styles.row}>
               <div>
@@ -86,17 +92,40 @@ export function ImportExportScreen() {
                 <div className={styles.rowMeta}>
                   {row.meta ?? `${dated} séance${dated > 1 ? 's' : ''} datée${dated > 1 ? 's' : ''}`}
                 </div>
+                {row.unavailableReason && (
+                  <InertNote id={`inert-${row.format.slice(1).toLowerCase()}`}>
+                    {row.unavailableReason}
+                  </InertNote>
+                )}
               </div>
-              <SecondaryAction
-                shape="link"
-                className={styles.rowAction}
-                disabled={!row.available}
-                title={row.unavailableReason}
-                onClick={row.available ? () => void exportJson() : undefined}
-                aria-label={`Exporter ${row.title} en ${row.format}`}
-              >
-                {row.format}
-              </SecondaryAction>
+              {row.format === '.JSON' ? (
+                <SecondaryAction
+                  shape="link"
+                  className={styles.rowAction}
+                  onClick={() => void exportJson()}
+                  aria-label={`Exporter ${row.title} en ${row.format}`}
+                >
+                  {row.format}
+                </SecondaryAction>
+              ) : row.available ? (
+                <Link
+                  className={`${styles.rowAction} ${styles.rowActionLink}`}
+                  to={exportSheetPath()}
+                  aria-label={`Exporter ${row.title} en ${row.format}`}
+                >
+                  {row.format}
+                </Link>
+              ) : (
+                <SecondaryAction
+                  shape="link"
+                  className={styles.rowAction}
+                  disabled
+                  aria-describedby={`inert-${row.format.slice(1).toLowerCase()}`}
+                  aria-label={`Exporter ${row.title} en ${row.format}`}
+                >
+                  {row.format}
+                </SecondaryAction>
+              )}
             </div>
           ))}
         </div>

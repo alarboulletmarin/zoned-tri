@@ -31,6 +31,7 @@ import { buildWeekNav } from '../../domain/weekNav'
 import { formatDurationCompact, formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
 import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './SemaineScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 /**
  * Catalogue de résolution des identifiants du plan : la bibliothèque d'abord, les séances de
@@ -39,7 +40,12 @@ import styles from './SemaineScreen.module.css'
  */
 const WORKOUT_CATALOGUE: Workout[] = [...SEED_WORKOUTS, ...demoWorkouts]
 
-const INERT_TITLE = 'Bientôt disponible'
+/**
+ * Motif de la seule commande encore inerte de l'écran. Il est rendu À L'ÉCRAN par un `InertNote`
+ * dans le bandeau desktop, et non dans un `title` qu'un doigt ne survole jamais.
+ */
+const BLOCK_WEEK_REASON =
+  'Bloquer une semaine allège toutes les suivantes : l’écran qui montre ce que le plan devient n’existe qu’au niveau du jour, dans « Aujourd’hui ».'
 
 export interface SemaineScreenProps {
   plan: TrainingPlan
@@ -171,9 +177,17 @@ export function SemaineScreen({
               <span className={styles.headerStats}>
                 {formatDurationCompact(totals.totalMin)} prévues · {totals.remainingCount} restantes
               </span>
-              <button type="button" className={styles.headerButton} disabled title={INERT_TITLE}>
+              <button
+                type="button"
+                className={styles.headerButton}
+                disabled
+                aria-describedby="inert-bloquer-semaine"
+              >
                 Bloquer la semaine
               </button>
+              <InertNote id="inert-bloquer-semaine" className={styles.headerInertNote}>
+                {BLOCK_WEEK_REASON}
+              </InertNote>
               <Link className={styles.headerButton} to={exportSheetPath({ week: week.weekNumber })}>
                 .ICS
               </Link>

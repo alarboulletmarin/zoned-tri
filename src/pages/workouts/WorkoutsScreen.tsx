@@ -30,7 +30,6 @@ import styles from './WorkoutsScreen.module.css'
 /** Ordre de la bande de répartition, celui du canevas 07 l. 986 : natation, vélo, course, repos. */
 const DISCIPLINE_ORDER: Discipline[] = ['N', 'V', 'C', 'R']
 
-const INERT_TITLE = 'Export PDF — bientôt disponible'
 
 function computeDurationBounds() {
   const durations = SEED_WORKOUTS.map((workout) => workout.durationMin)
@@ -115,9 +114,7 @@ export function WorkoutsScreen({ initialFilters, initialSheetOpen = false }: Wor
       >
         Tri · durée {sortKey === 'duration_asc' ? '↑' : '↓'}
       </button>
-      <button type="button" className={styles.pdfButton} disabled title={INERT_TITLE}>
-        .PDF
-      </button>
+
     </>
   )
 

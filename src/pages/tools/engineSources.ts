@@ -37,21 +37,22 @@ export const EXPORT_ROWS: ExportRow[] = [
     meta: 'fichier structuré',
     format: '.FIT',
     available: false,
-    unavailableReason: 'L’écriture de fichiers .FIT n’est pas encore implémentée.',
+    unavailableReason:
+      'Le .FIT est un binaire Garmin : son écriture est reportée plutôt que bricolée — un fichier mal formé casserait la montre, pas l’application.',
   },
+  // Ces deux-là étaient annoncés « pas encore implémentés » alors que `zwoFile.ts` et
+  // `icsFile.ts` les écrivent, testés, depuis la reprise des artboards 20 et 24.
   {
     title: 'Séance → home-trainer',
     meta: 'Zwift, Rouvy, MyWhoosh',
     format: '.ZWO',
-    available: false,
-    unavailableReason: 'L’écriture de fichiers .ZWO n’est pas encore implémentée.',
+    available: true,
   },
   {
     title: 'Plan → agenda',
     meta: null,
     format: '.ICS',
-    available: false,
-    unavailableReason: 'L’écriture de fichiers .ICS n’est pas encore implémentée.',
+    available: true,
   },
   {
     title: 'Sauvegarde complète',

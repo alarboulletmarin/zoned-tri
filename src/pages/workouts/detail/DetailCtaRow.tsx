@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { PrimaryAction } from '../../../components/ui/PrimaryAction/PrimaryAction'
 import { exportCardPath, exportSheetPath } from '../../exports/exportsRoutes'
 import styles from './DetailCtaRow.module.css'
+import { InertNote } from '../../../components/ui/InertNote/InertNote'
 
 export interface DetailCtaRowProps {
   exportChips: string[]
@@ -52,7 +53,7 @@ export function DetailCtaRow({ exportChips, workoutId, sourceRef }: DetailCtaRow
           tone="ink-shadow"
           className={styles.markDone}
           disabled
-          title="Disponible une fois la séance intégrée à un plan"
+          aria-describedby="inert-marquer-faite"
         >
           Marquer comme faite
         </PrimaryAction>
@@ -64,6 +65,10 @@ export function DetailCtaRow({ exportChips, workoutId, sourceRef }: DetailCtaRow
           ))}
         </span>
       </div>
+      <InertNote id="inert-marquer-faite">
+        Cette fiche est un gabarit de bibliothèque, pas une séance de ton plan : la cocher « faite »
+        confirmerait une séance que personne n’a programmée. Depuis « Aujourd’hui », elle se coche.
+      </InertNote>
     </div>
   )
 }

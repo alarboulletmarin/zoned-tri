@@ -114,13 +114,14 @@ export function ExportSheet({
 
 function FormatCard({ row, onPick }: { row: ExportRow; onPick: () => void }) {
   const inert = row.unavailableReason !== null
+  const reasonId = `inert-format-${row.format.slice(1).toLowerCase()}`
   return (
     <button
       type="button"
       className={row.featured ? `${styles.card} ${styles.cardFeatured}` : styles.card}
       onClick={inert ? undefined : onPick}
       disabled={inert}
-      title={row.unavailableReason ?? undefined}
+      aria-describedby={inert ? reasonId : undefined}
     >
       <span className={styles.cardTop}>
         <span className={styles.cardFormat}>{row.format}</span>
@@ -128,6 +129,13 @@ function FormatCard({ row, onPick }: { row: ExportRow; onPick: () => void }) {
       </span>
       <span className={styles.cardTitle}>{row.title}</span>
       <span className={styles.cardDetail}>{row.detail}</span>
+      {/* Le motif était dans un `title` : sur la feuille d'export, ouverte au doigt neuf fois sur
+          dix, il n'existait pas. Il descend dans la carte, sous le détail qu'il nuance. */}
+      {row.unavailableReason && (
+        <span id={reasonId} className={styles.cardInert}>
+          {row.unavailableReason}
+        </span>
+      )}
     </button>
   )
 }

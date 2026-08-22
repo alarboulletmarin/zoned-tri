@@ -86,20 +86,17 @@ describe('BurgerMenu', () => {
     expect(screen.getByRole('link', { name: /Réglages/ })).toBeInTheDocument()
   })
 
-  it('renders the "Méthodologie · bientôt" future row as disabled', async () => {
+  /**
+   * Le pied portait une paire FR / EN dont l'anglais était désactivé, alors que l'écran S3 fait
+   * déjà ce choix — avec la couverture réelle de la traduction. Deux surfaces pour un réglage,
+   * dont une inerte : celle du panneau est partie, et « Réglages » y mène.
+   */
+  it('ne garde en pied que la version, le choix de langue vivant dans les Réglages', () => {
     renderMenu()
-    expect(await screen.findByText("Ce qui n'existe pas encore")).toBeInTheDocument()
-    const row = screen.getByText('Méthodologie').closest('[aria-disabled="true"]')
-    expect(row).not.toBeNull()
-    expect(row).toHaveTextContent('bientôt')
-  })
-
-  it('renders the language footer with FR active, EN disabled and the version', async () => {
-    renderMenu()
-    expect(await screen.findByText('Langue')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'FR' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'EN' })).toBeDisabled()
-    expect(screen.getByText('v 1.4 · hors ligne')).toBeInTheDocument()
+    expect(screen.getByText(/^v [0-9]/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'EN' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'FR' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Réglages/ })).toHaveAttribute('href', '/settings')
   })
 
   it('closes when a root link is clicked', async () => {

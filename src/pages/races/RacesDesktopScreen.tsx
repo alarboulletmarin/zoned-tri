@@ -22,6 +22,9 @@ import { racePath } from './routes'
 import { EXPORTS_PRINT_PATH } from '../exports/exportsRoutes'
 import s from './RaceScreens.module.css'
 import own from './RacesDesktopScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { buildRaceIcs, raceIcsFileName } from '../../domain/exports/raceIcs'
+import { downloadIcs } from '../exports/download'
 
 export interface RacesDesktopScreenProps {
   races: Race[]
@@ -79,7 +82,11 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
         desktopActions={
           <>
             <span className={own.breakdown}>{overview.breakdownLabel || 'aucune course'}</span>
-            <SecondaryAction shape="chip" className={own.headerChip} disabled title="Bientôt disponible">
+            <SecondaryAction
+              shape="chip"
+              className={own.headerChip}
+              onClick={() => navigate('/generate-plan')}
+            >
               Ajouter une course
             </SecondaryAction>
           </>
@@ -234,14 +241,18 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
                     className={own.chip}
                     onClick={() => navigate(racePath(goal.id, 'checklist'))}
                     disabled={!goal.transitionChecklist?.length}
-                    title={
-                      goal.transitionChecklist?.length
-                        ? undefined
-                        : 'Aucune checklist de parc enregistrée pour cette course'
+                    aria-describedby={
+                      goal.transitionChecklist?.length ? undefined : 'inert-checklist-parc'
                     }
                   >
                     Checklist parc à vélo
                   </SecondaryAction>
+                  {!goal.transitionChecklist?.length && (
+                    <InertNote id="inert-checklist-parc">
+                      Aucune checklist de parc enregistrée pour cette course : les affaires de T1, du
+                      vélo et de T2 se saisissent course par course.
+                    </InertNote>
+                  )}
                   {/* L'atlas des zones n'était pas « à venir » : c'est la première page du
                       document A4, qui se rend depuis toujours dans `PrintDocument`. */}
                   <SecondaryAction
@@ -251,9 +262,18 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
                   >
                     Atlas des zones
                   </SecondaryAction>
-                  <SecondaryAction shape="chip" className={own.chip} disabled title="Bientôt disponible">
+                  <SecondaryAction
+                    shape="chip"
+                    className={own.chip}
+                    disabled
+                    aria-describedby="inert-plan-course-pdf"
+                  >
                     Plan de course .PDF
                   </SecondaryAction>
+                  <InertNote id="inert-plan-course-pdf">
+                    Les documents du produit portent le plan et les zones, pas une course : il n’existe
+                    aucun gabarit de plan de course à écrire.
+                  </InertNote>
                 </div>
               </section>
 
@@ -265,15 +285,26 @@ export function RacesDesktopScreen({ races, today, taperWeeks }: RacesDesktopScr
                 >
                   Voir le plan de cette course
                 </PrimaryAction>
+                {/* Le moteur d'agenda existe : ce qui manque, quand il manque, c'est la timeline
+                    de la course — et la note le dit à l'écran. */}
                 <button
                   type="button"
                   className={`${s.chipButton} ${own.footerChip}`}
-                  disabled
-                  title="Bientôt disponible"
+                  disabled={!buildRaceIcs(goal)}
+                  aria-describedby={buildRaceIcs(goal) ? undefined : 'inert-ics-objectif'}
+                  onClick={() => {
+                    const ics = buildRaceIcs(goal)
+                    if (ics) downloadIcs(raceIcsFileName(goal), ics)
+                  }}
                 >
                   .ICS
                 </button>
               </div>
+              {!buildRaceIcs(goal) && (
+                <InertNote id="inert-ics-objectif">
+                  Aucune timeline enregistrée pour cette course : il n’y a rien à mettre dans l’agenda.
+                </InertNote>
+              )}
             </>
           )}
         </aside>

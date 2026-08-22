@@ -206,3 +206,9 @@
     padding-block: 0 var(--space-28);
   }
 }
+
+/* Le motif de « Défaire », dans la colonne de l'action qu'il explique. */
+.rowInertNote {
+  grid-column: -2 / -1;
+  max-width: 34ch;
+}

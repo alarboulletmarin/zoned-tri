@@ -132,11 +132,17 @@ describe('ToolsScreen · artboard S8 (desktop)', () => {
     expect(screen.getByText(/aucune FC max n’est estimée d’après ton âge/)).toBeInTheDocument()
   })
 
-  it('keeps the two unwired actions inert, each with its reason', () => {
+  /** Les deux motifs vivaient dans des `title` : sur téléphone, deux commandes grises et rien. */
+  it('garde les deux actions inertes, chacune avec son motif LISIBLE', () => {
     renderDesktop()
+
     const save = screen.getByRole('button', { name: 'Enregistrer une référence' })
     expect(save).toBeDisabled()
-    expect(save).toHaveAttribute('title', expect.stringContaining('quelles séances bougent'))
-    expect(screen.getByRole('button', { name: '.CSV' })).toBeDisabled()
+    expect(save).not.toHaveAttribute('title')
+    expect(save).toHaveAccessibleDescription(/lesquelles bougent/)
+
+    const csv = screen.getByRole('button', { name: '.CSV' })
+    expect(csv).toBeDisabled()
+    expect(csv).toHaveAccessibleDescription(/\.JSON/)
   })
 })

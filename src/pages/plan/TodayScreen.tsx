@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { usePlans, useProfile, useRaces, useWorkouts } from '../../context/AppDataContext'
 import { usePublishRailBlock } from '../../context/RailBlockContext'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
@@ -28,8 +28,12 @@ import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressB
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { WeekStrip, type WeekStripDay } from '../../components/ui/WeekStrip/WeekStrip'
 import { exportSheetPath } from '../exports/exportsRoutes'
+
+/** La bibliothèque : le seul endroit où l'on peut aujourd'hui choisir une séance. */
+const WORKOUTS_PATH = '/workouts'
 import styles from './TodayScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 const WEEK_PATH = '/plan/semaine'
 
@@ -845,6 +849,8 @@ function RestDayState({
   /** En deux colonnes, « Reste cette semaine » vit à droite : la répéter ici la dédoublerait. */
   listInAside?: boolean
 }) {
+  const navigate = useNavigate()
+
   return (
     <>
       <div className={styles.body}>
@@ -873,11 +879,19 @@ function RestDayState({
         </div>
       )}
 
+      {/* « Ajouter une séance légère » était grise sous un `title` que le doigt ne survole pas :
+          rien dans le produit ne sait insérer une séance dans une semaine. La commande morte part,
+          et celle qui la remplace mène où l'on peut vraiment aller. */}
       <div className={styles.hairlineNote}>
-        L’app ne propose rien d’elle-même : à toi d’ajouter une séance, en sachant ce qu’elle coûte à demain.
+        L’app ne propose rien d’elle-même. Ajouter une séance au plan n’est pas encore possible — mais la
+        bibliothèque dit, pour chacune, ce qu’elle vise et ce qu’elle coûte.
       </div>
-      <SecondaryAction shape="block" className={styles.fullButton} disabled title="Bientôt disponible">
-        Ajouter une séance légère
+      <SecondaryAction
+        shape="block"
+        className={styles.fullButton}
+        onClick={() => navigate(WORKOUTS_PATH)}
+      >
+        Parcourir la bibliothèque
       </SecondaryAction>
 
       {!listInAside && <SessionList label="Reste cette semaine" sessions={view.rest.slice(0, REST_LIMIT)} />}
@@ -936,10 +950,19 @@ function AllDoneState({
             <SecondaryAction shape="block" className={styles.inlineAction} onClick={() => onUndo(done.workout)}>
               Annuler « faite »
             </SecondaryAction>
-            <SecondaryAction shape="block" className={styles.inlineAction} disabled title="Bientôt disponible">
+            <SecondaryAction
+              shape="block"
+              className={styles.inlineAction}
+              disabled
+              aria-describedby="inert-ressenti"
+            >
               Noter le ressenti
             </SecondaryAction>
           </div>
+          <InertNote id="inert-ressenti">
+            Le ressenti n’est encore stocké nulle part : `Workout` ne porte aucun champ pour lui, et
+            l’écrire dans le journal en ferait un changement de plan, ce qu’il n’est pas.
+          </InertNote>
         </section>
       ))}
 
@@ -1012,10 +1035,15 @@ function WeekPausedState({
           className={styles.pausedSecondary}
           onClick={onBlockMore}
           disabled={!view.canBlockMore}
-          title={view.canBlockMore ? undefined : 'Le plan ne compte pas de semaine suivante à bloquer'}
+          aria-describedby={view.canBlockMore ? undefined : 'inert-bloquer-plus'}
         >
           Bloquer une semaine de plus
         </SecondaryAction>
+        {!view.canBlockMore && (
+          <InertNote id="inert-bloquer-plus">
+            Le plan ne compte pas de semaine suivante à bloquer : celle-ci est la dernière.
+          </InertNote>
+        )}
       </div>
 
       <div className={styles.waitingBlock}>

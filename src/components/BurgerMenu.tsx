@@ -95,23 +95,10 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
         ))}
       </div>
 
-      <div className={styles.future}>
-        <div className={styles.futureLabel}>Ce qui n'existe pas encore</div>
-        <div className={styles.futureRow} aria-disabled="true">
-          <span className={styles.futureItem}>Méthodologie</span>
-          <span className={styles.futureNote}>bientôt</span>
-        </div>
-      </div>
-
+      {/* Le pied portait une paire FR / EN dont l'anglais était désactivé, alors que l'écran S3
+          (« Réglages / Langue ») fait déjà ce choix — et le fait mieux, avec la couverture réelle
+          de la traduction. Deux surfaces pour un même réglage, dont une inerte : celle-ci part. */}
       <div className={styles.footer}>
-        <span className={styles.langLabel}>Langue</span>
-        {/* Une seule langue existe : « EN » est désactivé plutôt que faussement cliquable. */}
-        <button type="button" className={`${styles.lang} ${styles.langActive}`} aria-pressed="true">
-          FR
-        </button>
-        <button type="button" className={styles.lang} aria-pressed="false" disabled>
-          EN
-        </button>
         {/* La build de démonstration le dit : on ne présente jamais un plan amorcé comme un vrai. */}
         <span className={styles.version}>
           v {APP_VERSION} · hors ligne{IS_DEMO_BUILD && ' · démonstration'}

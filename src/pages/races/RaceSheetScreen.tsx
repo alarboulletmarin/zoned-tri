@@ -18,6 +18,8 @@ import { splitName } from './splitName'
 import { racePath } from './routes'
 import s from './RaceScreens.module.css'
 import own from './RaceSheetScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
+import { calculatorPath } from '../tools/toolsRoutes'
 
 export interface RaceSheetScreenProps {
   race: Race
@@ -175,37 +177,65 @@ export function RaceSheetScreen({ race, today, variant = 'root' }: RaceSheetScre
           </div>
         </div>
 
+        {/* Trois commandes grises sous un `title` que le doigt ne survole pas. Deux d'entre elles
+            avaient pourtant une sortie évidente : le produit embarque douze calculateurs, dont
+            celui du pacing et celui des glucides de course. Une commande sans sa donnée cesse
+            donc d'être morte — elle mène là où l'on fabrique cette donnée. */}
         <div className={s.navStack}>
-          <SecondaryAction
-            shape="block"
-            className={s.navAction}
-            onClick={() => navigate(racePath(race.id, 'pacing'))}
-            disabled={!race.pacing}
-            title={race.pacing ? undefined : 'Aucun plan de pacing enregistré pour cette course'}
-          >
-            Plan de pacing
-            <span aria-hidden="true">→</span>
-          </SecondaryAction>
-          <SecondaryAction
-            shape="block"
-            className={s.navAction}
-            onClick={() => navigate(racePath(race.id, 'nutrition'))}
-            disabled={!race.nutrition}
-            title={race.nutrition ? undefined : 'Aucun plan nutrition enregistré pour cette course'}
-          >
-            Plan nutrition
-            <span aria-hidden="true">→</span>
-          </SecondaryAction>
+          {race.pacing ? (
+            <SecondaryAction
+              shape="block"
+              className={s.navAction}
+              onClick={() => navigate(racePath(race.id, 'pacing'))}
+            >
+              Plan de pacing
+              <span aria-hidden="true">→</span>
+            </SecondaryAction>
+          ) : (
+            <SecondaryAction
+              shape="block"
+              className={s.navAction}
+              onClick={() => navigate(calculatorPath('pacing-course'))}
+            >
+              Calculer un plan de pacing
+              <span aria-hidden="true">→</span>
+            </SecondaryAction>
+          )}
+          {race.nutrition ? (
+            <SecondaryAction
+              shape="block"
+              className={s.navAction}
+              onClick={() => navigate(racePath(race.id, 'nutrition'))}
+            >
+              Plan nutrition
+              <span aria-hidden="true">→</span>
+            </SecondaryAction>
+          ) : (
+            <SecondaryAction
+              shape="block"
+              className={s.navAction}
+              onClick={() => navigate(calculatorPath('glucides-course'))}
+            >
+              Calculer les glucides de course
+              <span aria-hidden="true">→</span>
+            </SecondaryAction>
+          )}
           <SecondaryAction
             shape="block"
             className={s.navAction}
             onClick={() => navigate(racePath(race.id, 'jour-j'))}
             disabled={!race.timeline?.length}
-            title={race.timeline?.length ? undefined : 'Aucune timeline enregistrée pour cette course'}
+            aria-describedby={race.timeline?.length ? undefined : 'inert-timeline'}
           >
             Timeline du jour J
             <span aria-hidden="true">→</span>
           </SecondaryAction>
+          {!race.timeline?.length && (
+            <InertNote id="inert-timeline">
+              Aucune timeline enregistrée pour cette course : les repères du jour J (réveil, dépôt du
+              vélo, départ) se saisissent course par course, et cet écran n’existe pas encore.
+            </InertNote>
+          )}
         </div>
       </div>
     </div>

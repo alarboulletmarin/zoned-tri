@@ -13,6 +13,7 @@ import {
 } from '../../domain/planSettings'
 import type { PlanSettingKey, Race, TrainingPlan } from '../../domain/types'
 import styles from './PlanSettingsScreen.module.css'
+import { InertNote } from '../../components/ui/InertNote/InertNote'
 
 const IMPACT_CLASS: Record<PlanSettingImpact, string> = {
   sessions: styles.impactSessions,
@@ -163,11 +164,18 @@ export function PlanSettingsScreen({
                   <div className={styles.decisionBody}>
                     <div className={styles.decisionTitle}>{decision.title}</div>
                     <div className={styles.decisionReason}>{decision.reason}</div>
+                    {/* Le motif d'un « Changer » inerte vivait dans un `title` : sur téléphone,
+                        un bouton gris et rien d'autre. */}
+                    {decision.setting === undefined && decision.inertReason && (
+                      <InertNote id={`inert-decision-${decision.id}`}>{decision.inertReason}</InertNote>
+                    )}
                   </div>
                   <SecondaryAction
                     className={styles.decisionAction}
                     disabled={decision.setting === undefined}
-                    title={decision.inertReason}
+                    aria-describedby={
+                      decision.setting === undefined ? `inert-decision-${decision.id}` : undefined
+                    }
                     onClick={
                       decision.setting ? () => onOpenSetting(decision.setting as PlanSettingKey) : undefined
                     }

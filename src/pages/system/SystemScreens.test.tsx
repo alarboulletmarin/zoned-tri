@@ -59,7 +59,9 @@ describe('SettingsScreen · artboard S2', () => {
     for (const label of ['Sombre', 'Système']) {
       const option = screen.getByRole('button', { name: label })
       expect(option).toBeDisabled()
-      expect(option).toHaveAttribute('title', expect.stringContaining('palette sombre'))
+      // Le motif est rendu à l'écran, non dans un `title` qu'un doigt ne survole pas.
+      expect(option).not.toHaveAttribute('title')
+      expect(option).toHaveAccessibleDescription(/palette sombre/)
     }
   })
 
@@ -110,7 +112,7 @@ describe('SettingsScreen · artboard S2', () => {
     const toggle = screen.getByRole('switch', { name: /fiches course lisibles hors ligne/ })
     expect(toggle).toBeDisabled()
     expect(toggle).toHaveAttribute('aria-checked', 'true')
-    expect(toggle).toHaveAttribute('title', expect.stringContaining('écrit sur l’appareil'))
+    expect(toggle).toHaveAccessibleDescription(/écrit sur l’appareil/)
   })
 
   it('ferme sur la version et l’absence de compte', () => {
@@ -127,7 +129,7 @@ describe('LanguageScreen · artboard S3', () => {
     expect(screen.getByRole('button', { name: /Français/ })).toHaveAttribute('aria-pressed', 'true')
     const english = screen.getByRole('button', { name: /English/ })
     expect(english).toBeDisabled()
-    expect(english).toHaveAttribute('title', expect.stringContaining('Aucune chaîne'))
+    expect(english).toHaveAccessibleDescription(/Aucune chaîne/)
   })
 
   it('donne à la couverture ses valeurs réelles — zéro partout', () => {

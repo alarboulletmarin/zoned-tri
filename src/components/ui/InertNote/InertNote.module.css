@@ -1,0 +1,16 @@
+/*
+ * Une note de motif n'est pas un avertissement : elle explique, elle n'alerte pas. Elle prend donc
+ * la mono des étiquettes du système, l'encre douce des textes secondaires, et un filet vertical
+ * d'encre — le même trait que le produit pose devant tout ce qui est « dit, pas montré ».
+ */
+.note {
+  margin: var(--space-8) 0 0;
+  padding-left: var(--space-10);
+  border-left: var(--border-width-structure) solid var(--color-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-section);
+  line-height: 1.6;
+  letter-spacing: var(--ls-label-micro);
+  color: var(--color-label);
+  max-width: var(--measure-prose);
+}

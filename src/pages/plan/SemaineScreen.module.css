@@ -645,3 +645,13 @@ a.headerButton {
   text-decoration: none;
   line-height: normal;
 }
+
+/* La note de motif du bandeau desktop : elle suit la commande qu'elle explique, sans filet — le
+   bandeau en porte déjà un. */
+.headerInertNote {
+  margin: 0;
+  padding-left: var(--space-8);
+  border-left-color: var(--color-inactive);
+  max-width: 30ch;
+  text-transform: none;
+}

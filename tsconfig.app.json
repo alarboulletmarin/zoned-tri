@@ -4,7 +4,9 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "module": "esnext",
-    "types": ["vite/client"],
+    /* `node` : le garde-fou de source (src/pages/inertMotives.test.ts) lit les fichiers du
+       produit pour vérifier une règle qui porte sur tout le dépôt. */
+    "types": ["vite/client", "node"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
