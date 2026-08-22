@@ -96,9 +96,23 @@ describe('PlanMacroScreen · artboard 04', () => {
     expect(screen.getByText('Exporter les 18 semaines')).toBeInTheDocument()
   })
 
-  it('décrit l’histogramme du volume hebdomadaire', () => {
+  /**
+   * L'histogramme était une image muette : dix-huit barres et pas une destination, alors que la
+   * Saison sert précisément à choisir où regarder. Chaque barre est un lien vers SA semaine —
+   * `PlanWeekRoute` lit déjà `?semaine=N`, personne ne le lui envoyait.
+   */
+  it('mène chaque barre de semaine à sa semaine, en la nommant', () => {
     renderScreen()
-    expect(screen.getByRole('img', { name: /Volume hebdomadaire : semaine 7 8 h 10/ })).toBeInTheDocument()
+    const semaine7 = screen.getByRole('link', { name: /Semaine 7 · 8 h 10/ })
+    expect(semaine7).toHaveAttribute('href', '/plan/semaine?semaine=7')
+  })
+
+  it('mène chaque phase à sa première semaine', () => {
+    renderScreen()
+    expect(screen.getByRole('link', { name: /^Base ·/ })).toHaveAttribute(
+      'href',
+      '/plan/semaine?semaine=1',
+    )
   })
 
   it('nomme le vide quand le plan ne porte aucune semaine', () => {
@@ -108,6 +122,8 @@ describe('PlanMacroScreen · artboard 04', () => {
 
   it('garde une colonne par semaine, même à volume nul', () => {
     renderScreen({ ...demoPlan, weeks: [emptyWeek(1), emptyWeek(2), emptyWeek(3)] })
-    expect(screen.getByRole('img', { name: /semaine 1 0′, semaine 2 0′, semaine 3 0′/ })).toBeInTheDocument()
+    for (const rang of [1, 2, 3]) {
+      expect(screen.getByRole('link', { name: `Semaine ${rang} · 0′` })).toBeInTheDocument()
+    }
   })
 })

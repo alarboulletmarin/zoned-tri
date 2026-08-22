@@ -91,7 +91,7 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
 
   it('writes one row per day, the day name once', () => {
     renderScreen(singleSessionPerDay())
-    const rows = screen.getAllByRole('button', { name: /150 m|seuil|Repos actif|Enchaînement|Longue/ })
+    const rows = screen.getAllByRole('link', { name: /150 m|seuil|Repos actif|Enchaînement|Longue/ })
     expect(rows).toHaveLength(7)
     expect(rows[0]).toHaveTextContent('Lun')
     expect(rows[0]).toHaveTextContent('55 min · Z4')
@@ -102,7 +102,7 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
     renderScreen(singleSessionPerDay())
     const marks = screen.getAllByText('AUJ.')
     expect(marks).toHaveLength(1)
-    expect(marks[0].closest('button')).toHaveTextContent('Mar')
+    expect(marks[0].closest('a')).toHaveTextContent('Mar')
   })
 
   it('shows the intensity split and both exports in the footer', () => {
@@ -136,7 +136,10 @@ describe('SemaineScreen · artboard 03 (mobile, une séance par jour)', () => {
         </Routes>
       </MemoryRouter>,
     )
-    await userEvent.click(screen.getByRole('button', { name: /8 × 150 m au CSS/ }))
+    // La ligne est désormais un LIEN : son adresse se copie et s'ouvre dans un onglet.
+    const ligne = screen.getByRole('link', { name: /8 × 150 m au CSS/ })
+    expect(ligne).toHaveAttribute('href', expect.stringContaining('/workouts/'))
+    await userEvent.click(ligne)
     expect(screen.getByText('détail de séance')).toBeInTheDocument()
   })
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import type { Workout } from '../../domain/types'
 import {
   LOCATION_LABELS,
@@ -31,7 +32,15 @@ export type WorkoutRowVariant = 'library' | 'search' | 'master'
 export interface WorkoutListRowProps {
   workout: Workout
   variant?: WorkoutRowVariant
-  onClick?: () => void
+  /** Adresse de la fiche. La ligne EST un lien : elle se copie, s'ouvre dans un onglet, s'annonce. */
+  to: string
+  /**
+   * Ce que fait un clic gauche simple EN PLUS de suivre le lien. Le patron liste + fiche de S5
+   * ouvre la fiche dans la colonne de droite sans quitter la liste : la ligne appelle alors
+   * `onSelect` et empêche la navigation. Un clic milieu, un Ctrl-clic ou un « ouvrir dans un
+   * onglet » ne passent pas par là et suivent le `href` — ce qui est exactement ce qu'on veut.
+   */
+  onSelect?: () => void
   /** Titre déjà découpé pour porter le surlignage du terme cherché (artboard 25). */
   titleContent?: ReactNode
   /** Ligne sélectionnée du patron liste + fiche (S5) : aplat d'encre bord à bord. */
@@ -62,21 +71,32 @@ function rowMeta(workout: Workout, variant: WorkoutRowVariant): string {
   return `${formatDurationMin(workout.durationMin)} · ${place}`
 }
 
+/** Un clic que le navigateur traiterait comme « ouvrir ici », par opposition à un nouvel onglet. */
+function isPlainLeftClick(event: React.MouseEvent): boolean {
+  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
+}
+
 export function WorkoutListRow({
   workout,
   variant = 'library',
-  onClick,
+  to,
+  onSelect,
   titleContent,
   isSelected,
 }: WorkoutListRowProps) {
   const zone = workout.zone ? zoneToNumber(workout.zone) : null
 
   return (
-    <button
-      type="button"
+    <Link
       className={[styles.row, styles[variant], isSelected ? styles.rowSelected : ''].filter(Boolean).join(' ')}
-      onClick={onClick}
+      to={to}
+      state={{ from: 'Bibliothèque' }}
       aria-current={isSelected ? 'true' : undefined}
+      onClick={(event) => {
+        if (!onSelect || !isPlainLeftClick(event)) return
+        event.preventDefault()
+        onSelect()
+      }}
     >
       {variant === 'library' ? (
         <span className={styles.badgeSlot}>
@@ -100,6 +120,6 @@ export function WorkoutListRow({
       </span>
 
       {variant === 'master' && zone && <ZoneTag zone={zone} size="md" />}
-    </button>
+    </Link>
   )
 }

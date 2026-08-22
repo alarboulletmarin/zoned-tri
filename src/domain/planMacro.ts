@@ -90,6 +90,8 @@ export interface PlanMacroPhaseRow {
   isActive: boolean
   /** La phase d'affûtage porte l'appel de note 2. */
   hasEvidence: boolean
+  /** Rang de la première semaine de la phase — la destination de la ligne, qui est un lien. */
+  firstWeekNumber: number
 }
 
 export interface PlanMacroView {
@@ -206,10 +208,12 @@ export function computePhaseRows(plan: TrainingPlan, today: string): PlanMacroPh
 
   return plan.phases.map((phase) => {
     const doneInPhase = Math.max(0, Math.min(phase.weeksCount, elapsed - startWeek + 1))
+    const firstWeekNumber = startWeek
     startWeek += phase.weeksCount
 
     return {
       key: phase.name,
+      firstWeekNumber,
       label: `${PLAN_PHASE_LABELS[phase.name]} · ${plural(phase.weeksCount, 'semaine')}`,
       description: phase.description,
       colorVar: PHASE_COLOR_VAR[phase.name],

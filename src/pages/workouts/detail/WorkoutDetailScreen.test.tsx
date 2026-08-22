@@ -95,10 +95,17 @@ describe('WorkoutDetailScreen', () => {
     expect(screen.getByText('Endurance · Route')).toBeInTheDocument()
   })
 
-  it('shows a not-found message for an unknown id', async () => {
+  /**
+   * L'écran 18 est écrit exactement pour ce cas — « lien partagé vers une séance supprimée ·
+   * toujours une sortie ». La fiche rendait à sa place une phrase nue, sans rapprochement et sans
+   * issue : le seul endroit du produit où un lien mort ne menait nulle part.
+   */
+  it('rend le vrai écran 404 pour un identifiant inconnu, pas une phrase nue', async () => {
     // « Introuvable » n'est affiché qu'une fois la base lue : avant, l'absence n'est pas prouvée.
     renderDetail('does-not-exist')
-    expect(await screen.findByText('Séance introuvable.')).toBeInTheDocument()
+    expect(await screen.findByText('Erreur 404')).toBeInTheDocument()
+    expect(screen.queryByText('Séance introuvable.')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Ouvrir la bibliothèque/ })).toBeInTheDocument()
   })
 
   it('only renders the why section when the workout has one', () => {

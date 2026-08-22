@@ -10,6 +10,7 @@ import type { AthleteProfile, Workout } from '../../../domain/types'
 import { useBreakpoint } from '../../../hooks/useBreakpoint'
 import { WorkoutDetailContent } from './WorkoutDetailContent'
 import styles from './WorkoutDetailScreen.module.css'
+import { NotFoundScreen } from '../../system/NotFoundScreen'
 
 interface DetailLocationState {
   /** Écran d'origine, pour le segment du milieu (« Aujourd'hui » ou « Semaine »). */
@@ -93,14 +94,11 @@ export function WorkoutDetailScreen() {
     // Tant que la base n'est pas lue, l'absence n'est pas prouvée : on ne dit pas « introuvable »
     // à la place d'un identifiant qui pourrait appartenir à un plan généré.
     if (loading) return null
-    return (
-      <>
-        <AppHeader variant="detail" trail={['Séances', 'Introuvable']} onBack={goBack} />
-        <div className={styles.notFound}>
-          <p>Séance introuvable.</p>
-        </div>
-      </>
-    )
+    // L'écran 18 est écrit exactement pour ce cas — « lien partagé vers une séance supprimée ·
+    // toujours une sortie » : il nomme l'adresse, propose les séances qui s'en rapprochent et
+    // donne deux issues. Rendre à sa place une phrase nue était le seul endroit du produit où un
+    // lien mort ne menait nulle part.
+    return <NotFoundScreen />
   }
 
   const trail = buildTrail(

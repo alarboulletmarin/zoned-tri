@@ -14,6 +14,8 @@ import {
   type WorkoutFilters,
 } from '../../domain/workoutFilters'
 import styles from './EmptyResultsPanel.module.css'
+import { Link } from 'react-router-dom'
+import { workoutPath } from '../../navigation'
 
 const CATEGORY_LABEL: Record<FilterCategory, string> = {
   discipline: 'la discipline',
@@ -150,9 +152,11 @@ export function EmptyResultsPanel({ catalogue, filters, onChange }: EmptyResults
           <h2 className={styles.blockLabel}>Les plus proches</h2>
           <div className={styles.nearList}>
             {nearest.map(({ workout, missedCategories }) => (
-              <div
+              <Link
                 key={workout.id}
                 className={styles.nearRow}
+                to={workoutPath(workout.id)}
+                state={{ from: 'Bibliothèque' }}
                 title={`Écartée par ${missedCategories.map((category) => CATEGORY_LABEL[category]).join(' et ')}`}
               >
                 {workout.zone ? (
@@ -164,7 +168,7 @@ export function EmptyResultsPanel({ catalogue, filters, onChange }: EmptyResults
                 )}
                 <span className={styles.nearTitle}>{workout.title}</span>
                 <span className={styles.nearDuration}>{formatDurationCompact(workout.durationMin)}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

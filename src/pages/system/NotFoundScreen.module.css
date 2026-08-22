@@ -188,3 +188,9 @@
     margin-inline: auto;
   }
 }
+
+/* Les rapprochements sont des liens : même dessin, plus un `href`. */
+a.nearestRow {
+  color: inherit;
+  text-decoration: none;
+}

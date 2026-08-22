@@ -1250,3 +1250,14 @@ a.chipButton {
   text-decoration: none;
   line-height: normal;
 }
+
+/* Les lignes de « Reste cette semaine » sont devenues des liens : même dessin, plus un `href`. */
+a.listRow {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.listRow:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: 2px;
+}

@@ -14,6 +14,8 @@ import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAc
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { nearestWorkouts } from './nearestWorkouts'
 import styles from './NotFoundScreen.module.css'
+import { Link } from 'react-router-dom'
+import { workoutPath } from '../../navigation'
 
 const WORKOUTS_PATH = '/workouts'
 const PLAN_PATH = '/plan'
@@ -82,12 +84,7 @@ export function NotFoundScreen({ pathname, catalogue }: NotFoundScreenProps) {
           {nearest.length > 0 ? (
             <div className={styles.nearestList}>
               {nearest.map((workout) => (
-                <button
-                  key={workout.id}
-                  type="button"
-                  className={styles.nearestRow}
-                  onClick={() => navigate(`${WORKOUTS_PATH}/${workout.id}`)}
-                >
+                <Link key={workout.id} className={styles.nearestRow} to={workoutPath(workout.id)}>
                   {workout.zone ? (
                     <ZoneTag zone={zoneToNumber(workout.zone) as ZoneNumber} size="sm" />
                   ) : (
@@ -100,7 +97,7 @@ export function NotFoundScreen({ pathname, catalogue }: NotFoundScreenProps) {
                   <span className={styles.nearestArrow} aria-hidden="true">
                     →
                   </span>
-                </button>
+                </Link>
               ))}
             </div>
           ) : (

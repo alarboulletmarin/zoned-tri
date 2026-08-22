@@ -17,6 +17,7 @@ import {
 import { todayIso } from '../../domain/planWeek'
 import { formatDurationCompact } from '../../domain/workoutFormat'
 import type { Race, TrainingPlan } from '../../domain/types'
+import { weekPath } from '../../navigation'
 import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './PlanMacroScreen.module.css'
 
@@ -188,17 +189,17 @@ function WeekVolumeChart({ view }: { view: PlanMacroView }) {
     return <div className={styles.chartEmpty}>Ce plan ne porte aucune semaine : rien à comparer.</div>
   }
 
-  const summary = view.bars
-    .map((bar) => `semaine ${bar.weekNumber} ${formatDurationCompact(bar.volumeMin)}`)
-    .join(', ')
-
+  // `role="img"` masquait les enfants du conteneur : dix-huit liens invisibles au lecteur d'écran
+  // seraient pires que dix-huit barres muettes. Chaque barre porte donc son propre nom.
   return (
-    <div className={styles.chart} role="img" aria-label={`Volume hebdomadaire : ${summary}`}>
+    <div className={styles.chart}>
       {view.bars.map((bar) => (
-        <div
+        <Link
           key={bar.key}
           className={styles.chartBar}
           style={{ height: `${bar.heightPercent}%`, background: bar.colorVar }}
+          to={weekPath(bar.weekNumber)}
+          aria-label={`Semaine ${bar.weekNumber} · ${formatDurationCompact(bar.volumeMin)}`}
           title={`Semaine ${bar.weekNumber} · ${formatDurationCompact(bar.volumeMin)}`}
         />
       ))}
@@ -206,9 +207,17 @@ function WeekVolumeChart({ view }: { view: PlanMacroView }) {
   )
 }
 
+/**
+ * Une phase de la saison. Les quatre lignes étaient inertes : la Saison montrait dix-huit semaines
+ * et quatre phases sans qu'aucune ne descende vers ce qu'elle décrit. Chacune mène désormais à sa
+ * première semaine — `PlanWeekRoute` lit déjà `?semaine=N`, personne ne le lui envoyait.
+ */
 function PhaseRow({ phase }: { phase: PlanMacroPhaseRow }) {
   return (
-    <div className={phase.isActive ? `${styles.phaseRow} ${styles.phaseRowActive}` : styles.phaseRow}>
+    <Link
+      className={phase.isActive ? `${styles.phaseRow} ${styles.phaseRowActive}` : styles.phaseRow}
+      to={weekPath(phase.firstWeekNumber)}
+    >
       <span className={styles.phaseSwatch} style={{ background: phase.colorVar }} aria-hidden="true" />
       <span className={styles.phaseBody}>
         <span className={styles.phaseTitle}>{phase.label}</span>
@@ -220,6 +229,6 @@ function PhaseRow({ phase }: { phase: PlanMacroPhaseRow }) {
         )}
       </span>
       {phase.statusLabel && <span className={styles.phaseStatus}>{phase.statusLabel}</span>}
-    </div>
+    </Link>
   )
 }

@@ -70,7 +70,8 @@ describe('WorkoutsScreen · artboard 07', () => {
     expect(screen.queryByText('BRICK')).not.toBeInTheDocument()
     const brick = SEED_WORKOUTS.find((workout) => workout.isBrick)
     expect(brick).toBeDefined()
-    const row = screen.getByRole('button', { name: new RegExp(brick!.title) })
+    // Les lignes sont des LIENS depuis qu'une séance a une adresse partageable.
+    const row = screen.getByRole('link', { name: new RegExp(brick!.title) })
     expect(within(row).queryByLabelText(/^Discipline/)).not.toBeInTheDocument()
     expect(within(row).getByLabelText(/^Zone|Aucune zone/)).toBeInTheDocument()
   })
@@ -131,7 +132,7 @@ describe('WorkoutsScreen · artboard S5 · desktop', () => {
     const user = userEvent.setup()
     renderScreen()
 
-    const rows = screen.getAllByRole('button', { name: /Discipline/ })
+    const rows = screen.getAllByRole('link', { name: /Discipline/ })
     expect(rows[0]).toHaveAttribute('aria-current', 'true')
 
     await user.click(rows[2])
@@ -160,7 +161,7 @@ describe('WorkoutsScreen · artboard S5 · desktop', () => {
     expect(screen.getByText(/^Allure dérivée de ton CSS du /)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Retirer le filtre Natation' }))
-    const bike = screen.getAllByRole('button', { name: /Discipline V/ })[0]
+    const bike = screen.getAllByRole('link', { name: /Discipline V/ })[0]
     await user.click(bike)
     expect(screen.queryByText(/^Allure dérivée/)).not.toBeInTheDocument()
   })

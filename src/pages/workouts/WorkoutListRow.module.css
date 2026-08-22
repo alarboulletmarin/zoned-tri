@@ -103,3 +103,14 @@
   background: var(--color-neutral-fill);
   color: var(--color-label);
 }
+
+/* La ligne est devenue un lien : même dessin, plus un `href`. Le liseré de focus vient avec. */
+a.row {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.row:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: -2px;
+}

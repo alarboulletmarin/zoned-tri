@@ -7,6 +7,7 @@ import { CALCULATORS, calculatorCounter } from '../tools/calculators/registry'
 import { calculatorPath } from '../tools/toolsRoutes'
 import { WorkoutListRow } from './WorkoutListRow'
 import styles from './SearchOverlay.module.css'
+import { workoutPath } from '../../navigation'
 
 export interface SearchOverlayProps {
   onClose: () => void
@@ -130,7 +131,8 @@ export function SearchOverlay({ onClose, initialQuery = '' }: SearchOverlayProps
                         key={match.workout.id}
                         workout={match.workout}
                         variant="search"
-                        onClick={() => open(`/workouts/${match.workout.id}`)}
+                        to={workoutPath(match.workout.id)}
+                        onSelect={() => open(workoutPath(match.workout.id))}
                         titleContent={
                           <Highlighted text={match.workout.title} start={match.matchStart} end={match.matchEnd} />
                         }

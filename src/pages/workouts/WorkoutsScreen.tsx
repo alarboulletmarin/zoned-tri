@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { AppHeader } from '../../components/ui/AppHeader/AppHeader'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
@@ -26,6 +25,7 @@ import { EmptyResultsPanel } from './EmptyResultsPanel'
 import { WorkoutListRow } from './WorkoutListRow'
 import { WorkoutDetailContent } from './detail/WorkoutDetailContent'
 import styles from './WorkoutsScreen.module.css'
+import { workoutPath } from '../../navigation'
 
 /** Ordre de la bande de répartition, celui du canevas 07 l. 986 : natation, vélo, course, repos. */
 const DISCIPLINE_ORDER: Discipline[] = ['N', 'V', 'C', 'R']
@@ -70,7 +70,6 @@ export interface WorkoutsScreenProps {
 }
 
 export function WorkoutsScreen({ initialFilters, initialSheetOpen = false }: WorkoutsScreenProps = {}) {
-  const navigate = useNavigate()
   const isDesktop = useBreakpoint() === 'desktop'
   const { profile } = useProfile()
   const [filters, setFilters] = useState<WorkoutFilters>(initialFilters ?? EMPTY_FILTERS)
@@ -90,12 +89,9 @@ export function WorkoutsScreen({ initialFilters, initialSheetOpen = false }: Wor
     isDesktop ? [countLabel(SEED_WORKOUTS.length), `${workouts.length} après filtres`] : null,
   )
 
-  function openWorkout(id: string) {
-    // S5 : « La liste garde sa place : ouvrir une fiche ne la remplace pas. » En mobile, la
-    // largeur ne permet pas les deux — l'artboard 05 est alors un écran à part entière.
-    if (isDesktop) setSelectedId(id)
-    else navigate(`/workouts/${id}`, { state: { from: 'Bibliothèque' } })
-  }
+  // Les lignes sont des LIENS : en mobile, le `href` suffit. En desktop, S5 veut que la liste garde
+  // sa place — `onSelect` ouvre alors la fiche dans la colonne de droite et empêche la navigation,
+  // mais un clic milieu ou un Ctrl-clic suivent bien le lien, ce qui est exactement ce qu'on veut.
 
   function removeChip(category: FilterCategory) {
     setFilters((current) => relaxFilterCategory(current, category))
@@ -195,7 +191,8 @@ export function WorkoutsScreen({ initialFilters, initialSheetOpen = false }: Wor
                     workout={workout}
                     variant="master"
                     isSelected={workout.id === selected?.id}
-                    onClick={() => openWorkout(workout.id)}
+                    to={workoutPath(workout.id)}
+                    onSelect={() => setSelectedId(workout.id)}
                   />
                 ))}
               </div>
@@ -214,7 +211,7 @@ export function WorkoutsScreen({ initialFilters, initialSheetOpen = false }: Wor
       ) : (
         <div className={styles.list}>
           {workouts.map((workout) => (
-            <WorkoutListRow key={workout.id} workout={workout} onClick={() => openWorkout(workout.id)} />
+            <WorkoutListRow key={workout.id} workout={workout} to={workoutPath(workout.id)} />
           ))}
         </div>
       )}

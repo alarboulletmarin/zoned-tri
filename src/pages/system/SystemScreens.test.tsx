@@ -199,7 +199,11 @@ describe('NotFoundScreen · artboard 18', () => {
 
   it('propose ce que les mots de l’adresse rapprochent vraiment', () => {
     renderScreen(<NotFoundScreen pathname="/seance/8f2c-pyramide-css-v2" catalogue={SEED_WORKOUTS} />)
-    expect(screen.getByRole('button', { name: /Pyramide CSS courte/ })).toBeInTheDocument()
+    // Les rapprochements sont des liens : on peut les ouvrir dans un onglet, et en copier l'adresse.
+    expect(screen.getByRole('link', { name: /Pyramide CSS courte/ })).toHaveAttribute(
+      'href',
+      expect.stringContaining('/workouts/'),
+    )
   })
 
   it('nomme le vide plutôt que de proposer les deux premières venues', () => {

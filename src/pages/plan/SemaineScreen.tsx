@@ -29,6 +29,7 @@ import {
 import { DAY_LABELS, computeWeekBars, type WeekBar } from '../../domain/weekContext'
 import { buildWeekNav } from '../../domain/weekNav'
 import { formatDurationCompact, formatDurationMin, zoneToNumber } from '../../domain/workoutFormat'
+import { workoutPath } from '../../navigation'
 import { EXPORTS_PRINT_PATH, exportSheetPath } from '../exports/exportsRoutes'
 import styles from './SemaineScreen.module.css'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -485,7 +486,12 @@ function EntryRow({
   const tone: TagTone = isToday ? 'ink' : workout.discipline === 'R' ? 'outline' : 'fill'
 
   return (
-    <button type="button" className={className} onClick={() => onOpenWorkout(workout.id)}>
+    <Link
+      className={className}
+      to={workoutPath(workout.id)}
+      state={{ from: 'Semaine' }}
+      onClick={() => onOpenWorkout(workout.id)}
+    >
       {marker}
       <DisciplineTag discipline={workout.discipline} size="sm" tone={tone} />
       <span className={styles.rowBody}>
@@ -498,7 +504,7 @@ function EntryRow({
         ) : (
           workout.status === 'completed' && <span className={styles.doneMark}>✓</span>
         ))}
-    </button>
+    </Link>
   )
 }
 
@@ -605,10 +611,17 @@ function DayColumn({ day }: { day: WeekDay }) {
   )
 }
 
+/**
+ * Une carte de la grille des sept colonnes. Elle était un `<article>` inerte : la Semaine large,
+ * qui est le meilleur écran du produit et l'argument même de la règle nº 3, ne laissait ouvrir
+ * aucune séance — alors que le mobile, lui, l'a toujours permis. Le lien enveloppe la carte : le
+ * rendu ne change pas d'un pixel, et l'adresse se copie, s'ouvre dans un onglet et s'annonce.
+ */
 function SessionCard({ workout }: { workout: Workout }) {
   const detail = workoutSubDetail(workout)
 
   return (
+    <Link className={styles.cardLink} to={workoutPath(workout.id)} state={{ from: 'Semaine' }}>
     <article className={styles.card}>
       <div className={styles.cardTop}>
         <DisciplineTag discipline={workout.discipline} size="sm" />
@@ -623,5 +636,6 @@ function SessionCard({ workout }: { workout: Workout }) {
         ≡
       </div>
     </article>
+    </Link>
   )
 }

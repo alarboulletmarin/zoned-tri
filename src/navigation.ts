@@ -22,6 +22,27 @@ export const PLANS_PATH = '/plans'
 export const PLAN_PATH = '/plan'
 export const WEEK_PATH = '/plan/semaine'
 
+/**
+ * Adresses de la Bibliothèque et d'une fiche de séance.
+ *
+ * Elles étaient écrites à la main dans neuf fichiers, sous forme de gabarits — et c'est en partie
+ * pour ça que presque rien n'était un lien : construire une adresse dans du JSX coûtait plus cher
+ * que d'appeler `navigate()`. Une fonction, et le coût disparaît.
+ */
+export const WORKOUTS_PATH = '/workouts'
+
+export function workoutPath(id: string): string {
+  return `${WORKOUTS_PATH}/${id}`
+}
+
+/**
+ * La semaine, éventuellement une semaine précise. `PlanWeekRoute` lit déjà `?semaine=N` : c'est ce
+ * qui permet aux dix-huit barres de la Saison de mener chacune à SA semaine.
+ */
+export function weekPath(weekNumber?: number): string {
+  return weekNumber === undefined ? WEEK_PATH : `${WEEK_PATH}?semaine=${weekNumber}`
+}
+
 /** Mois (artboard 04m) : « le niveau qui manquait entre la semaine et la saison ». */
 export const PLAN_MONTH_PATH = '/plan/mois'
 

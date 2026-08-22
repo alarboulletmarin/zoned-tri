@@ -655,3 +655,23 @@ a.headerButton {
   max-width: 30ch;
   text-transform: none;
 }
+
+/* Les cartes et les lignes de jour sont devenues des liens : le rendu ne change pas d'un pixel —
+   c'est le même bloc, avec un `href` — et le focus clavier reçoit enfin un liseré. */
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink:focus-visible {
+  outline: var(--border-width-structure) solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+a.row,
+a.rowStacked,
+a.rowDense {
+  color: inherit;
+  text-decoration: none;
+}

@@ -27,10 +27,8 @@ import { PrimaryAction } from '../../components/ui/PrimaryAction/PrimaryAction'
 import { ProgressBar, type ProgressSegment } from '../../components/ui/ProgressBar/ProgressBar'
 import { SecondaryAction } from '../../components/ui/SecondaryAction/SecondaryAction'
 import { WeekStrip, type WeekStripDay } from '../../components/ui/WeekStrip/WeekStrip'
+import { WORKOUTS_PATH, workoutPath } from '../../navigation'
 import { exportSheetPath } from '../exports/exportsRoutes'
-
-/** La bibliothèque : le seul endroit où l'on peut aujourd'hui choisir une séance. */
-const WORKOUTS_PATH = '/workouts'
 import styles from './TodayScreen.module.css'
 import { StackedTitle } from '../../components/ui/StackedTitle/StackedTitle'
 import { InertNote } from '../../components/ui/InertNote/InertNote'
@@ -373,15 +371,22 @@ function SessionList({
           </>
         )}
       </div>
+      {/* « Reste cette semaine » listait cinq séances sans qu'aucune ne s'ouvre : la liste
+          nommait ce qui arrive et n'y menait pas. */}
       {sessions.map((session, index) => (
-        <div key={session.key} className={styles.listRow}>
+        <Link
+          key={session.key}
+          className={styles.listRow}
+          to={workoutPath(session.workoutId)}
+          state={{ from: 'Plan' }}
+        >
           <DisciplineTag discipline={session.discipline} size="md" />
           <span className={styles.listTitle}>
             {session.title}
             {withSublineOnFirst && index === 0 && <span className={styles.listSubline}>{session.subline}</span>}
           </span>
           <span className={styles.listDay}>{session.dayLabel}</span>
-        </div>
+        </Link>
       ))}
     </section>
   )
@@ -647,11 +652,12 @@ function SessionBlock({
           Marquer comme faite
         </label>
         {/* 02 : « Séance entière → », le seul chemin depuis Aujourd'hui vers la fiche complète. */}
-        {!framed && (
-          <Link className={styles.wholeSession} to={`/workouts/${workout.id}`} state={{ from: 'Plan' }}>
-            Séance entière <span aria-hidden="true">→</span>
-          </Link>
-        )}
+        {/* La garde `!framed` faisait disparaître le lien dès que la journée portait deux séances :
+            une journée doublée n'ouvrait donc AUCUNE fiche, alors que c'est le jour où l'on a le
+            plus besoin de lire le déroulé de chacune. */}
+        <Link className={styles.wholeSession} to={workoutPath(workout.id)} state={{ from: 'Plan' }}>
+          Séance entière <span aria-hidden="true">→</span>
+        </Link>
         {(framed || wide) && (
           <Link className={styles.chipButton} to={exportSheetPath({ workoutId: workout.id })}>
             .FIT
