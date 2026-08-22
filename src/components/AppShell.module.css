@@ -78,6 +78,18 @@
   text-decoration: none;
 }
 
+/* Mention de la build de démonstration, juste au-dessus du pied du rail. Elle est en mono, en
+   gris, et n'est pas une commande : elle dit d'où viennent les données, elle ne mène nulle part. */
+.railDemoMark {
+  margin-top: auto;
+  padding: 0 18px 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-inactive);
+}
+
 .railFooter {
   padding: 13px 18px;
   display: flex;

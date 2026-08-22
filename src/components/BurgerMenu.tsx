@@ -5,6 +5,7 @@ import { usePlans, useRaces } from '../context/AppDataContext'
 import { buildMenuCounts } from '../domain/menuCounts'
 import { todayIso } from '../domain/planWeek'
 import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
+import { IS_DEMO_BUILD } from '../demoBuild'
 import styles from './BurgerMenu.module.css'
 import { APP_VERSION } from '../domain/types'
 
@@ -96,7 +97,10 @@ function BurgerMenuPanel({ onClose }: BurgerMenuPanelProps) {
         <button type="button" className={styles.lang} aria-pressed="false" disabled>
           EN
         </button>
-        <span className={styles.version}>v {APP_VERSION} · hors ligne</span>
+        {/* La build de démonstration le dit : on ne présente jamais un plan amorcé comme un vrai. */}
+        <span className={styles.version}>
+          v {APP_VERSION} · hors ligne{IS_DEMO_BUILD && ' · démonstration'}
+        </span>
       </div>
     </div>
   )

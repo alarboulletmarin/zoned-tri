@@ -4,6 +4,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint'
 import { RailBlockProvider, useRailBlock } from '../context/RailBlockContext'
 import { ShellChromeProvider } from '../context/ShellChromeContext'
 import { OPENING_PATH, ROOT_SECTIONS } from '../navigation'
+import { IS_DEMO_BUILD } from '../demoBuild'
 import { BurgerIcon } from './ui/AppHeader/AppHeader'
 import { ProgressBar } from './ui/ProgressBar/ProgressBar'
 import { BurgerMenu } from './BurgerMenu'
@@ -91,6 +92,10 @@ function AppShellLayout() {
             </div>
           )}
           {railBlock?.note && <NoteBox className={styles.railNote}>{railBlock.note}</NoteBox>}
+
+          {/* Le rail remplace le panneau burger en desktop : c'est donc lui qui doit porter la
+              mention de démonstration, sans quoi elle ne serait visible qu'en mobile. */}
+          {IS_DEMO_BUILD && <div className={styles.railDemoMark}>jeu de démonstration</div>}
 
           <NavLink
             to="/settings"

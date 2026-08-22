@@ -66,13 +66,28 @@ export function AppDataProvider({ children }: AppDataProviderProps) {
   }, [])
 
   useEffect(() => {
-    // Amorçage de démonstration, développement uniquement : l'import dynamique sous
-    // `import.meta.env.DEV` laisse le bundler retirer entièrement `devSeed` du build. La base
-    // n'est amorcée que si elle est vide (cf. `seedIfEmpty`), jamais écrasée.
+    /**
+     * Amorçage de démonstration. Deux cas, et deux seulement :
+     *
+     * — le développement, pour qu'un `npm run dev` sur une machine neuve ait du contenu ;
+     * — une **build de démonstration** (`VITE_DEMO=1`), celle qu'on déploie pour montrer l'app à
+     *   qui n'a pas de plan. Elle s'annonce comme telle (cf. `IS_DEMO_BUILD`), et la build du
+     *   produit ne pose pas le drapeau : la règle de l'artboard 01b — « on n'affiche jamais de
+     *   faux plan » — reste entière là où elle compte.
+     *
+     * L'import reste dynamique : sans l'un des deux cas, le bundler retire `devSeed` entièrement.
+     * La base n'est amorcée que si elle est vide (cf. `seedIfEmpty`), jamais écrasée.
+     */
     async function boot() {
       // `MODE !== 'test'` : sous Vitest, `DEV` vaut aussi vrai, et amorcer la base fausserait
       // chaque test qui monte le fournisseur — ils posent leurs propres fixtures.
-      if (import.meta.env.DEV && import.meta.env.MODE !== 'test') {
+      // La condition est écrite EN LIGNE, et non via `IS_DEMO_BUILD` : le bundler ne replie une
+      // branche que s'il en voit la constante sur place. Passée par un autre module, elle laissait
+      // le chunk `devSeed` dans la build du produit — vérifié, et c'était le cas.
+      if (
+        (import.meta.env.DEV || import.meta.env.VITE_DEMO === '1') &&
+        import.meta.env.MODE !== 'test'
+      ) {
         const { seedIfEmpty } = await import('../dev/devSeed')
         await seedIfEmpty()
       }
