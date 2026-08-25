@@ -212,11 +212,19 @@ export function SettingsScreen({ onWipe }: SettingsScreenProps) {
           <span className={styles.toggleText}>Garder les fiches course lisibles hors ligne</span>
         </div>
 
+        {/* Le canevas ne dessine que la ligne de version. La mention légale se range dessous, dans
+            le même pied : c'est le seul endroit du produit qui parle déjà de ce qu'il fait des
+            données, et l'app n'a pas de page à elle. */}
         <div className={styles.footer}>
           <span>v {APP_VERSION} · aucun compte</span>
           <Link className={styles.sources} to={IMPORT_EXPORT_PATH}>
             sources ↗
           </Link>
+          <p className={styles.legal}>
+            Tes données restent dans ce navigateur : rien n’est envoyé sur un serveur, il n’y a ni
+            compte ni mesure d’audience. Hébergeur : Vercel Inc., 440 N Barranca Ave #4133, Covina,
+            CA 91723, États-Unis.
+          </p>
         </div>
       </div>
 

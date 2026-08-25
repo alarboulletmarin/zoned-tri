@@ -319,11 +319,25 @@
   padding: var(--space-12) var(--space-gutter-mobile) var(--space-18);
   border-top: var(--border-width-hairline) solid var(--color-hairline);
   display: flex;
+  /* La mention légale prend toute la largeur : elle se pose sur une deuxième ligne du pied plutôt
+     que dans une boîte à elle, pour que le retrait et le fond de 18 px du canevas restent ceux du
+     pied. Les deux premiers éléments, eux, ne se renvoient jamais à la ligne. */
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-10);
   font-family: var(--font-mono);
   font-size: var(--fs-label-section);
   color: var(--color-label);
+}
+
+/* Une phrase, pas une étiquette : la chasse du micro-label lui irait mal, elle garde donc son
+   interlignage de prose et le gris le plus éteint — présente, jamais dans le chemin. */
+.legal {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--fs-label-micro);
+  line-height: 1.5;
+  color: var(--color-inactive);
 }
 
 /* La cible de 44 px du lien de sources ne doit pas repousser le pied de 18 px du canevas. */
