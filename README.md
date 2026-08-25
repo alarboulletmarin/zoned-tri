@@ -3,8 +3,13 @@
 Application d'entraînement triathlon. Hors-ligne complet, aucun compte, données locales.
 
 Le style est une affiche de club sérigraphiée : contours noirs de 2 px, aucun arrondi, ombres dures
-sans flou, aplats de couleur, General Sans et Space Mono. La couleur ne dit que deux choses — la
+sans flou, aplats de couleur, une grotesque et Space Mono. La couleur ne dit que deux choses — la
 discipline et la zone d'intensité.
+
+Aucune police ne vient d'un tiers : Space Mono est servie depuis `public/fonts` (SIL OFL 1.1, texte
+dans `licenses/`), et le rôle « display » — General Sans sur le canevas — s'appuie sur la grotesque
+du système, la licence de General Sans n'autorisant pas clairement la redistribution de ses
+fichiers. Le code est sous licence MIT (`LICENSE`).
 
 ## Démarrer
 

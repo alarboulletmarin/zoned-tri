@@ -1,0 +1,31 @@
+/*
+ * Space Mono auto-hébergée (Google Fonts, sous-ensemble latin, graisses 400 et 700 romaines).
+ *
+ * Aucune origine externe : les liens `fonts.googleapis.com` / `fonts.gstatic.com` qui vivaient dans
+ * `index.html` envoyaient l'IP de chaque visiteur à Google avant même le premier pixel. Les fichiers
+ * sont ceux de `@fontsource/space-mono` (identiques à ceux du projet frère Zoned) ; le texte de la
+ * licence SIL OFL 1.1, qui autorise explicitement cette redistribution, est dans `licenses/`.
+ *
+ * Seules 400 et 700 romaines sont déclarées : c'est tout ce que le produit emploie — aucune règle
+ * ne pose `font-style: italic`, et l'échelle mono de `tokens.css` ne connaît que ces deux graisses.
+ *
+ * General Sans n'a pas de @font-face : sa licence (ITF Free Font License) n'autorise pas clairement
+ * la redistribution des fichiers dans un dépôt public. `--font-display` s'appuie donc sur la pile
+ * système — voir la note dans `tokens.css`.
+ */
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/space-mono-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-mono-700.woff2') format('woff2');
+}

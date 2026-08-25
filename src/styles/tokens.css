@@ -70,9 +70,15 @@
   --shadow-primary-sm: 5px 5px 0 #ff6a1f;
   --shadow-featured-lg: 6px 6px 0 #d6f24b;
 
-  /* Typographie */
-  --font-display: 'General Sans', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+  /* Typographie.
+   * Le canevas est dessiné en General Sans, mais la police n'est PAS livrée : sa licence (ITF Free
+   * Font License) n'autorise pas clairement la redistribution des fichiers dans un dépôt public, et
+   * la charger depuis api.fontshare.com enverrait l'IP de chaque visiteur à un tiers. Le rôle
+   * « display » revient donc à la grotesque du système — c'est déjà le repli que le produit servait
+   * hors ligne. Toutes les mentions « General Sans » du code désignent ce rôle, pas un fichier.
+   * Space Mono, elle, est sous licence SIL OFL : elle est auto-hébergée (`src/styles/fonts.css`). */
+  --font-display: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --fw-regular: 400;
   --fw-medium: 500;
